@@ -124,7 +124,7 @@ services:
       -Dservice.name=game-minigame
       -Dlogback.configurationFile=/app/game/Minigame/config/logback.xml
       -cp "libs/app/*:libs/runtime/*"
-      game.MiniGameMain
+      game.MinigameMain
     # TCP: 1643, Admin: 16072
     ports:
       - "11640:1640"
