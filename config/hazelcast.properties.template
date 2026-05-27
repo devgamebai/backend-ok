@@ -1,0 +1,3 @@
+address=hazelcast:5701
+group_name=${HAZELCAST_GROUP}
+group_pass=${HAZELCAST_PASSWORD}

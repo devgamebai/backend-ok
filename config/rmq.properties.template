@@ -1,0 +1,7 @@
+rmq_username=${RABBITMQ_USER}
+rmq_password=${RABBITMQ_PASSWORD}
+rmq_server=rabbitmq
+rmq_port=5672
+rmq_reconnect_delay=5000
+rmq_connection_timeout=1000
+rmq_handshake_timeout=1000

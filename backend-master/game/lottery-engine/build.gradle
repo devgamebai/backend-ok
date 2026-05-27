@@ -1,0 +1,51 @@
+// SUN-LOTTERY PR-1/3 — lottery-engine
+//
+// Pure-Java engine module for XSMB (Xổ Số Miền Bắc) Lô Đề.
+// CRITICAL: This module pins ZoneId.of("Asia/Ho_Chi_Minh") at code level —
+// the rest of the stack runs TZ=Asia/Seoul intentionally (see CLAUDE.md
+// + docs/specs/lottery-anticheat-audit.md §5.1).
+//
+// No Spring, no BitZero, no JDBC. Hexagonal ports only.
+plugins {
+    id 'java-library'
+}
+
+group = 'com.sunwinkr'
+version = '0.1.0-SNAPSHOT'
+
+sourceCompatibility = '1.8'
+targetCompatibility = '1.8'
+
+compileJava.options.encoding = 'UTF-8'
+compileTestJava.options.encoding = 'UTF-8'
+
+// Drop the inherited heavy `compile` deps from root build.gradle — this
+// module is pure Java and must stay light. Anything we actually need is
+// listed below explicitly.
+configurations {
+    // Keep root build.gradle's log4j exclusions (already applied via
+    // `configurations.all`) but otherwise we declare our own minimal set.
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    api 'org.slf4j:slf4j-api:1.7.36'
+
+    testImplementation 'org.junit.jupiter:junit-jupiter:5.10.2'
+    testImplementation 'org.mockito:mockito-core:4.11.0'
+    testImplementation 'org.assertj:assertj-core:3.24.2'
+    testImplementation 'net.jqwik:jqwik:1.8.4'
+}
+
+test {
+    useJUnitPlatform {
+        includeEngines 'junit-jupiter', 'jqwik'
+    }
+    testLogging {
+        events 'passed', 'failed', 'skipped'
+        showStandardStreams = false
+    }
+}

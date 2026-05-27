@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<portal>
+	<http_port>18081</http_port>
+	<ssl_port>8643</ssl_port>
+	<idle_timeout>30000</idle_timeout>
+	<commands>
+		<command>
+			<id>1</id>
+			<name>get money user</name>
+			<path>com.vinplay.api.processors.GetMoneyInfoProcessor</path>
+		</command>
+   <command>
+			<id>2</id>
+			<name>exchange money </name>
+			<path>com.vinplay.api.processors.ExchangeMoneyProcessor</path>
+		</command>
+   <command>
+   <id>3</id>
+   <name>query transaction</name>
+   <path>com.vinplay.api.processors.QueryTransactionProcessor</path>
+  </command>
+	</commands>
+</portal>

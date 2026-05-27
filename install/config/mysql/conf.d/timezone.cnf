@@ -1,0 +1,10 @@
+[mysqld]
+# Canonical platform timezone — Asia/Seoul (UTC+9).
+# Set in two places defense-in-depth:
+#   1) TZ=Asia/Seoul env var on the mysql service (docker-compose.database.yml)
+#   2) This my.cnf fragment — survives even if TZ env is stripped on restart.
+# All JDBC pools additionally force SET time_zone='+09:00' at connection
+# handout via connectionTimeZone=Asia/Seoul&forceConnectionTimeZoneToSession=true
+# in every db_pool.properties. So every CURRENT_TIMESTAMP / NOW() /
+# DEFAULT CURRENT_TIMESTAMP across the platform resolves to Seoul wall-clock.
+default_time_zone = '+09:00'

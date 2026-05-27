@@ -1,0 +1,533 @@
+# =============================================================================
+# GAME SERVERS (Java)
+# =============================================================================
+# All game servers (card games, dice games, slots, minigames)
+#
+# All modules build from source (backend-master/).
+# Source: Slot, Minigame, TLMN, XocDia, BaCay, Poker, PokerTour,
+#         Lieng, Binh, BaiCao, Sam, Caro, CoTuong, Coup, XiZach, ThirdParty
+#
+# Usage:
+#   docker compose -f docker-compose.yml -f docker-compose.database.yml -f docker-compose.games.yml up -d
+# =============================================================================
+
+x-game-base: &game-base
+  build:
+    context: ./backend-master
+    dockerfile: Dockerfile
+  restart: unless-stopped
+  # SUN-1034: games write to MongoDB (game log), Hazelcast (session state),
+  # and hold live player sockets. 30s lets the BitZero loop drain sessions
+  # and flush the tail of the write queue before SIGKILL.
+  stop_grace_period: 30s
+  # SUN-1035: enroll every game in autoheal. Docker Compose only restarts
+  # on process exit; this label tells the autoheal sidecar to also restart
+  # containers reporting unhealthy (stalled game loops, frozen JVM, etc).
+  labels:
+    autoheal: "true"
+  working_dir: /app
+  env_file: [.env]
+  entrypoint: ["/app/entrypoint.sh"]
+  depends_on:
+    mysql:
+      condition: service_healthy
+    hazelcast-1:
+      condition: service_healthy
+  volumes:
+    - ./logs:/app/logs
+  networks:
+    - gameservers
+    - frontend
+    - database
+    - messaging
+  # P2: game-loop liveness healthcheck. GameHealthServer.tick() stamps
+  # the loop heartbeat; /health returns 503 if tick is >90s stale. After 3
+  # consecutive failures compose auto-restarts the container → game loop
+  # recovers without manual intervention. start_period gives BitZero time
+  # to finish module init before the first probe.
+  healthcheck:
+    test: ["CMD-SHELL", "curl -sf http://localhost:${GAME_HEALTH_PORT:-8888}/health > /dev/null || exit 1"]
+    interval: 30s
+    timeout: 5s
+    retries: 3
+    start_period: 120s
+  deploy:
+    resources:
+      limits:
+        memory: 512M
+  logging:
+    driver: json-file
+    options:
+      max-size: "50m"
+      max-file: "5"
+
+services:
+
+  # ===========================================================================
+  # GAME SERVERS (all built from source)
+  # ===========================================================================
+
+  # ---------------------------------------------------------------------------
+  # Slot Machine - Multiple slot game variants
+  # ---------------------------------------------------------------------------
+  game-slot:
+    <<: *game-base
+    container_name: sunwinkr-game-slot
+    command: >
+      java -Xmx512m -Xms256m -Djava.net.preferIPv4Stack=true -Djava.net.preferIPv4Addresses=true
+      -Dservice.name=game-slot
+      -Dlogback.configurationFile=/app/game/slot/config/logback.xml
+      -cp "libs/runtime/*:libs/app/*"
+      game.SlotMain
+    # TCP: 1843, Admin: 16070
+    ports:
+      - "11843:1843"
+      - "11844:1844"
+    deploy:
+      resources:
+        limits:
+          memory: 1G
+
+  # ---------------------------------------------------------------------------
+  # XocDia Tứ Linh (4 Divine Beasts) - Dedicated server
+  # ---------------------------------------------------------------------------
+  # TCP: 1650 | WS: 1651
+  # Isolated from minigame server — no TàiXỉu/Sicbo broadcast noise
+  # ---------------------------------------------------------------------------
+  game-xocdiatulinh:
+    <<: *game-base
+    container_name: sunwinkr-game-xocdiatulinh
+    command: >
+      java -Xmx512m -Xms256m -Djava.net.preferIPv4Stack=true -Djava.net.preferIPv4Addresses=true
+      -Dservice.name=game-xocdiatulinh
+      -Dlogback.configurationFile=/app/game/xocdiatulinh/config/logback.xml
+      -cp "libs/runtime/*:libs/app/*"
+      game.xocdia.XocdiaMain
+    # XocDia Tứ Linh uses same ports as normal XocDia (2343/2344) but different container
+    ports:
+      - "12543:2343"
+      - "12544:2344"
+
+  # ---------------------------------------------------------------------------
+  # Minigame - MiniPoker, Bau Cua, Tai Xiu, Cao Thap, Sicbo, Galaxy
+  # ---------------------------------------------------------------------------
+  # TCP: 1643 | Jetty Admin: 16072
+  # Contains the fund/balance system for most minigames
+  # ---------------------------------------------------------------------------
+  game-minigame:
+    <<: *game-base
+    container_name: sunwinkr-game-minigame
+    extra_hosts:
+      - "localhost:host-gateway"
+    command: >
+      java -Xmx512m -Xms256m -Djava.net.preferIPv4Stack=true -Djava.net.preferIPv4Addresses=true
+      -Dservice.name=game-minigame
+      -Dlogback.configurationFile=/app/game/Minigame/config/logback.xml
+      -cp "libs/app/*:libs/runtime/*"
+      game.MiniGameMain
+    # TCP: 1643, Admin: 16072
+    ports:
+      - "11640:1640"
+      - "11641:1641"
+    deploy:
+      resources:
+        limits:
+          memory: 1G
+
+  # ---------------------------------------------------------------------------
+  # Tien Len Mien Nam (TLMN) - Vietnamese "Thirteen" card game
+  # ---------------------------------------------------------------------------
+  # TCP: 2143 | Jetty Admin: 16071
+  # ---------------------------------------------------------------------------
+  # ---------------------------------------------------------------------------
+  # game-tlmn — DISABLED 2026-05-14 per operator: card game, not deployed.
+  # Slots + 4 minis + GSC/thirdparty + board games are the active set.
+  # Re-enable by un-commenting the block below.
+  # ---------------------------------------------------------------------------
+  # game-tlmn:
+    # <<: *game-base
+    # container_name: sunwinkr-game-tlmn
+    # command: >
+      # java -Xmx512m -Xms256m -Djava.net.preferIPv4Stack=true -Djava.net.preferIPv4Addresses=true
+      # -Dservice.name=game-tlmn
+      # -Dlogback.configurationFile=/app/game/tlmn/config/logback.xml
+      # -cp "libs/runtime/*:libs/app/*"
+      # game.tienlen.server.TlmnMain
+    # # TCP: 2143, Admin: 16071
+    # ports:
+      # - "12143:2143"
+      # - "12144:2144"
+    # deploy:
+      # resources:
+        # limits:
+          # memory: 1G
+  #
+  # # ---------------------------------------------------------------------------
+  # # Xoc Dia - Vietnamese dice shaking game (Even/Odd)
+  # # ---------------------------------------------------------------------------
+  # # TCP: 2343 | Jetty Admin: 16073
+  # # ---------------------------------------------------------------------------
+  game-xocdia:
+    <<: *game-base
+    container_name: sunwinkr-game-xocdia
+    command: >
+      java -Xmx512m -Xms256m -Djava.net.preferIPv4Stack=true -Djava.net.preferIPv4Addresses=true
+      -Dservice.name=game-xocdia
+      -Dlogback.configurationFile=/app/game/xocdia/config/logback.xml
+      -cp "libs/runtime/*:libs/app/*"
+      game.xocdia.XocdiaMain
+    # TCP: 2343, Admin: 16073
+    ports:
+      - "12343:2343"
+      - "12344:2344"
+    deploy:
+      resources:
+        limits:
+          memory: 1G
+
+  # ---------------------------------------------------------------------------
+  # Ba Cay - Vietnamese 3-card baccarat
+  # ---------------------------------------------------------------------------
+  # TCP: 1043
+  # ---------------------------------------------------------------------------
+  # ---------------------------------------------------------------------------
+  # game-bacay — DISABLED 2026-05-14 per operator: card game, not deployed.
+  # Slots + 4 minis + GSC/thirdparty + board games are the active set.
+  # Re-enable by un-commenting the block below.
+  # ---------------------------------------------------------------------------
+  # game-bacay:
+    # <<: *game-base
+    # container_name: sunwinkr-game-bacay
+    # command: >
+      # java -Xmx256m -Xms128m -Djava.net.preferIPv4Stack=true -Djava.net.preferIPv4Addresses=true
+      # -Dservice.name=game-bacay
+      # -Dlogback.configurationFile=/app/game/bacayServer/config/logback.xml
+      # -cp "libs/runtime/*:libs/app/*"
+      # game.bacay.server.BacayMain
+    # # TCP: 1043
+    # ports:
+      # - "13043:3043"
+      # - "13044:3044"
+  #
+  # # ---------------------------------------------------------------------------
+  # # Third Party - GSC+ game aggregator (CQ9, JILI, SA Gaming, Evolution, etc.)
+  # # ---------------------------------------------------------------------------
+  # # API port 9590 (player: launch game, list games)
+  # # Hook port 9591 (GSC+ callbacks: balance, withdraw, deposit, rollback, etc.)
+  # # ---------------------------------------------------------------------------
+  # game-thirdparty:
+  #   <<: *game-base
+  #   container_name: sunwinkr-game-thirdparty
+  #   working_dir: /app/game/thirdParty
+  #   command: >
+  #     java -Xmx256m -Xms128m -Djava.net.preferIPv4Stack=true -Djava.net.preferIPv4Addresses=true
+  #     -Dservice.name=game-thirdparty
+  #     -Dlogback.configurationFile=/app/game/thirdParty/config/logback.xml
+  #     -cp "/app/libs/runtime/*:/app/libs/app/*:/app/libs/api-precompiled/*"
+  #     game.third.server.VinPlayMain
+  #   # Override the *game-base liveness probe: game-thirdparty is an HTTP
+  #   # service (Jetty on 9591), not a BitZero game-loop, so the dead-man-tick
+  #   # in GameHealthServer never refreshes and /health flips to 503 ~90s
+  #   # after boot. Probe the actual service port instead — any TCP response
+  #   # from Jetty (even a 404) means the JVM is alive and accepting requests.
+  #   healthcheck:
+  #     test: ["CMD-SHELL", "curl -s -o /dev/null --connect-timeout 3 http://localhost:9591/ || exit 1"]
+  #     interval: 30s
+  #     timeout: 5s
+  #     retries: 3
+  #     start_period: 120s
+
+  # ===========================================================================
+  #   # BACKEND2DX GAME SERVERS
+  #   # ===========================================================================
+  #
+  #   # ---------------------------------------------------------------------------
+  #   # Poker - Texas Hold'em
+  #   # ---------------------------------------------------------------------------
+  # TCP: 1743
+  # ---------------------------------------------------------------------------
+  # ---------------------------------------------------------------------------
+  # game-poker — DISABLED 2026-05-14 per operator: card game, not deployed.
+  # Slots + 4 minis + GSC/thirdparty + board games are the active set.
+  # Re-enable by un-commenting the block below.
+  # ---------------------------------------------------------------------------
+  # game-poker:
+    # <<: *game-base
+    # container_name: sunwinkr-game-poker
+    # command: >
+      # java -Xmx512m -Xms256m -Djava.net.preferIPv4Stack=true -Djava.net.preferIPv4Addresses=true
+      # -Dservice.name=game-poker
+      # -Dlogback.configurationFile=/app/game/poker/config/logback.xml
+      # -cp "libs/runtime/*:libs/app/*"
+      # game.poker.server.PokerMain
+    # # TCP: 1743
+    # ports:
+      # - "11743:1743"
+      # - "11744:1744"
+  #
+  # # ---------------------------------------------------------------------------
+  # # Poker Tournament
+  # # ---------------------------------------------------------------------------
+  # # TCP: 1738
+  # # ---------------------------------------------------------------------------
+  # ---------------------------------------------------------------------------
+  # game-pokertour — DISABLED 2026-05-14 per operator: card game, not deployed.
+  # Slots + 4 minis + GSC/thirdparty + board games are the active set.
+  # Re-enable by un-commenting the block below.
+  # ---------------------------------------------------------------------------
+  # game-pokertour:
+    # <<: *game-base
+    # container_name: sunwinkr-game-pokertour
+    # command: >
+      # java -Xmx512m -Xms256m -Djava.net.preferIPv4Stack=true -Djava.net.preferIPv4Addresses=true
+      # -Dservice.name=game-pokertour
+      # -Dlogback.configurationFile=/app/game/pokertour/config/logback.xml
+      # -cp "libs/runtime/*:libs/app/*"
+      # game.tour.server.PokerTourMain
+    # # TCP: 1738
+    # ports:
+      # - "11738:1738"
+      # - "11740:1740"
+  #
+  # # ---------------------------------------------------------------------------
+  # # Lieng - Vietnamese 3-Card Brag
+  # # ---------------------------------------------------------------------------
+  # # TCP: 1543
+  # # ---------------------------------------------------------------------------
+  # ---------------------------------------------------------------------------
+  # game-lieng — DISABLED 2026-05-14 per operator: card game, not deployed.
+  # Slots + 4 minis + GSC/thirdparty + board games are the active set.
+  # Re-enable by un-commenting the block below.
+  # ---------------------------------------------------------------------------
+  # game-lieng:
+    # <<: *game-base
+    # container_name: sunwinkr-game-lieng
+    # command: >
+      # java -Xmx256m -Xms128m -Djava.net.preferIPv4Stack=true -Djava.net.preferIPv4Addresses=true
+      # -Dservice.name=game-lieng
+      # -Dlogback.configurationFile=/app/game/lieng/config/logback.xml
+      # -cp "libs/runtime/*:libs/app/*"
+      # game.lieng.server.LiengMain
+    # # TCP: 1543
+    # ports:
+      # - "11543:1543"
+      # - "11544:1544"
+  #
+  # # ---------------------------------------------------------------------------
+  # # Binh - Vietnamese 13-Card Poker (Binh Xap Xam)
+  # # ---------------------------------------------------------------------------
+  # # TCP: 1243
+  # # ---------------------------------------------------------------------------
+  # ---------------------------------------------------------------------------
+  # game-binh — DISABLED 2026-05-14 per operator: card game, not deployed.
+  # Slots + 4 minis + GSC/thirdparty + board games are the active set.
+  # Re-enable by un-commenting the block below.
+  # ---------------------------------------------------------------------------
+  # game-binh:
+    # <<: *game-base
+    # container_name: sunwinkr-game-binh
+    # command: >
+      # java -Xmx256m -Xms128m -Djava.net.preferIPv4Stack=true -Djava.net.preferIPv4Addresses=true
+      # -Dservice.name=game-binh
+      # -Dlogback.configurationFile=/app/game/binh/config/logback.xml
+      # -cp "libs/runtime/*:libs/app/*"
+      # game.binh.server.BinhMain
+    # # binh auto-card decks (402 .properties files, ~454 MB). BinhAuto.init()
+    # # reads these at boot via FileInputStream(basePath + "/data/binhthuong/..")
+    # # and swallows FileNotFoundException silently — missing files = empty bot
+    # # pools = every deal NPEs CardSuit.dealCards:107 in an infinite retry loop
+    # # that was filling main.log/debug.log at ~120 MB/hour on 2026-04-11.
+    # # Bind-mounting from host keeps the shared Java image lean (the 15 other
+    # # game services don't need this data). Read-only so the container can't
+    # # modify the source tree. YAML merge on <<: *game-base replaces the
+    # # inherited volumes list, so ./logs must be re-declared here explicitly.
+    # volumes:
+      # - ./logs:/app/logs
+      # - ./backend-master/game/binh/data/binhthuong:/app/data/binhthuong:ro
+      # - ./backend-master/game/binh/data/binhat:/app/data/binhat:ro
+    # # TCP: 1243
+    # ports:
+      # - "11243:1243"
+      # - "11244:1244"
+  #
+  # # ---------------------------------------------------------------------------
+  # # Bai Cao - Vietnamese high-low card game
+  # # ---------------------------------------------------------------------------
+  # # TCP: 1143
+  # # ---------------------------------------------------------------------------
+  # ---------------------------------------------------------------------------
+  # game-baicao — DISABLED 2026-05-14 per operator: card game, not deployed.
+  # Slots + 4 minis + GSC/thirdparty + board games are the active set.
+  # Re-enable by un-commenting the block below.
+  # ---------------------------------------------------------------------------
+  # game-baicao:
+    # <<: *game-base
+    # container_name: sunwinkr-game-baicao
+    # command: >
+      # java -Xmx256m -Xms128m -Djava.net.preferIPv4Stack=true -Djava.net.preferIPv4Addresses=true
+      # -Dservice.name=game-baicao
+      # -Dlogback.configurationFile=/app/game/baicao/config/logback.xml
+      # -cp "libs/runtime/*:libs/app/*"
+      # game.baicao.server.BaicaoMain
+    # # TCP: 1143
+    # ports:
+      # - "11143:1143"
+      # - "11144:1144"
+  #
+  # # ---------------------------------------------------------------------------
+  # # Sam - Vietnamese Sam card game
+  # # ---------------------------------------------------------------------------
+  # # TCP: 1943
+  # # ---------------------------------------------------------------------------
+  # ---------------------------------------------------------------------------
+  # game-sam — DISABLED 2026-05-14 per operator: card game, not deployed.
+  # Slots + 4 minis + GSC/thirdparty + board games are the active set.
+  # Re-enable by un-commenting the block below.
+  # ---------------------------------------------------------------------------
+  # game-sam:
+    # <<: *game-base
+    # container_name: sunwinkr-game-sam
+    # command: >
+      # java -Xmx256m -Xms128m -Djava.net.preferIPv4Stack=true -Djava.net.preferIPv4Addresses=true
+      # -Dservice.name=game-sam
+      # -Dlogback.configurationFile=/app/game/sam/config/logback.xml
+      # -cp "libs/runtime/*:libs/app/*"
+      # game.sam.server.SamMain
+    # # TCP: 1943
+    # ports:
+      # - "11943:1943"
+      # - "11944:1944"
+  #
+  # # ---------------------------------------------------------------------------
+  # # Caro - Gomoku / Five-in-a-Row
+  # # ---------------------------------------------------------------------------
+  # # TCP: 1343
+  # # ---------------------------------------------------------------------------
+  # game-caro:
+  #   <<: *game-base
+  #   container_name: sunwinkr-game-caro
+  #   command: >
+  #     java -Xmx256m -Xms128m -Djava.net.preferIPv4Stack=true -Djava.net.preferIPv4Addresses=true
+  #     -Dservice.name=game-caro
+  #     -Dlogback.configurationFile=/app/game/caro/config/logback.xml
+  #     -cp "libs/runtime/*:libs/app/*"
+  #     game.caro.server.CaroMain
+  #   # TCP: 1343
+  #   ports:
+  #     - "11343:1343"
+  #     - "11344:1344"
+
+  # ---------------------------------------------------------------------------
+  # Co Tuong - Chinese Chess (Xiangqi)
+  # ---------------------------------------------------------------------------
+  # TCP: 1443
+  # ---------------------------------------------------------------------------
+  # game-cotuong:
+  #   <<: *game-base
+  #   container_name: sunwinkr-game-cotuong
+  #   command: >
+  #     java -Xmx256m -Xms128m -Djava.net.preferIPv4Stack=true -Djava.net.preferIPv4Addresses=true
+  #     -Dservice.name=game-cotuong
+  #     -Dlogback.configurationFile=/app/game/cotuong/config/logback.xml
+  #     -cp "libs/runtime/*:libs/app/*"
+  #     game.cotuong.server.CotuongMain
+  #   # TCP: 1443
+  #   ports:
+  #     - "11443:1443"
+  #     - "11444:1444"
+
+  # ---------------------------------------------------------------------------
+  # Coup - Coup party card game
+  # ---------------------------------------------------------------------------
+  # TCP: 2443
+  # ---------------------------------------------------------------------------
+  # ---------------------------------------------------------------------------
+  # game-coup — DISABLED 2026-05-14 per operator: card game, not deployed.
+  # Slots + 4 minis + GSC/thirdparty + board games are the active set.
+  # Re-enable by un-commenting the block below.
+  # ---------------------------------------------------------------------------
+  # game-coup:
+    # <<: *game-base
+    # container_name: sunwinkr-game-coup
+    # command: >
+      # java -Xmx256m -Xms128m -Djava.net.preferIPv4Stack=true -Djava.net.preferIPv4Addresses=true
+      # -Dservice.name=game-coup
+      # -Dlogback.configurationFile=/app/game/coup/config/logback.xml
+      # -cp "libs/runtime/*:libs/app/*"
+      # game.coup.server.CoupMain
+    # # TCP: 2443
+    # ports:
+      # - "12443:2443"
+      # - "12444:2444"
+  #
+  # # ---------------------------------------------------------------------------
+  # # Xi Zach - Vietnamese Blackjack
+  # # ---------------------------------------------------------------------------
+  # # TCP: 2243
+  # # ---------------------------------------------------------------------------
+  # ---------------------------------------------------------------------------
+  # game-xizach — DISABLED 2026-05-14 per operator: card game, not deployed.
+  # Slots + 4 minis + GSC/thirdparty + board games are the active set.
+  # Re-enable by un-commenting the block below.
+  # ---------------------------------------------------------------------------
+  # game-xizach:
+    # <<: *game-base
+    # container_name: sunwinkr-game-xizach
+    # command: >
+      # java -Xmx256m -Xms128m -Djava.net.preferIPv4Stack=true -Djava.net.preferIPv4Addresses=true
+      # -Dservice.name=game-xizach
+      # -Dlogback.configurationFile=/app/game/xizach/config/logback.xml
+      # -cp "libs/runtime/*:libs/app/*"
+      # game.xizach.server.XizachMain
+    # # TCP: 2243
+    # ports:
+      # - "12243:2243"
+      # - "12244:2244"
+  #
+  # # ---------------------------------------------------------------------------
+  # # ws-bridge — WebSocket JSON↔Binary translation for browser clients
+  # # ---------------------------------------------------------------------------
+  # # GitLab #34: previously lived in docker-compose.staging.yml behind the
+  # # CLOUDFLARE_TUNNEL_TOKEN flag. That meant a `./deploy.sh --rebuild`
+  # # without the tunnel enabled would pre-stop ws-bridge (name-filter
+  # # matches every sunwinkr-*) but never recreate it — taking down all
+  # # player-facing game WebSockets. Moving it into games.yml keeps it
+  # # next to the game services it bridges, and guarantees compose always
+  # # knows how to recreate it.
+  ws-bridge:
+    build:
+      context: ./ws-bridge
+      dockerfile: Dockerfile
+    container_name: sunwinkr-ws-bridge
+    restart: unless-stopped
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    volumes:
+      - ./ws-bridge/bridge.js:/app/bridge.js:ro
+      - ./logs/ws-bridge:/app/logs
+    networks:
+      - frontend
+      - gameservers
+    deploy:
+      resources:
+        limits:
+          memory: 256M
+    logging:
+      driver: json-file
+      options:
+        max-size: "20m"
+        max-file: "5"
+
+networks:
+  gameservers:
+    external: true
+    name: sunkr-games
+  database:
+    external: true
+    name: sunkr-network
+  messaging:
+    external: true
+    name: sunkr-messaging
+  frontend:
+    external: true
+    name: sunkr-network

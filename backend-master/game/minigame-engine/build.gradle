@@ -1,0 +1,46 @@
+// minigame-engine — pure Java engine module for TaiXiu / Sicbo.
+//
+// PR-2/4 bet-path: SicboBetService + SicboPotState + SicboTxIdGenerator
+// + shared ports (WalletPort, BetRecorder, MoneyResult, TransKind).
+//
+// Build rules:
+//   - JDK 8 source/target.
+//   - Engine MUST NOT import Spring, BitZero, Hazelcast, Mongo, RabbitMQ.
+//     Pure POJO + slf4j only.
+
+apply plugin: 'java-library'
+
+group   = 'com.sunwinkr'
+version = '0.1.0-SNAPSHOT'
+
+sourceCompatibility = '1.8'
+targetCompatibility = '1.8'
+
+compileJava.options.encoding     = 'UTF-8'
+compileTestJava.options.encoding = 'UTF-8'
+
+repositories {
+    mavenCentral()
+    mavenLocal()
+}
+
+dependencies {
+    // Pure engine deps only. ZERO Spring, ZERO BitZero, ZERO Hazelcast.
+    api         'org.slf4j:slf4j-api:1.7.36'
+    compileOnly 'com.google.code.findbugs:jsr305:3.0.2'
+
+    testImplementation 'org.junit.jupiter:junit-jupiter:5.10.2'
+    testImplementation 'org.mockito:mockito-core:4.11.0'
+    testImplementation 'org.assertj:assertj-core:3.24.2'
+    testImplementation 'net.jqwik:jqwik:1.8.4'
+}
+
+test {
+    useJUnitPlatform {
+        includeEngines 'junit-jupiter', 'jqwik'
+    }
+    testLogging {
+        events 'passed', 'failed', 'skipped'
+        showStandardStreams = false
+    }
+}

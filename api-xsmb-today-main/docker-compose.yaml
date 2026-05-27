@@ -1,0 +1,10 @@
+version: '3'
+services:
+  api-xsmb:
+    image: api-xsmb
+    network_mode: host
+    container_name: api-xsmb
+    restart: always
+    build:
+      context: .
+      dockerfile: Dockerfile

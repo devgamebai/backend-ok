@@ -1,0 +1,50 @@
+{
+  "join_room_interval_time": 10000,
+  "big_win": 100000,
+  "roomList": [
+    {
+      "moneyType": 1,
+      "moneyBet": 1000,
+      "requiredMoney": 1000,
+      "outMoney": 1,
+      "maxUserPerRoom": 500,
+      "commisionRate": 2,
+      "rule": 2,
+      "numberOfInitialRoom": 1,
+      "roomName": "Hoàng Kim Long"
+    },
+    {
+      "moneyType": 1,
+      "moneyBet": 1000,
+      "requiredMoney": 5000,
+      "outMoney": 1,
+      "maxUserPerRoom": 500,
+      "commisionRate": 2,
+      "rule": 2,
+      "numberOfInitialRoom": 1,
+      "roomName": "Hỏa Chu Tước"
+    },
+    {
+      "moneyType": 1,
+      "moneyBet": 2000,
+      "requiredMoney": 10000,
+      "outMoney": 1,
+      "maxUserPerRoom": 500,
+      "commisionRate": 2,
+      "rule": 2,
+      "numberOfInitialRoom": 1,
+      "roomName": "Hải Huyền Vũ"
+    },
+    {
+      "moneyType": 1,
+      "moneyBet": 5000,
+      "requiredMoney": 20000,
+      "outMoney": 1,
+      "maxUserPerRoom": 500,
+      "commisionRate": 2,
+      "rule": 2,
+      "numberOfInitialRoom": 1,
+      "roomName": "Phong Bạch Hổ"
+    }
+  ]
+}

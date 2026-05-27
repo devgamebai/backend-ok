@@ -1,0 +1,34 @@
+<?xml version="1.0"?>
+<hook>
+    <port>29500</port>
+    <games>
+        <game>
+            <path_root>/hook</path_root>
+            <name>Default callback API</name>
+            <whitelist>
+                <ip>127.0.0.1</ip>
+                <ip>192.168.0.102</ip>
+                <ip>localhost</ip>
+                <ip>0:0:0:0:0:0:0:1</ip>
+                <ip>*</ip>
+            </whitelist>
+            <paths>
+                <path>
+                    <pattern>/callback/bank</pattern>
+                    <name>CallbackBankIn</name>
+                    <process>com.vinplay.hook.callback.CallbackBankIn</process>
+                </path>
+                <path>
+                    <pattern>/callback/card</pattern>
+                    <name>CallbackCardIn</name>
+                    <process>com.vinplay.hook.callback.CallbackCardIn</process>
+                </path>
+                <path>
+                    <pattern>/callback/bankOut</pattern>
+                    <name>CallbackBankOut</name>
+                    <process>com.vinplay.hook.callback.CallbackBankOut</process>
+                </path>
+            </paths>
+        </game>
+    </games>
+</hook>

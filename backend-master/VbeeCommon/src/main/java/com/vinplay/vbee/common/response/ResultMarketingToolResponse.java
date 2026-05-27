@@ -1,0 +1,45 @@
+/*
+ * Decompiled with CFR 0.144.
+ */
+package com.vinplay.vbee.common.response;
+
+import com.vinplay.vbee.common.models.MarketingModel;
+import com.vinplay.vbee.common.response.BaseResponseModel;
+import java.util.ArrayList;
+import java.util.List;
+
+public class ResultMarketingToolResponse
+extends BaseResponseModel {
+    private long total;
+    private long totalRecord;
+    private List<MarketingModel> transactions = new ArrayList<MarketingModel>();
+
+    public long getTotal() {
+        return this.total;
+    }
+
+    public void setTotal(long total) {
+        this.total = total;
+    }
+
+    public long getTotalRecord() {
+        return this.totalRecord;
+    }
+
+    public void setTotalRecord(long totalRecord) {
+        this.totalRecord = totalRecord;
+    }
+
+    public List<MarketingModel> getTransactions() {
+        return this.transactions;
+    }
+
+    public void setTransactions(List<MarketingModel> transactions) {
+        this.transactions = transactions;
+    }
+
+    public ResultMarketingToolResponse(boolean success, String errorCode) {
+        super(success, errorCode);
+    }
+}
+

@@ -1,0 +1,391 @@
+# =============================================================================
+# SUNWINKR - BACKEND API SERVICES (Java)
+# =============================================================================
+# VinPlayPortal, VinPlayBackend, Payment, VBee, GameAccess, WSPay
+#
+# Usage:
+#   docker compose -f docker-compose.yml -f docker-compose.database.yml -f docker-compose.backend.yml build
+#   docker compose -f docker-compose.yml -f docker-compose.database.yml -f docker-compose.backend.yml up -d
+#
+# Multi-stage build: Gradle runs inside Docker, no host JDK needed.
+# Just `docker compose build` and all JARs are compiled fresh.
+# =============================================================================
+
+x-java-base: &java-base
+  build:
+    context: ./backend-master
+    dockerfile: Dockerfile
+  env_file: [.env]
+  entrypoint: ["/app/entrypoint.sh"]
+  # SUN-1035: enroll in autoheal. Services without a healthcheck (vbee)
+  # carry the label harmlessly — autoheal ignores them because it
+  # only acts on containers whose state.health.status transitions to
+  # unhealthy, which requires a configured healthcheck.
+  labels:
+    autoheal: "true"
+
+services:
+
+  # ---------------------------------------------------------------------------
+  # VinPlayPortal - Player-facing API (login, register, profile)
+  # ---------------------------------------------------------------------------
+  # Port 8081 (HTTP), 8443 (HTTPS)
+  # Handles: user registration, login, profile updates, social login
+  # ---------------------------------------------------------------------------
+  portal-api:
+    <<: *java-base
+    container_name: sunwinkr-portal-api
+    restart: unless-stopped
+    working_dir: /app
+    command: >
+      java -Xmx512m -Xms256m -Djava.net.preferIPv4Stack=true -Djava.net.preferIPv4Addresses=true
+      -Dservice.name=portal-api
+      -Dlogback.configurationFile=/app/api/VinPlayPortal/config/logback.xml
+      -cp "libs/app/*:libs/runtime/*:libs/api-precompiled/*"
+      com.vinplay.api.server.JettyServer
+    volumes:
+      - ./logs:/app/logs
+    networks:
+      - backend
+      - messaging
+    # Exposed to nginx via backend network, NOT to internet directly
+    # ports:
+    #   - "127.0.0.1:8081:8081"
+    depends_on:
+      mysql:
+        condition: service_healthy
+      mongodb:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+      hazelcast-1:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-sf", "http://localhost:8081/api?c=9"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 60s
+    deploy:
+      resources:
+        limits:
+          memory: 1G
+    logging:
+      driver: json-file
+      options:
+        max-size: "50m"
+        max-file: "5"
+
+  # ---------------------------------------------------------------------------
+  # VinPlayBackend - Admin/Agent API
+  # ---------------------------------------------------------------------------
+  # Port 8082
+  # Handles: admin operations, user management, game config, agent system
+  # ---------------------------------------------------------------------------
+  backend-api:
+    <<: *java-base
+    container_name: sunwinkr-backend-api
+    restart: unless-stopped
+    working_dir: /app
+    # SUN-1243: bumped -Xmx512m -> -Xmx1500m. The 512MB heap was OOM-ing
+    # repeatedly (16x in ~30 min on 2026-05-03) under the combined load of
+    # 16 GSC_SIDE_EFFECT_THREADS, RebateRollupScheduler, GscWagerReconciler,
+    # ConnectionPoolMonitor, AggregatorP99Scheduler, plus the agent
+    # bet-history processor (c=9843) which can pull 5000+ player rows × 7-day
+    # date ranges from Mongo. Symptom: every read endpoint timed out at 30s
+    # because the JVM crashed → restarted → crashed again. Container limit
+    # bumped to 2g via deploy.resources.limits.memory below so the new heap
+    # has headroom for off-heap (JIT, metaspace, direct buffers).
+    # HeapDumpOnOutOfMemoryError emits a /app/logs/backend-api-oom.hprof on
+    # next OOM for postmortem analysis.
+    command: >
+      java -Xmx1500m -Xms512m -Djava.net.preferIPv4Stack=true -Djava.net.preferIPv4Addresses=true
+      -XX:+HeapDumpOnOutOfMemoryError -XX:HeapDumpPath=/app/logs/backend-api-oom.hprof
+      -Dservice.name=backend-api
+      -Dlogback.configurationFile=/app/api/VinPlayBackend/config/logback.xml
+      -cp "libs/app/*:libs/runtime/*:libs/api-precompiled/*"
+      com.vinplay.api.backend.server.VinPlayBackendMain
+    volumes:
+      - ./logs:/app/logs
+    networks:
+      - backend
+      - messaging
+    depends_on:
+      mysql:
+        condition: service_healthy
+      mongodb:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+      hazelcast-1:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-sf", "http://localhost:19082/api_backend?c=1992"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 60s
+    deploy:
+      resources:
+        limits:
+          memory: 2G   # SUN-1243: bumped 1G -> 2G to support 1500m heap + off-heap
+    logging:
+      driver: json-file
+      options:
+        max-size: "50m"
+        max-file: "5"
+
+  # ---------------------------------------------------------------------------
+  # Payment API - Deposit, withdrawal, card top-up processing
+  # ---------------------------------------------------------------------------
+  # Port 28081 (HTTP), 29500 (webhook callback)
+  # DISABLED: source not available, dependencies missing
+  # ---------------------------------------------------------------------------
+  #   # payment-api:
+  #     image: eclipse-temurin:8-jre
+  #     container_name: sunwinkr-payment-api
+  #     restart: unless-stopped
+  #     working_dir: /app
+  #     env_file: [.env]
+  #     entrypoint: ["/app/entrypoint.sh"]
+  #     command: >
+  #       java -Xmx512m -Xms256m -Djava.net.preferIPv4Stack=true -Djava.net.preferIPv4Addresses=true
+  #       -Dservice.name=payment-api
+  #       -Dlogback.configurationFile=/app/api/payment/config/logback.xml
+  #       -cp "libs/app/*:libs/runtime/*:libs/api-precompiled/*"
+  #       com.vinplay.pay.server.JettyServer
+  #     volumes:
+  #       - ./backend-master:/app
+  #       - ./backend-master/api/payment/config:/app/api/payment/config
+  #       - ./logs:/app/logs
+  #     networks:
+  #       - backend
+  #       - database
+  #       - messaging
+  #     depends_on:
+  #       mysql:
+  #         condition: service_healthy
+  #       rabbitmq:
+  #         condition: service_healthy
+  #     healthcheck:
+  #       test: ["CMD", "curl", "-sf", "http://localhost:28081/"]
+  #       interval: 30s
+  #       timeout: 10s
+  #       retries: 5
+  #       start_period: 60s
+  #     deploy:
+  #       resources:
+  #         limits:
+  #           memory: 1G
+  #     logging:
+  #       driver: json-file
+  #       options:
+  #         max-size: "50m"
+  #         max-file: "5"
+
+  # ---------------------------------------------------------------------------
+  # VBee - Internal messaging/event processor
+  # ---------------------------------------------------------------------------
+  # No HTTP port (RabbitMQ consumer/producer only)
+  # Handles: OTP, email, SMS, internal event routing
+  # ---------------------------------------------------------------------------
+  vbee:
+    # Single-instance RMQ consumer + Telegram bot poller.
+    #
+    # History: ran as vbee + vbee-2 to round-robin RMQ consumer threads.
+    # Collapsed to one instance on 2026-04-30 because:
+    #   - Telegram bot is single-instance anyway (long-poll collision on
+    #     vbee-2 → DEPOSIT_BOT_ENABLED=false there → bot fix had to be
+    #     deployed twice with different image tags, drift bugs).
+    #   - Throughput at peak: ~85/sec money-log, ~17/sec slot, well within
+    #     1 JVM with prefetch + the 10-thread-per-queue config in
+    #     api/vbee/config/rabbitmq_config.xml.
+    #   - Bumped Xmx 256→768 + memory limit 512→1024 so a single instance
+    #     has the headroom of two.
+    #
+    # If RMQ ever falls behind:
+    #   1. Bump Xmx (768→1024, then 2g) and `<threads>` per queue first.
+    #   2. Last resort: `docker compose up --scale vbee=2`
+    #      (bot must be guarded by a Hazelcast leader-lock first to avoid
+    #      Telegram 409 collisions — current code uses DEPOSIT_BOT_ENABLED
+    #      env var, NOT a leader lock, so a naive scale=2 will break the bot).
+    <<: *java-base
+    container_name: sunwinkr-vbee
+    restart: unless-stopped
+    working_dir: /app
+    command: >
+      java -Xmx768m -Xms256m -Djava.net.preferIPv4Stack=true -Djava.net.preferIPv4Addresses=true
+      -Dservice.name=vbee
+      -Dlogback.configurationFile=/app/api/vbee/config/logback.xml
+      -cp "libs/app/*:libs/runtime/*:libs/api-precompiled/*"
+      com.vinplay.vbee.main.VBeeMain
+    volumes:
+      - ./logs:/app/logs
+    networks:
+      - backend
+      - messaging
+    depends_on:
+      mysql:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+    deploy:
+      resources:
+        limits:
+          memory: 1024M
+    logging:
+      driver: json-file
+      options:
+        max-size: "50m"
+        max-file: "5"
+
+  # ---------------------------------------------------------------------------
+  # commission-history-drainer (SUN-1112 / CQRS Phase 0)
+  # ---------------------------------------------------------------------------
+  # Drains vinplay.commission_history_outbox (MySQL) into the MongoDB
+  # vinplay.commission_history collection. Phase 0 is an idle shell — flag
+  # off, container heartbeats only. Phase 1 adds the drain logic.
+  # ---------------------------------------------------------------------------
+  history-drainer:
+    <<: *java-base
+    container_name: sunwinkr-history-drainer
+    restart: unless-stopped
+    working_dir: /app
+    environment:
+      DRAINER_ENABLED: "false"            # Phase 0: idle. Phase 1 flips on per-host.
+      DRAINER_HEARTBEAT_SEC: "60"
+    command: >
+      java -Xmx128m -Xms64m -Djava.net.preferIPv4Stack=true -Djava.net.preferIPv4Addresses=true
+      -Dservice.name=history-drainer
+      -Dlogback.configurationFile=/app/api/commission-history-drainer/config/logback.xml
+      -cp "libs/app/*:libs/runtime/*:libs/api-precompiled/*"
+      com.vinplay.drainer.HistoryDrainerMain
+    volumes:
+      - ./logs:/app/logs
+    networks:
+      - backend
+    depends_on:
+      mysql:
+        condition: service_healthy
+    deploy:
+      resources:
+        limits:
+          memory: 256M
+    logging:
+      driver: json-file
+      options:
+        max-size: "50m"
+        max-file: "5"
+
+  # ---------------------------------------------------------------------------
+  # audit-bot (SUN-1141 v2 — Q&A agent)
+  # ---------------------------------------------------------------------------
+  # Rewritten 2026-05-13: replaces the prior periodic snapshot+delta auditor.
+  # Operators ask money-flow questions in the configured Telegram group; the
+  # bot routes the question through OpenRouter (LLM), which calls a fixed set
+  # of read-only DB tools defined in audit-wallet-bot.py and replies in chat.
+  # Continuous monitoring is handled by Grafana (docker-compose.monitoring.yml).
+  # ---------------------------------------------------------------------------
+  audit-bot:
+    build:
+      context: ./audit-bot
+      dockerfile: Dockerfile
+    image: sunwinkr-audit-bot:2.0
+    container_name: sunwinkr-audit-bot
+    restart: unless-stopped
+    environment:
+      MYSQL_HOST: mysql
+      MYSQL_PORT: "3306"
+      MYSQL_USER: ${AUDIT_BOT_MYSQL_USER:-audit_ro}
+      MYSQL_PASSWORD: ${AUDIT_BOT_MYSQL_PASSWORD}
+      MYSQL_DB: vinplay
+      TELEGRAM_AUDIT_BOT_TOKEN: ${TELEGRAM_AUDIT_BOT_TOKEN}
+      TELEGRAM_AUDIT_CHAT_ID: ${TELEGRAM_AUDIT_CHAT_ID}
+      OPENROUTER_API_KEY: ${OPENROUTER_API_KEY}
+      OPENROUTER_MODEL: ${OPENROUTER_MODEL:-anthropic/claude-3.5-sonnet}
+    networks:
+      - backend
+    depends_on:
+      mysql:
+        condition: service_healthy
+    deploy:
+      resources:
+        limits:
+          memory: 256M
+    logging:
+      driver: json-file
+      options:
+        max-size: "50m"
+        max-file: "5"
+    labels:
+      - "autoheal=true"
+
+  # ---------------------------------------------------------------------------
+  # GameAccess - Third-party game provider gateway (EBET, AG, SBO, WM)
+  # ---------------------------------------------------------------------------
+  # DISABLED: Backend2Dx/api/GameAccess/ has no Java source files (config/logs only).
+  # Cannot determine main class or build a JAR without source.
+  # Re-enable once source code is available in Backend2Dx/api/GameAccess/src/
+  # ---------------------------------------------------------------------------
+  # gameaccess:
+  #   image: eclipse-temurin:8-jre
+  #   container_name: sunwinkr-gameaccess
+  #   restart: unless-stopped
+  #   working_dir: /app
+  #   env_file: [.env]
+  #   entrypoint: ["/app/entrypoint.sh"]
+  #   command: >
+  #     java -Xmx256m -Xms128m -Djava.net.preferIPv4Stack=true -Djava.net.preferIPv4Addresses=true
+  #     -cp "api/GameAccess/build/libs/GameAccess-1.0.jar:all-libs/*"
+  #     com.vinplay.api.server.JettyServer
+  #   volumes:
+  #     - ./backend-master:/app
+  #     - ./backend-master/api/GameAccess/config:/app/api/GameAccess/config
+  #     - ./backend-master/api/GameAccess/logs:/app/api/GameAccess/logs
+  #   networks:
+  #     - backend
+  #     - database
+  #     - messaging
+  #   depends_on:
+  #     mysql:
+  #       condition: service_healthy
+  #     rabbitmq:
+  #       condition: service_healthy
+  #   deploy:
+  #     resources:
+  #       limits:
+  #         memory: 512M
+  #   logging:
+  #     driver: json-file
+  #     options:
+  #       max-size: "50m"
+  #       max-file: "5"
+
+  # ---------------------------------------------------------------------------
+  # WSPay - Wallet & exchange service (game currency ↔ VIN transfers)
+  # ---------------------------------------------------------------------------
+  # Port 18081 (HTTP), 8643 (HTTPS)
+  # Handles: money exchange between game wallets and main wallet
+  # ---------------------------------------------------------------------------
+  # WSPay - DISABLED (not running on production)
+  # wspay:
+  #   image: eclipse-temurin:8-jre
+  #   container_name: sunwinkr-wspay
+  #   command: >
+  #     java -Xmx256m -Xms128m -Djava.net.preferIPv4Stack=true -Djava.net.preferIPv4Addresses=true
+  #     -cp "libs/*:api/wspay/libs/*:api/wspay/build/libs/wspay-1.0.jar"
+  #     com.vinplay.pay.server.WSPay
+
+networks:
+  frontend:
+    external: true
+    name: sunkr-network
+  backend:
+    external: true
+    name: sunkr-network
+  database:
+    external: true
+    name: sunkr-network
+  messaging:
+    external: true
+    name: sunkr-messaging

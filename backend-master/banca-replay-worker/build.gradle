@@ -1,0 +1,45 @@
+// SUN-1054 follow-up — BanCa failed-settle replay worker.
+//
+// Drains the `banca:failed_settle` Redis list produced by
+// banca/Core/Libs/UnifiedWallet/MoneyGatewayClient.cs after its 3-retry
+// exhaustion. Re-posts each payload to the Java backend money-gateway
+// HTTP bridge (command 9998 — BanCaSettleProcessor). The same
+// external_ref guarantees server-side idempotency: a replay of an
+// already-applied settle returns success without double-applying.
+//
+// Sidecar service. Tiny footprint. Reuses VbeeCommon for Lettuce
+// Redis access; uses Java 8 HttpURLConnection for the HTTP call so the
+// jar stays as small as the drainer.
+
+plugins {
+    id 'java'
+    id 'application'
+}
+
+group 'backend'
+sourceCompatibility = 1.8
+
+repositories {
+    mavenCentral()
+}
+
+application {
+    mainClassName = 'com.vinplay.bancareplay.BancaReplayWorker'
+}
+
+dependencies {
+    compile project(':VbeeCommon')
+
+    testCompile group: 'junit', name: 'junit', version: '4.12'
+    testCompile group: 'org.mockito', name: 'mockito-core', version: '3.12.4'
+}
+
+// Allow running unit tests for this module despite the root project
+// running `-x test` (no JUnit suites exist in the rest of the tree).
+test {
+    useJUnit()
+    testLogging {
+        events "passed", "failed", "skipped"
+        showStandardStreams = true
+    }
+}

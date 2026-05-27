@@ -1,0 +1,274 @@
+{
+  "id": null,
+  "uid": "awc-latency-001",
+  "title": "AWC seamless wallet \u2014 latency",
+  "tags": [
+    "gsc",
+    "wallet",
+    "seamless"
+  ],
+  "timezone": "Asia/Seoul",
+  "schemaVersion": 39,
+  "version": 1,
+  "refresh": "30s",
+  "time": {
+    "from": "now-1h",
+    "to": "now"
+  },
+  "templating": {
+    "list": [
+      {
+        "name": "endpoint",
+        "type": "custom",
+        "label": "Endpoint",
+        "query": "withdraw, deposit, balance, rollback, pushbet, transfer, cancel",
+        "current": {
+          "selected": false,
+          "text": "All",
+          "value": "$__all"
+        },
+        "options": [],
+        "includeAll": true,
+        "allValue": ".*",
+        "multi": true
+      }
+    ]
+  },
+  "panels": [
+    {
+      "id": 1,
+      "title": "Throughput \u2014 events per minute, by endpoint",
+      "type": "timeseries",
+      "gridPos": {
+        "x": 0,
+        "y": 0,
+        "w": 24,
+        "h": 7
+      },
+      "datasource": {
+        "type": "mysql",
+        "uid": "P_MYSQL_VINPLAY"
+      },
+      "targets": [
+        {
+          "rawSql": "SELECT UNIX_TIMESTAMP(DATE_FORMAT(received_at, '%Y-%m-%d %H:%i:00')) AS time, awc_action AS metric, COUNT(*) AS value FROM vinplay.awc_event_log WHERE $__timeFilter(received_at) AND awc_action REGEXP '$endpoint' GROUP BY 1, 2 ORDER BY 1",
+          "format": "time_series"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "ops",
+          "custom": {
+            "drawStyle": "line",
+            "lineWidth": 2,
+            "fillOpacity": 10
+          }
+        }
+      }
+    },
+    {
+      "id": 2,
+      "title": "p50 latency by endpoint (ms)",
+      "type": "timeseries",
+      "gridPos": {
+        "x": 0,
+        "y": 7,
+        "w": 8,
+        "h": 8
+      },
+      "datasource": {
+        "type": "mysql",
+        "uid": "P_MYSQL_VINPLAY"
+      },
+      "targets": [
+        {
+          "rawSql": "WITH ranked AS (SELECT FROM_UNIXTIME(FLOOR(UNIX_TIMESTAMP(received_at)/60)*60) AS bucket, awc_action, TIMESTAMPDIFF(MICROSECOND, received_at, response_at)/1000 AS ms, ROW_NUMBER() OVER (PARTITION BY FLOOR(UNIX_TIMESTAMP(received_at)/60), awc_action ORDER BY TIMESTAMPDIFF(MICROSECOND, received_at, response_at)) AS rn, COUNT(*) OVER (PARTITION BY FLOOR(UNIX_TIMESTAMP(received_at)/60), awc_action) AS total FROM vinplay.awc_event_log WHERE $__timeFilter(received_at) AND processing_status='COMPLETED' AND response_at IS NOT NULL AND awc_action REGEXP '$endpoint') SELECT UNIX_TIMESTAMP(bucket) AS time, awc_action AS metric, MAX(CASE WHEN rn=CEIL(total*0.50) THEN ms END) AS value FROM ranked GROUP BY 1, 2 ORDER BY 1",
+          "format": "time_series"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "ms",
+          "custom": {
+            "drawStyle": "line",
+            "lineWidth": 2
+          }
+        }
+      }
+    },
+    {
+      "id": 3,
+      "title": "p90 latency by endpoint (ms)",
+      "type": "timeseries",
+      "gridPos": {
+        "x": 8,
+        "y": 7,
+        "w": 8,
+        "h": 8
+      },
+      "datasource": {
+        "type": "mysql",
+        "uid": "P_MYSQL_VINPLAY"
+      },
+      "targets": [
+        {
+          "rawSql": "WITH ranked AS (SELECT FROM_UNIXTIME(FLOOR(UNIX_TIMESTAMP(received_at)/60)*60) AS bucket, awc_action, TIMESTAMPDIFF(MICROSECOND, received_at, response_at)/1000 AS ms, ROW_NUMBER() OVER (PARTITION BY FLOOR(UNIX_TIMESTAMP(received_at)/60), awc_action ORDER BY TIMESTAMPDIFF(MICROSECOND, received_at, response_at)) AS rn, COUNT(*) OVER (PARTITION BY FLOOR(UNIX_TIMESTAMP(received_at)/60), awc_action) AS total FROM vinplay.awc_event_log WHERE $__timeFilter(received_at) AND processing_status='COMPLETED' AND response_at IS NOT NULL AND awc_action REGEXP '$endpoint') SELECT UNIX_TIMESTAMP(bucket) AS time, awc_action AS metric, MAX(CASE WHEN rn=CEIL(total*0.90) THEN ms END) AS value FROM ranked GROUP BY 1, 2 ORDER BY 1",
+          "format": "time_series"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "ms",
+          "custom": {
+            "drawStyle": "line",
+            "lineWidth": 2
+          }
+        }
+      }
+    },
+    {
+      "id": 4,
+      "title": "p99 latency by endpoint (ms)  \u2190 page when >100ms sustained",
+      "type": "timeseries",
+      "gridPos": {
+        "x": 16,
+        "y": 7,
+        "w": 8,
+        "h": 8
+      },
+      "datasource": {
+        "type": "mysql",
+        "uid": "P_MYSQL_VINPLAY"
+      },
+      "targets": [
+        {
+          "rawSql": "WITH ranked AS (SELECT FROM_UNIXTIME(FLOOR(UNIX_TIMESTAMP(received_at)/60)*60) AS bucket, awc_action, TIMESTAMPDIFF(MICROSECOND, received_at, response_at)/1000 AS ms, ROW_NUMBER() OVER (PARTITION BY FLOOR(UNIX_TIMESTAMP(received_at)/60), awc_action ORDER BY TIMESTAMPDIFF(MICROSECOND, received_at, response_at)) AS rn, COUNT(*) OVER (PARTITION BY FLOOR(UNIX_TIMESTAMP(received_at)/60), awc_action) AS total FROM vinplay.awc_event_log WHERE $__timeFilter(received_at) AND processing_status='COMPLETED' AND response_at IS NOT NULL AND awc_action REGEXP '$endpoint') SELECT UNIX_TIMESTAMP(bucket) AS time, awc_action AS metric, MAX(CASE WHEN rn=CEIL(total*0.99) THEN ms END) AS value FROM ranked GROUP BY 1, 2 ORDER BY 1",
+          "format": "time_series"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "ms",
+          "custom": {
+            "drawStyle": "line",
+            "lineWidth": 2
+          },
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "yellow",
+                "value": 100
+              },
+              {
+                "color": "red",
+                "value": 1000
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "id": 5,
+      "title": "Max latency by endpoint \u2014 outliers (ms)",
+      "type": "timeseries",
+      "gridPos": {
+        "x": 0,
+        "y": 15,
+        "w": 12,
+        "h": 8
+      },
+      "datasource": {
+        "type": "mysql",
+        "uid": "P_MYSQL_VINPLAY"
+      },
+      "targets": [
+        {
+          "rawSql": "SELECT UNIX_TIMESTAMP(DATE_FORMAT(received_at, '%Y-%m-%d %H:%i:00')) AS time, awc_action AS metric, MAX(TIMESTAMPDIFF(MICROSECOND, received_at, response_at)/1000) AS value FROM vinplay.awc_event_log WHERE $__timeFilter(received_at) AND processing_status='COMPLETED' AND response_at IS NOT NULL AND awc_action REGEXP '$endpoint' GROUP BY 1, 2 ORDER BY 1",
+          "format": "time_series"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "ms"
+        }
+      }
+    },
+    {
+      "id": 6,
+      "title": "Failed / Received-stuck events",
+      "type": "timeseries",
+      "gridPos": {
+        "x": 12,
+        "y": 15,
+        "w": 12,
+        "h": 8
+      },
+      "datasource": {
+        "type": "mysql",
+        "uid": "P_MYSQL_VINPLAY"
+      },
+      "targets": [
+        {
+          "rawSql": "SELECT UNIX_TIMESTAMP(DATE_FORMAT(received_at, '%Y-%m-%d %H:%i:00')) AS time, CONCAT(awc_action, '/', processing_status) AS metric, COUNT(*) AS value FROM vinplay.awc_event_log WHERE $__timeFilter(received_at) AND processing_status IN ('FAILED', 'RECEIVED') AND awc_action REGEXP '$endpoint' GROUP BY 1, 2 ORDER BY 1",
+          "format": "time_series"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "ops",
+          "custom": {
+            "drawStyle": "bars"
+          }
+        }
+      }
+    },
+    {
+      "id": 7,
+      "title": "Latency bucket distribution (last hour)",
+      "type": "barchart",
+      "gridPos": {
+        "x": 0,
+        "y": 23,
+        "w": 24,
+        "h": 7
+      },
+      "datasource": {
+        "type": "mysql",
+        "uid": "P_MYSQL_VINPLAY"
+      },
+      "targets": [
+        {
+          "rawSql": "SELECT awc_action AS metric, SUM(CASE WHEN ms < 50 THEN 1 ELSE 0 END) AS `<50ms`, SUM(CASE WHEN ms BETWEEN 50 AND 99 THEN 1 ELSE 0 END) AS `50-100ms`, SUM(CASE WHEN ms BETWEEN 100 AND 499 THEN 1 ELSE 0 END) AS `100-500ms`, SUM(CASE WHEN ms BETWEEN 500 AND 999 THEN 1 ELSE 0 END) AS `500ms-1s`, SUM(CASE WHEN ms BETWEEN 1000 AND 2999 THEN 1 ELSE 0 END) AS `1-3s`, SUM(CASE WHEN ms BETWEEN 3000 AND 9999 THEN 1 ELSE 0 END) AS `3-10s`, SUM(CASE WHEN ms >= 10000 THEN 1 ELSE 0 END) AS `>10s_DANGER` FROM (SELECT awc_action, TIMESTAMPDIFF(MICROSECOND, received_at, response_at)/1000 AS ms FROM vinplay.awc_event_log WHERE $__timeFilter(received_at) AND processing_status='COMPLETED' AND awc_action REGEXP '$endpoint') t GROUP BY awc_action",
+          "format": "table"
+        }
+      ]
+    },
+    {
+      "id": 8,
+      "title": "Worst-N events in window (debugging panel)",
+      "type": "table",
+      "gridPos": {
+        "x": 0,
+        "y": 30,
+        "w": 24,
+        "h": 8
+      },
+      "datasource": {
+        "type": "mysql",
+        "uid": "P_MYSQL_VINPLAY"
+      },
+      "targets": [
+        {
+          "rawSql": "SELECT received_at AS `Time (VN)`, awc_action AS `Endpoint`, processing_status AS `Status`, member_account AS `Player`, product_code AS `Product`, gsc_wager_code AS `Wager`, ROUND(TIMESTAMPDIFF(MICROSECOND, received_at, response_at)/1000, 1) AS `Latency (ms)`, last_error AS `Error` FROM vinplay.awc_event_log WHERE $__timeFilter(received_at) AND awc_action REGEXP '$endpoint' ORDER BY (response_at - received_at) DESC LIMIT 50",
+          "format": "table"
+        }
+      ]
+    }
+  ]
+}

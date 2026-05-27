@@ -1,0 +1,35 @@
+plugins {
+    id 'java'
+}
+
+group 'backend'
+sourceCompatibility = 1.8
+
+// No exclusions — all source should compile
+//buildDir = "../../../dist/build"
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    testCompile group: 'junit', name: 'junit', version: '4.12'
+    compile project(':VinPlayUserCore')
+    compile project(':VinPlayDAL')
+    compile project(':VinPlayCardLib')
+    compile project(':BitzeroMini')
+    compile project(':VbeeCommon')
+}
+task simulate(type: JavaExec) {
+    main = 'game.modules.slot.utils.SlotSimulator'
+    classpath = sourceSets.main.runtimeClasspath
+    
+    if (project.hasProperty('pct')) {
+        systemProperty 'pct', project.getProperty('pct')
+    }
+    if (project.hasProperty('spins')) {
+        systemProperty 'spins', project.getProperty('spins')
+    }
+    if (project.hasProperty('fund')) {
+        systemProperty 'fund', project.getProperty('fund')
+    }
+}

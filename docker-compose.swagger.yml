@@ -1,0 +1,46 @@
+# =============================================================================
+# SWAGGER UI proxy — optional, run on demand for local Swagger Try-it-out.
+# =============================================================================
+# Use:
+#   docker compose -f docker-compose.swagger.yml up -d
+#   open http://localhost:8087/swagger/
+#   docker compose -f docker-compose.swagger.yml down
+#
+# Why a dedicated service:
+#   • backend-api and portal-api have no host port mapping — only reachable
+#     from inside the sunwinkr-backend docker network.
+#   • The OpenAPI spec uses synthetic /c/{id} paths (OpenAPI 3.0 forbids `?`
+#     in path templates), so Swagger UI's "Try it out" needs an HTTP rewrite
+#     before forwarding to the Java APIs.
+#
+# This container does both: serves the static Swagger UI assets and rewrites
+# /api_backend/c/N → /api_backend?c=N (and the portal equivalent) before
+# proxying to backend-api:19082 / portal-api:8081 inside the docker network.
+# =============================================================================
+
+services:
+  swagger-nginx:
+    image: nginx:1.25-alpine
+    container_name: sunwinkr-swagger-nginx
+    restart: unless-stopped
+    ports:
+      - "18080:80"
+    volumes:
+      - ./docs/openapi:/var/www/swagger:ro
+      - ./nginx/conf.d/swagger.conf:/etc/nginx/conf.d/default.conf:ro
+    # NOTE: `default` is REQUIRED — Docker Desktop's host port-forwarding is
+    # tied to the default bridge network. With only `backend` (external),
+    # the port mapping is silently dropped.
+    networks:
+      - default
+      - backend
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO- -T 3 http://localhost/swagger/openapi.json -S 2>&1 | grep -q 'HTTP/1.[01] 200'"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+
+networks:
+  backend:
+    external: true
+    name: sunkr-network

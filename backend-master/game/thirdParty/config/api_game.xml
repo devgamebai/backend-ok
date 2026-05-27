@@ -1,0 +1,37 @@
+<?xml version="1.0"?>
+<server>
+    <port>9590</port>
+    <type>1</type>
+    <commands>
+        <command>
+            <id>10</id>
+            <name>GSC List Game</name>
+            <path>game.third.processors.gscSeamless.ListGameProcessor</path>
+        </command>
+        <command>
+            <id>11</id>
+            <name>GSC Launch Game</name>
+            <path>game.third.processors.gscSeamless.LaunchGameProcessor</path>
+        </command>
+        <command>
+            <id>12</id>
+            <name>GSC Launch Supper Lobby</name>
+            <path>game.third.processors.gscSeamless.LaunchLobbyProcessor</path>
+        </command>
+        <command>
+            <id>13</id>
+            <name>GSC Launch Supper Lobby - SPORT BOOK</name>
+            <path>game.third.processors.gscSeamless.LaunchLobbySportBookProcessor</path>
+        </command>
+        <command>
+            <id>14</id>
+            <name>GSC List Product</name>
+            <path>game.third.processors.gscSeamless.ListProductProcessor</path>
+        </command>
+        <command>
+            <id>20</id>
+            <name>Game568win Launch Game</name>
+            <path>game.third.processors.game568win.LaunchGameProcessor</path>
+        </command>
+    </commands>
+</server>

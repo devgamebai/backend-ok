@@ -1,0 +1,174 @@
+# =============================================================================
+# OFFLINE-GAMES TIER — Spring Boot 2.7.18 REST + STOMP services
+# =============================================================================
+# Internal games (Lô Đề, Tài Xỉu, Xí Ngầu) that run as Spring Boot REST
+# services with their own engine, analogous to the GSC/EVO third-party adapter
+# pattern but in-process. These coexist with legacy BitZero game-minigame;
+# they expose disjoint network paths on the same backing databases.
+#
+# Compose project: sunwinkr-backend
+#
+# Services:
+#   lottery-spring-api  — XSMB Lô Đề REST + STOMP /ws/lottery (port 9292)
+#   minigame-api        — TaiXiu + Sicbo REST + STOMP /ws/minigame (port 9290)
+#
+# Provider contract: see SUN-1339 (commit history) for upstream API shape.
+#
+# NOTE on lottery service name: "lottery-spring-api" (not "lottery-api") —
+# that name is already taken by the legacy Node XSMB scraper in
+# docker-compose.lottery.yml which still feeds game-minigame's LotteryModule
+# on port 49111. Both run side-by-side.
+#
+# TZ POLICY: containers inherit TZ from .env (Asia/Seoul). Lottery code pins
+# Asia/Ho_Chi_Minh at the Java level only — do NOT add TZ overrides here.
+#
+# Usage (single service):
+#   docker compose -p sunwinkr-backend -f docker-compose.yml \
+#     -f docker-compose.database.yml -f docker-compose.offline-games.yml \
+#     up -d lottery-spring-api
+#   docker compose -p sunwinkr-backend -f docker-compose.yml \
+#     -f docker-compose.database.yml -f docker-compose.offline-games.yml \
+#     up -d minigame-api
+# =============================================================================
+
+services:
+
+  lottery-spring-api:
+    image: sunwinkr-lottery-spring-api
+    container_name: sunwinkr-lottery-spring-api
+    build:
+      context: ./backend-master
+      dockerfile: ./game/lottery-api/Dockerfile
+    restart: unless-stopped
+    stop_grace_period: 30s
+    env_file: [.env]
+    environment:
+      LOTTERY_API_ENABLED: ${LOTTERY_API_ENABLED:-1}
+      LOTTERY_ENGINE_ENABLED: ${LOTTERY_ENGINE_ENABLED:-0}
+      LOTTERY_ENGINE_GHOST_MODE: ${LOTTERY_ENGINE_GHOST_MODE:-0}
+      LOTTERY_SHADOW_DIFF_ENABLED: ${LOTTERY_SHADOW_DIFF_ENABLED:-0}
+      LOTTERY_MODE5_LEGACY_3OF4: ${LOTTERY_MODE5_LEGACY_3OF4:-0}
+      LOTTERY_SCRAPE_URL: ${LOTTERY_SCRAPE_URL:-https://az24.vn/xsmb-sxmb-xo-so-mien-bac.html}
+      MYSQL_HOST: mysql
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+      MONGO_HOST: mongodb
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_USER}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_PASSWORD}
+      HAZELCAST_HOST: hazelcast-1
+      HAZELCAST_GROUP: ${HAZELCAST_GROUP}
+      HAZELCAST_PASSWORD: ${HAZELCAST_PASSWORD}
+      RABBITMQ_HOST: rabbitmq
+      RABBITMQ_USER: ${RABBITMQ_USER}
+      RABBITMQ_PASSWORD: ${RABBITMQ_PASSWORD}
+    depends_on:
+      mysql:
+        condition: service_healthy
+      mongodb:
+        condition: service_healthy
+      hazelcast-1:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+    ports:
+      - "127.0.0.1:9292:9292"
+      - "127.0.0.1:9293:9293"
+    networks:
+      - frontend
+      - gameservers
+      - database
+      - messaging
+    volumes:
+      - ./logs/lottery-spring-api:/app/logs
+    healthcheck:
+      test: ["CMD-SHELL", "curl -fsS http://localhost:9293/actuator/health > /dev/null || curl -fsS http://localhost:9292/actuator/health > /dev/null || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 60s
+    deploy:
+      resources:
+        limits:
+          memory: 768M
+    logging:
+      driver: json-file
+      options:
+        max-size: "50m"
+        max-file: "5"
+
+  minigame-api:
+    image: sunwinkr-minigame-api
+    container_name: sunwinkr-minigame-api
+    build:
+      context: ./backend-master
+      dockerfile: ./game/minigame-api/Dockerfile
+    restart: unless-stopped
+    stop_grace_period: 30s
+    env_file: [.env]
+    environment:
+      MINIGAME_API_ENABLED: ${MINIGAME_API_ENABLED:-1}
+      MINIGAME_API_PUSH_ENABLED: ${MINIGAME_API_PUSH_ENABLED:-0}
+      MINIGAME_API_BRIDGE_ENABLED: ${MINIGAME_API_BRIDGE_ENABLED:-0}
+      MINIGAME_ENGINE_ENABLED: ${MINIGAME_ENGINE_ENABLED:-0}
+      MINIGAME_ENGINE_GHOST_MODE: ${MINIGAME_ENGINE_GHOST_MODE:-0}
+      MYSQL_HOST: mysql
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+      MONGO_HOST: mongodb
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_USER}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_PASSWORD}
+      HAZELCAST_HOST: hazelcast-1
+      HAZELCAST_GROUP: ${HAZELCAST_GROUP}
+      HAZELCAST_PASSWORD: ${HAZELCAST_PASSWORD}
+      RABBITMQ_HOST: rabbitmq
+      RABBITMQ_USER: ${RABBITMQ_USER}
+      RABBITMQ_PASSWORD: ${RABBITMQ_PASSWORD}
+    depends_on:
+      mysql:
+        condition: service_healthy
+      mongodb:
+        condition: service_healthy
+      hazelcast-1:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+    ports:
+      # Bind to 127.0.0.1 — public access is via nginx upstream only.
+      - "127.0.0.1:9290:9290"
+      - "127.0.0.1:9291:9291"
+    networks:
+      - frontend
+      - gameservers
+      - database
+      - messaging
+    volumes:
+      - ./logs/minigame-api:/app/logs
+    healthcheck:
+      test: ["CMD-SHELL", "curl -fsS http://localhost:9291/actuator/health > /dev/null || curl -fsS http://localhost:9290/actuator/health > /dev/null || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 60s
+    deploy:
+      resources:
+        limits:
+          memory: 768M
+    logging:
+      driver: json-file
+      options:
+        max-size: "50m"
+        max-file: "5"
+
+networks:
+  frontend:
+    external: true
+    name: sunkr-network
+  gameservers:
+    external: true
+    name: sunkr-games
+  database:
+    external: true
+    name: sunkr-network
+  messaging:
+    external: true
+    name: sunkr-messaging

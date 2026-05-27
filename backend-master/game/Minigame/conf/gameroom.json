@@ -1,0 +1,52 @@
+{
+  "roomList":[
+    {
+        "moneyType":1,
+        "moneyBet":100,
+        "requiredMoney":10000,
+        "outMoney":1,
+        "maxUserPerRoom":2,
+        "commisionRate":2,
+        "rule":0,
+        "numberOfInitialRoom":1,
+        "jackpotRate":0,
+        "roomName":"Bàn thường"
+    },
+    {
+        "moneyType":1,
+        "moneyBet":100,
+        "requiredMoney":10000,
+        "outMoney":1,
+        "maxUserPerRoom":5,
+        "commisionRate":2,
+        "rule":0,
+        "numberOfInitialRoom":1,
+        "jackpotRate":0,
+        "roomName":"Bàn thường"
+    },
+    {
+        "moneyType":2,
+        "moneyBet":100,
+        "requiredMoney":10000,
+        "outMoney":1,
+        "maxUserPerRoom":2,
+        "commisionRate":2,
+        "rule":0,
+        "numberOfInitialRoom":1,
+        "jackpotRate":0,
+        "roomName":"Bàn thường"
+    },
+    {
+        "moneyType":2,
+        "moneyBet":100,
+        "requiredMoney":10000,
+        "outMoney":1,
+        "maxUserPerRoom":5,
+        "commisionRate":2,
+        "rule":0,
+        "numberOfInitialRoom":1,
+        "jackpotRate":0,
+        "roomName":"Bàn thường"
+    }
+  ]
+}

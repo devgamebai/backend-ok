@@ -1,0 +1,226 @@
+{
+  "join_room_interval_time":1,
+  "big_win":100000,
+  "roomList":[ 
+    {
+        "moneyType":0,
+        "moneyBet":1000,
+        "requiredMoney":20,
+        "outMoney":5,
+        "maxUserPerRoom":8,
+        "commisionRate":5,
+        "rule":0,
+		"numberOfInitialRoom":5, 
+		"roomName": "San Bang Tat Ca"
+    },
+    {
+        "moneyType":0,
+        "moneyBet":3000,
+        "requiredMoney":20,
+        "outMoney":5,
+        "maxUserPerRoom":8,
+        "commisionRate":5,
+        "rule":0,
+		"numberOfInitialRoom":5, 
+		"roomName": "San Bang Tat Ca"
+    },
+    {
+        "moneyType":0,
+        "moneyBet":5000,
+        "requiredMoney":20,
+        "outMoney":5,
+        "maxUserPerRoom":8,
+        "commisionRate":5,
+        "rule":0,
+		"numberOfInitialRoom":5, 
+		"roomName": "San Bang Tat Ca"
+    },
+    {
+        "moneyType":0,
+        "moneyBet":10000,
+        "requiredMoney":20,
+        "outMoney":2,
+        "maxUserPerRoom":8,
+        "commisionRate":5,
+        "rule":0,
+		"numberOfInitialRoom":5, 
+		"roomName": "San Bang Tat Ca"
+    },
+    {
+        "moneyType":0,
+        "moneyBet":20000,
+        "requiredMoney":20,
+        "outMoney":5,
+        "maxUserPerRoom":8,
+        "commisionRate":5,
+        "rule":0,
+		"numberOfInitialRoom":5, 
+		"roomName": "San Bang Tat Ca"
+    },
+    {
+        "moneyType":0,
+        "moneyBet":50000,
+        "requiredMoney":20,
+        "outMoney":5,
+        "maxUserPerRoom":8,
+        "commisionRate":5,
+        "rule":0,
+		"numberOfInitialRoom":5, 
+		"roomName": "San Bang Tat Ca"
+    },
+    {
+        "moneyType":0,
+        "moneyBet":100000,
+        "requiredMoney":20,
+        "outMoney":5,
+        "maxUserPerRoom":8,
+        "commisionRate":5,
+        "rule":0,
+		"numberOfInitialRoom":5, 
+		"roomName": "San Bang Tat Ca"
+    },
+    {
+        "moneyType":0,
+        "moneyBet":200000,
+        "requiredMoney":20,
+        "outMoney":5,
+        "maxUserPerRoom":8,
+        "commisionRate":5,
+        "rule":0,
+		"numberOfInitialRoom":5, 
+		"roomName": "San Bang Tat Ca"
+    },
+    {
+        "moneyType":0,
+        "moneyBet":500000,
+        "requiredMoney":20,
+        "outMoney":5,
+        "maxUserPerRoom":8,
+        "commisionRate":5,
+        "rule":0,
+		"numberOfInitialRoom":5, 
+		"roomName": "San Bang Tat Ca"
+    },
+    {
+        "moneyType":0,
+        "moneyBet":1000000,
+        "requiredMoney":20,
+        "outMoney":5,
+        "maxUserPerRoom":8,
+        "commisionRate":5,
+        "rule":0,
+		"numberOfInitialRoom":5, 
+		"roomName": "San Bang Tat Ca"
+    },    
+    {
+        "moneyType":1,
+        "moneyBet":200000,
+        "requiredMoney":20,
+        "outMoney":5,
+        "maxUserPerRoom":8,
+        "commisionRate":2,
+        "rule":0,
+		"numberOfInitialRoom":5, 
+		"roomName": "San Bang Tat Ca"
+    },
+    {
+        "moneyType":1,
+        "moneyBet":100000,
+        "requiredMoney":20,
+        "outMoney":5,
+        "maxUserPerRoom":8,
+        "commisionRate":2,
+        "rule":0,
+		"numberOfInitialRoom":5, 
+		"roomName": "San Bang Tat Ca"
+    },
+    {
+        "moneyType":1,
+        "moneyBet":50000,
+        "requiredMoney":20,
+        "outMoney":5,
+        "maxUserPerRoom":8,
+        "commisionRate":2,
+        "rule":0,
+		"numberOfInitialRoom":5, 
+		"roomName": "San Bang Tat Ca"
+    },
+    {
+        "moneyType":1,
+        "moneyBet":20000,
+        "requiredMoney":20,
+        "outMoney":5,
+        "maxUserPerRoom":8,
+        "commisionRate":2,
+        "rule":0,
+		"numberOfInitialRoom":5, 
+		"roomName": "San Bang Tat Ca"
+    },
+    {
+        "moneyType":1,
+        "moneyBet":10000,
+        "requiredMoney":20,
+        "outMoney":5,
+        "maxUserPerRoom":8,
+        "commisionRate":2,
+        "rule":0,
+		"numberOfInitialRoom":5, 
+		"roomName": "San Bang Tat Ca"
+    },
+    {
+        "moneyType":1,
+        "moneyBet":5000,
+        "requiredMoney":20,
+        "outMoney":5,
+        "maxUserPerRoom":8,
+        "commisionRate":2,
+        "rule":0,
+		"numberOfInitialRoom":5, 
+		"roomName": "San Bang Tat Ca"
+    },
+    {
+        "moneyType":1,
+        "moneyBet":2000,
+        "requiredMoney":20,
+        "outMoney":5,
+        "maxUserPerRoom":8,
+        "commisionRate":2,
+        "rule":0,
+		"numberOfInitialRoom":5, 
+		"roomName": "San Bang Tat Ca"
+    },
+    {
+        "moneyType":1,
+        "moneyBet":1000,
+        "requiredMoney":20,
+        "outMoney":5,
+        "maxUserPerRoom":8,
+        "commisionRate":2,
+        "rule":0,
+		"numberOfInitialRoom":5, 
+		"roomName": "San Bang Tat Ca"
+    },
+    {
+        "moneyType":1,
+        "moneyBet":500,
+        "requiredMoney":20,
+        "outMoney":5,
+        "maxUserPerRoom":8,
+        "commisionRate":2,
+        "rule":0,
+		"numberOfInitialRoom":5, 
+		"roomName": "San Bang Tat Ca"
+    },
+    {
+        "moneyType":1,
+        "moneyBet":100,
+        "requiredMoney":20,
+        "outMoney":5,
+        "maxUserPerRoom":8,
+        "commisionRate":2,
+        "rule":0,
+		"numberOfInitialRoom":5, 
+		"roomName": "San Bang Tat Ca"
+    }
+  ]
+}

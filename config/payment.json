@@ -1,0 +1,479 @@
+[
+  {
+    "name": "manualbank",
+    "config": {
+      "requestAPI": "",
+      "statusAPI": "",
+      "merchantCode": "",
+      "merchantKey": "",
+      "currencyCode": "VND",
+      "returnUrl": "",
+      "notifyUrl": "",
+      "payTypes": [
+        {
+          "key": "1",
+          "name": "bank_recharge",
+          "status": "1"
+        },
+        {
+          "key": "4",
+          "name": "momo_recharge",
+          "status": "1"
+        },
+        {
+          "key": "5",
+          "name": "zalo_recharge",
+          "status": "1"
+        }
+      ],
+      "banks": [
+        {
+          "key": "VCB",
+          "imageUrl": "https://cdn.yo789.club/1.png",
+          "name": "Vietcombank",
+          "status": "1",
+          "isWithdraw": 0
+        },
+        {
+          "key": "TCB",
+          "imageUrl": "https://cdn.yo789.club/10.png",
+          "name": "Techcombank",
+          "status": "1",
+          "isWithdraw": 0
+        },
+        {
+          "key": "BIDV",
+          "imageUrl": "https://cdn.yo789.club/9.png",
+          "name": "BIDV",
+          "status": "1",
+          "isWithdraw": 1
+        },
+        {
+          "key": "DAB",
+          "imageUrl": "https://cdn.yo789.club/2.png",
+          "name": "DongA Bank",
+          "status": "1",
+          "isWithdraw": 1
+        },
+        {
+          "key": "ICB",
+          "imageUrl": "https://cdn.yo789.club/3.png",
+          "name": "VietinBank",
+          "status": "1",
+          "isWithdraw": 1
+        },
+        {
+          "key": "STB",
+          "imageUrl": "https://cdn.yo789.club/4.png",
+          "name": "Sacombank",
+          "status": "1",
+          "isWithdraw": 1
+        },
+        {
+          "key": "ACB",
+          "imageUrl": "https://cdn.yo789.club/8.png",
+          "name": "ACB",
+          "status": "1",
+          "isWithdraw": 1
+        },
+        {
+          "key": "EXB",
+          "imageUrl": "https://cdn.yo789.club/7.png",
+          "name": "Eximbank",
+          "status": "1",
+          "isWithdraw": 1
+        },
+        {
+          "key": "VIB",
+          "imageUrl": "https://cdn.yo789.club/6.png",
+          "name": "VIB Bank",
+          "status": "1",
+          "isWithdraw": 1
+        },
+        {
+          "key": "MB",
+          "imageUrl": "https://cdn.yo789.club/5.png",
+          "name": "Mbbank",
+          "status": "1",
+          "isWithdraw": 1
+        },
+        {
+          "key": "TPB",
+          "imageUrl": "https://cdn.yo789.club/13.png",
+          "name": "TienPhong Bank",
+          "status": "1",
+          "isWithdraw": 1
+        },
+        {
+          "key": "MSB",
+          "imageUrl": "https://cdn.yo789.club/12.png",
+          "name": "MariTimeBank",
+          "status": "1",
+          "isWithdraw": 1
+        },
+        {
+          "key": "HDB",
+          "imageUrl": "https://cdn.yo789.club/11.png",
+          "name": "HD Bank",
+          "status": "1",
+          "isWithdraw": 1
+        }
+      ],
+      "minMoney": 20000,
+      "status": "1"
+    }
+  },
+  {
+    "name": "napthe",
+    "config": {
+      "requestAPI": "",
+      "statusAPI": "",
+      "merchantCode": "",
+      "merchantKey": "",
+      "currencyCode": "VND",
+      "returnUrl": "",
+      "notifyUrl": "",
+      "payTypes": [
+        {
+          "key": "1",
+          "name": "bank_recharge",
+          "status": "1"
+        },
+        {
+          "key": "4",
+          "name": "momo_recharge",
+          "status": "1"
+        },
+        {
+          "key": "5",
+          "name": "zalo_recharge",
+          "status": "1"
+        }
+      ],
+      "banks": [
+        {
+          "key": "VCB",
+          "imageUrl": "https://cdn.yo789.club/1.png",
+          "name": "Vietcombank",
+          "status": "1",
+          "isWithdraw": 0
+        },
+        {
+          "key": "TCB",
+          "imageUrl": "https://cdn.yo789.club/10.png",
+          "name": "Techcombank",
+          "status": "1",
+          "isWithdraw": 0
+        },
+        {
+          "key": "BIDV",
+          "imageUrl": "https://cdn.yo789.club/9.png",
+          "name": "BIDV",
+          "status": "1",
+          "isWithdraw": 1
+        },
+        {
+          "key": "DAB",
+          "imageUrl": "https://cdn.yo789.club/2.png",
+          "name": "DongA Bank",
+          "status": "1",
+          "isWithdraw": 1
+        },
+        {
+          "key": "ICB",
+          "imageUrl": "https://cdn.yo789.club/3.png",
+          "name": "VietinBank",
+          "status": "1",
+          "isWithdraw": 1
+        },
+        {
+          "key": "STB",
+          "imageUrl": "https://cdn.yo789.club/4.png",
+          "name": "Sacombank",
+          "status": "1",
+          "isWithdraw": 1
+        },
+        {
+          "key": "ACB",
+          "imageUrl": "https://cdn.yo789.club/8.png",
+          "name": "ACB",
+          "status": "1",
+          "isWithdraw": 1
+        },
+        {
+          "key": "EXB",
+          "imageUrl": "https://cdn.yo789.club/7.png",
+          "name": "Eximbank",
+          "status": "1",
+          "isWithdraw": 1
+        },
+        {
+          "key": "VIB",
+          "imageUrl": "https://cdn.yo789.club/6.png",
+          "name": "VIB Bank",
+          "status": "1",
+          "isWithdraw": 1
+        },
+        {
+          "key": "MB",
+          "imageUrl": "https://cdn.yo789.club/5.png",
+          "name": "Mbbank",
+          "status": "1",
+          "isWithdraw": 1
+        },
+        {
+          "key": "TPB",
+          "imageUrl": "https://cdn.yo789.club/13.png",
+          "name": "TienPhong Bank",
+          "status": "1",
+          "isWithdraw": 1
+        },
+        {
+          "key": "MSB",
+          "imageUrl": "https://cdn.yo789.club/12.png",
+          "name": "MariTimeBank",
+          "status": "1",
+          "isWithdraw": 1
+        },
+        {
+          "key": "HDB",
+          "imageUrl": "https://cdn.yo789.club/11.png",
+          "name": "HD Bank",
+          "status": "1",
+          "isWithdraw": 1
+        }
+      ],
+      "minMoney": 20000,
+      "status": "1"
+    }
+  },
+  {
+    "name": "clickpay",
+    "config": {
+      "requestAPI": "https://1clickpay.co/api/v2/payment/request",
+      "statusAPI": "https://1clickpay.co/api/v2/payment/query",
+      "merchantCode": "C00278",
+      "merchantKey": "y$10$S6KQcS.BRuz",
+      "currencyCode": "VND",
+      "returnUrl": "https://play.yo789.club",
+      "notifyUrl": "https://iwspay.yo789.club/oneclick/notify",
+      "payTypes": [
+        {
+          "key": "907",
+          "name": "quickPay",
+          "status": "1"
+        },
+        {
+          "key": "908",
+          "name": "banking",
+          "status": "0"
+        }
+      ],
+      "banks": [
+        {
+          "key": "VCB",
+          "imageUrl": "https://cdn.yo789.club/1.png",
+          "name": "Vietcombank",
+          "status": "0",
+          "isWithdraw": 1
+        }
+      ],
+      "minMoney": 10000,
+      "status": "0"
+    }
+  },
+  {
+    "name": "bank",
+    "config": {
+      "requestAPI": "https://1clickpay.co/api/v2/payment/request",
+      "statusAPI": "https://1clickpay.co/api/v2/payment/query",
+      "merchantCode": "C00278",
+      "merchantKey": "y$10$S6KQcS.BRuz",
+      "currencyCode": "VND",
+      "returnUrl": "https://play.yo789.club",
+      "notifyUrl": "https://iwspay.yo789.club/oneclick/notify",
+      "payTypes": [
+        {
+          "key": "907",
+          "name": "quickPay",
+          "status": "1"
+        },
+        {
+          "key": "908",
+          "name": "banking",
+          "status": "0"
+        }
+      ],
+      "banks": [
+        {
+          "key": "VCB",
+          "imageUrl": "https://cdn.yo789.club/1.png",
+          "name": "Vietcombank",
+          "status": "0",
+          "isWithdraw": 1
+        }
+      ],
+      "minMoney": 10000,
+      "status": "1"
+    }
+  },
+  {
+    "name": "gift",
+    "config": {
+      "requestAPI": "https://1clickpay.co/api/v2/payment/request",
+      "statusAPI": "https://1clickpay.co/api/v2/payment/query",
+      "merchantCode": "C00278",
+      "merchantKey": "y$10$S6KQcS.BRuz",
+      "currencyCode": "VND",
+      "returnUrl": "https://play.yo789.club",
+      "notifyUrl": "https://iwspay.yo789.club/oneclick/notify",
+      "payTypes": [
+        {
+          "key": "907",
+          "name": "quickPay",
+          "status": "1"
+        },
+        {
+          "key": "908",
+          "name": "banking",
+          "status": "0"
+        }
+      ],
+      "banks": [
+        {
+          "key": "VCB",
+          "imageUrl": "https://cdn.yo789.club/1.png",
+          "name": "Vietcombank",
+          "status": "0",
+          "isWithdraw": 1
+        }
+      ],
+      "minMoney": 10000,
+      "status": "1"
+    }
+  },
+  {
+    "name": "chuyenkhoan",
+    "config": {
+      "requestAPI": "",
+      "statusAPI": "",
+      "merchantCode": "",
+      "merchantKey": "",
+      "currencyCode": "VND",
+      "returnUrl": "",
+      "notifyUrl": "",
+      "payTypes": [
+        {
+          "key": "1",
+          "name": "bank_recharge",
+          "status": "1"
+        },
+        {
+          "key": "4",
+          "name": "momo_recharge",
+          "status": "1"
+        },
+        {
+          "key": "5",
+          "name": "zalo_recharge",
+          "status": "1"
+        }
+      ],
+      "banks": [
+        {
+          "key": "VCB",
+          "imageUrl": "https://cdn.yo789.club/1.png",
+          "name": "Vietcombank",
+          "status": "1",
+          "isWithdraw": 0
+        },
+        {
+          "key": "TCB",
+          "imageUrl": "https://cdn.yo789.club/10.png",
+          "name": "Techcombank",
+          "status": "1",
+          "isWithdraw": 0
+        },
+        {
+          "key": "BIDV",
+          "imageUrl": "https://cdn.yo789.club/9.png",
+          "name": "BIDV",
+          "status": "1",
+          "isWithdraw": 1
+        },
+        {
+          "key": "DAB",
+          "imageUrl": "https://cdn.yo789.club/2.png",
+          "name": "DongA Bank",
+          "status": "1",
+          "isWithdraw": 1
+        },
+        {
+          "key": "ICB",
+          "imageUrl": "https://cdn.yo789.club/3.png",
+          "name": "VietinBank",
+          "status": "1",
+          "isWithdraw": 1
+        },
+        {
+          "key": "STB",
+          "imageUrl": "https://cdn.yo789.club/4.png",
+          "name": "Sacombank",
+          "status": "1",
+          "isWithdraw": 1
+        },
+        {
+          "key": "ACB",
+          "imageUrl": "https://cdn.yo789.club/8.png",
+          "name": "ACB",
+          "status": "1",
+          "isWithdraw": 1
+        },
+        {
+          "key": "EXB",
+          "imageUrl": "https://cdn.yo789.club/7.png",
+          "name": "Eximbank",
+          "status": "1",
+          "isWithdraw": 1
+        },
+        {
+          "key": "VIB",
+          "imageUrl": "https://cdn.yo789.club/6.png",
+          "name": "VIB Bank",
+          "status": "1",
+          "isWithdraw": 1
+        },
+        {
+          "key": "MB",
+          "imageUrl": "https://cdn.yo789.club/5.png",
+          "name": "Mbbank",
+          "status": "1",
+          "isWithdraw": 1
+        },
+        {
+          "key": "TPB",
+          "imageUrl": "https://cdn.yo789.club/13.png",
+          "name": "TienPhong Bank",
+          "status": "1",
+          "isWithdraw": 1
+        },
+        {
+          "key": "MSB",
+          "imageUrl": "https://cdn.yo789.club/12.png",
+          "name": "MariTimeBank",
+          "status": "1",
+          "isWithdraw": 1
+        },
+        {
+          "key": "HDB",
+          "imageUrl": "https://cdn.yo789.club/11.png",
+          "name": "HD Bank",
+          "status": "1",
+          "isWithdraw": 1
+        }
+      ],
+      "minMoney": 20000,
+      "status": "1"
+    }
+  }
+]

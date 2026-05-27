@@ -1,0 +1,36 @@
+{
+  "botList": [
+    {
+      "game": "Minigame",
+      "bot": ["botamkn","botdauden78","botdtram","bothank","bothansuong","bothomngon","bothomngon4","Botreconroi","Botreconroi5","botxaphong","botxaphong3"]
+    },
+    {
+      "game": "TaiXiu",
+      "bot": ["botamkn","botdauden78","botdtram","bothank","bothansuong","bothomngon","bothomngon4","Botreconroi","Botreconroi5","botxaphong","botxaphong3"]
+    },
+    {
+      "game": "TaiXiuMD5",
+      "bot": ["botamkn","botdauden78","botdtram","bothank","bothansuong","bothomngon","bothomngon4","Botreconroi","Botreconroi5","botxaphong","botxaphong3"]
+    },
+    {
+      "game": "BauCua",
+      "bot": ["botamkn","botdauden78","botdtram","bothank","bothansuong"]
+    },
+    {
+      "game": "CaoThap",
+      "bot": ["botamkn","botdauden78","botdtram","bothank","bothansuong"]
+    },
+    {
+      "game": "MiniPoker",
+      "bot": ["botamkn","botdauden78","botdtram"]
+    },
+    {
+      "game": "Candy",
+      "bot": ["botamkn","botdauden78"]
+    },
+    {
+      "game": "Galaxy",
+      "bot": ["botamkn","botdauden78"]
+    }
+  ]
+}

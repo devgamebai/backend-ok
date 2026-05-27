@@ -1,0 +1,99 @@
+<configuration scan="true" scanPeriod="30 seconds">
+
+  <property name="SERVICE_NAME" value="${service.name:-unknown}" />
+  <property name="LOG_DIR" value="/app/logs/${SERVICE_NAME}" />
+  <property name="LOG_PATTERN" value="%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n" />
+
+  <!-- Console (visible via docker logs) -->
+  <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+    <encoder>
+      <pattern>${LOG_PATTERN}</pattern>
+      <charset>UTF-8</charset>
+    </encoder>
+    <!-- Only WARN+ to console to reduce noise -->
+    <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+      <level>WARN</level>
+    </filter>
+  </appender>
+
+  <!-- Main log file (daily rolling, 30 day retention) -->
+  <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+    <file>${LOG_DIR}/main.log</file>
+    <encoder>
+      <pattern>${LOG_PATTERN}</pattern>
+      <charset>UTF-8</charset>
+    </encoder>
+    <!-- Size + time rolling: caps the ACTIVE file (not just rotated ones) at
+         50MB. Previously TimeBasedRollingPolicy only rotated at midnight, so
+         a single spammy day could blow past the 200MB totalSizeCap on the
+         active main.log before rotation. See SUN-796 / commit 03674d13. -->
+    <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+      <fileNamePattern>${LOG_DIR}/main.%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+      <maxFileSize>50MB</maxFileSize>
+      <maxHistory>3</maxHistory>
+      <totalSizeCap>300MB</totalSizeCap>
+    </rollingPolicy>
+  </appender>
+
+  <!-- Debug log (all levels) -->
+  <appender name="DEBUG_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+    <file>${LOG_DIR}/debug.log</file>
+    <encoder>
+      <pattern>${LOG_PATTERN}</pattern>
+      <charset>UTF-8</charset>
+    </encoder>
+    <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+      <fileNamePattern>${LOG_DIR}/debug.%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+      <maxFileSize>50MB</maxFileSize>
+      <maxHistory>3</maxHistory>
+      <totalSizeCap>300MB</totalSizeCap>
+    </rollingPolicy>
+  </appender>
+
+  <!-- Money tracking CSV (hourly rolling, 30 day retention) -->
+  <appender name="MONEY" class="ch.qos.logback.core.rolling.RollingFileAppender">
+    <file>${LOG_DIR}/money.csv</file>
+    <encoder>
+      <pattern>%msg%n</pattern>
+    </encoder>
+    <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+      <fileNamePattern>${LOG_DIR}/money.%d{yyyy-MM-dd-HH}.csv</fileNamePattern>
+      <maxHistory>72</maxHistory>
+      <totalSizeCap>500MB</totalSizeCap>
+    </rollingPolicy>
+  </appender>
+
+  <!-- Suppress noisy libraries -->
+  <logger name="org.mongodb.driver" level="WARN" />
+  <logger name="snaq.db" level="WARN" />
+  <logger name="org.eclipse.jetty" level="WARN" />
+  <logger name="com.hazelcast" level="INFO" />
+
+  <!-- Money/CSV loggers (data only, no timestamp prefix) -->
+  <logger name="csvMoneyVin" level="DEBUG" additivity="false">
+    <appender-ref ref="MONEY" />
+  </logger>
+  <logger name="csvMoneyXu" level="DEBUG" additivity="false">
+    <appender-ref ref="MONEY" />
+  </logger>
+  <logger name="fund_log" level="DEBUG" additivity="false">
+    <appender-ref ref="MONEY" />
+  </logger>
+  <logger name="game_money" level="DEBUG" additivity="false">
+    <appender-ref ref="MONEY" />
+  </logger>
+
+  <!-- Root logger -->
+  <!-- SUN-796: lowered from DEBUG to INFO. With DEBUG, game-binh was writing
+       ~40 MB/hour of normal chatter (socket writes, room join events, BZ
+       protocol traffic) into main.log + debug.log. INFO matches the slot/vbee
+       variant that's been running cleanly. If you need DEBUG-level output
+       temporarily, edit this file and logback's scan="true" auto-reloads in
+       30 seconds — no container restart. -->
+  <root level="INFO">
+    <appender-ref ref="CONSOLE" />
+    <appender-ref ref="FILE" />
+    <appender-ref ref="DEBUG_FILE" />
+  </root>
+
+</configuration>

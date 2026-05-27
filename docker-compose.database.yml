@@ -1,0 +1,459 @@
+# =============================================================================
+# DATABASE & INFRASTRUCTURE SERVICES
+# =============================================================================
+# MySQL, MongoDB, Redis, RabbitMQ, Hazelcast
+#
+# Usage:
+#   docker compose -f docker-compose.yml -f docker-compose.database.yml up -d
+#
+# All services are on the internal "database" or "messaging" network.
+# No ports are exposed to the host by default (security).
+# To access from host for debugging, uncomment the "ports:" sections.
+# =============================================================================
+
+services:
+
+  # ---------------------------------------------------------------------------
+  # MySQL 8.0 - Primary relational database
+  # ---------------------------------------------------------------------------
+  # Stores: users, transactions, game configs, admin accounts, payment history
+  # Databases: vinplay, vinplay_minigame, vinplay_admin, vinplay_gamebai, cgame
+  # ---------------------------------------------------------------------------
+  mysql:
+    image: mysql:8.0
+    container_name: sunwinkr-mysql
+    restart: unless-stopped
+    # SUN-1034: InnoDB redo-log + binlog flush on shutdown can take tens of
+    # seconds under load. Default Docker grace is 10s — too short; we've
+    # seen it truncate mid-flush. 60s is the MySQL community recommendation.
+    stop_grace_period: 60s
+    environment:
+      MYSQL_USER: ${MYSQL_USER:-demo}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD:?Set MYSQL_PASSWORD in .env}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:?Set MYSQL_ROOT_PASSWORD in .env}
+    command: >
+      --default-authentication-plugin=mysql_native_password
+      --max-connections=2000
+      --character-set-server=utf8mb4
+      --collation-server=utf8mb4_unicode_ci
+      --innodb-buffer-pool-size=4G
+      --innodb-buffer-pool-instances=4
+      --log-bin-trust-function-creators=1
+    volumes:
+      - mysql-data:/var/lib/mysql
+      - ./install/config/mysql/conf.d:/etc/mysql/conf.d:ro
+      - ./install/config/mysql/db:/docker-entrypoint-initdb.d/:ro
+    networks:
+      - database
+      - mysql-external
+    ports:
+      - "3306:3306"
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p${MYSQL_ROOT_PASSWORD}"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 120s
+    deploy:
+      resources:
+        limits:
+          # 2G → 8G (2026-05-08): mysqld OOM-killed by docker cgroup at the
+          # 2G ceiling. RSS grew to 2,075,820 kB at SIGKILL — exactly cap.
+          # Workload that filled it: 600 msg/sec game traffic + new
+          # message_bus_audit dual-write inserts (108/s) + 4 schemas
+          # (vinplay, vinplay_minigame, vinplay_admin, vinplay_gamebai) +
+          # 2000 max_connections × per-thread sort/join/read buffers.
+          # Mirrors the mongo fix from 2026-04-28 (also was 2G, also OOM).
+          # Pairs with innodb_buffer_pool_size=4G in conf.d/my.cnf — keeps
+          # buffer pool at 50% of container limit, leaves 4G for the
+          # connection pool, log buffer, and sort/temp workspace.
+          memory: 8G
+        reservations:
+          memory: 4G
+    logging:
+      driver: json-file
+      options:
+        max-size: "50m"
+        max-file: "5"
+
+  # ---------------------------------------------------------------------------
+  # MongoDB 7.0 - Game logs and analytics
+  # ---------------------------------------------------------------------------
+  # Stores: game session logs, analytics, lottery results
+  # Database: win123club
+  # ---------------------------------------------------------------------------
+  mongodb:
+    image: mongo:5.0.11
+    container_name: sunwinkr-mongodb
+    restart: unless-stopped
+    # SUN-1034: WiredTiger checkpoint + journal flush on shutdown. 60s
+    # covers a busy write queue.
+    stop_grace_period: 60s
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_USER:-admin}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_PASSWORD:?Set MONGO_PASSWORD in .env}
+      MONGO_INITDB_DATABASE: win123club
+    command: --auth -f /configFolder/mongod.conf
+    volumes:
+      - mongo-data:/data/db
+      - ./install/config/mongod:/configFolder:ro
+    networks:
+      - database
+    # Uncomment to access from host (debugging only)
+    # ports:
+    #   - "127.0.0.1:27017:27017"
+    healthcheck:
+      test: ["CMD", "mongosh", "--eval", "db.adminCommand('ping')"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 30s
+    deploy:
+      resources:
+        limits:
+          # 2G → 6G (2026-04-28): mongod was OOM-killed 188 times because the
+          # container limit was below the WiredTiger cache target (4G in
+          # mongod.conf). With WT cache lowered to 2G AND container raised to
+          # 6G there's 4G headroom for connections, indexes, network buffers
+          # and growth. Host has 31G total, plenty of room.
+          memory: 6G
+        reservations:
+          memory: 4G
+    logging:
+      driver: json-file
+      options:
+        max-size: "50m"
+        max-file: "5"
+
+  # ---------------------------------------------------------------------------
+  # Redis 7 - Cache, sessions, pub/sub commands to game servers
+  # ---------------------------------------------------------------------------
+  redis:
+    image: redis:7-alpine
+    container_name: sunwinkr-redis
+    restart: unless-stopped
+    # SUN-1025: Give Redis enough time to flush AOF + rewrite manifest on
+    # SIGTERM. Default Docker grace is 10s — on a busy AOF this truncates
+    # mid-write and corrupts the incremental file, causing the 2026-04-21
+    # crash-loop (225+ restarts in 4h). 30s covers `appendfsync everysec`.
+    stop_grace_period: 30s
+    command: >
+      redis-server
+      --requirepass ${REDIS_PASSWORD:?Set REDIS_PASSWORD in .env}
+      --aof-timestamp-enabled yes
+      --appendonly yes
+      --appendfsync everysec
+      --auto-aof-rewrite-percentage 100
+      --auto-aof-rewrite-min-size 512mb
+      --maxmemory 24gb
+      --maxmemory-policy noeviction
+    volumes:
+      - redis-data:/data
+    networks:
+      - database
+    # Uncomment to access from host (debugging only)
+    # ports:
+    #   - "127.0.0.1:6379:6379"
+    healthcheck:
+      test: ["CMD", "sh", "-c", "REDISCLI_AUTH=$$REDIS_PASSWORD redis-cli ping"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+    deploy:
+      resources:
+        limits:
+          # SUN-RS / P3: bumped 1G → 26G to give Redis headroom for the
+          # streams workload. `--maxmemory 24gb` (set on the command line) is
+          # the in-process ceiling; Redis returns OOM errors on writes and
+          # the `noeviction` policy ensures unprocessed stream entries are
+          # NOT silently dropped. The extra ~2G covers Lettuce client
+          # buffers, internal allocator overhead, and RDB/AOF-rewrite fork
+          # copy-on-write spikes. Without raising this Docker limit the 1G
+          # cgroup would OOM-kill the container long before maxmemory tripped.
+          # Host has 31G; MySQL+Mongo+Hazelcast x3 reserve ~12G, leaving
+          # ample slack.
+          memory: 26G
+    logging:
+      driver: json-file
+      options:
+        max-size: "20m"
+        max-file: "3"
+
+  # ---------------------------------------------------------------------------
+  # redis_exporter - Prometheus metrics for the Redis container (Task O1)
+  # ---------------------------------------------------------------------------
+  # Scrapes the `redis` service over the internal `database` network and
+  # exposes Prometheus metrics on :9121. Required by the S1 dual-write soak
+  # so operators can compare Redis Streams depth/lag against RMQ producer
+  # counts (see message_bus_audit table, populated by the producer-side
+  # MessageBusAuditWriter).
+  #
+  # Network: `database` only. NEVER publish 9121 to the host — Prometheus
+  # scrapes container-to-container. If you need to debug from the host:
+  #   docker exec sunwinkr-redis-exporter wget -qO- http://localhost:9121/metrics
+  #
+  # Version pin: v1.83.0 (latest stable on Docker Hub as of 2026-05-04).
+  # If bumping, verify --check-streams flag still exists on the new tag.
+  # ---------------------------------------------------------------------------
+  redis-exporter:
+    image: oliver006/redis_exporter:v1.83.0
+    container_name: sunwinkr-redis-exporter
+    restart: unless-stopped
+    # --include-system-metrics: exports `redis_total_system_memory_bytes` so
+    #   the dashboard can compute `used_memory / maxmemory` ratio without a
+    #   second exporter (node_exporter is not deployed yet).
+    # --check-streams: enables per-stream `redis_stream_length`,
+    #   `redis_stream_group_pending`, `redis_stream_group_lag` — the core
+    #   metrics the S1 dashboard hangs off. Pattern '*' covers every stream;
+    #   acceptable scan cost since we have <50 streams in steady state.
+    command: >
+      --redis.addr=redis://redis:6379
+      --include-system-metrics
+      --check-streams=*
+    environment:
+      # redis-exporter reads REDIS_PASSWORD env var as the Redis AUTH
+      # password — does NOT support inline `:pw@host` URLs (verified
+      # against oliver006/redis_exporter README, 2026-05-04).
+      REDIS_PASSWORD: ${REDIS_PASSWORD:?Set REDIS_PASSWORD in .env}
+    networks:
+      - database
+    # Internal only — Prometheus (when deployed) reaches us by container DNS.
+    # Do NOT add a `ports:` block. If you need to port-forward for ad-hoc
+    # debug, do it via `docker exec` or attach a temp container to `database`.
+    depends_on:
+      redis:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO- http://localhost:9121/health || exit 1"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 15s
+    deploy:
+      resources:
+        limits:
+          memory: 64M
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  # ---------------------------------------------------------------------------
+  # RabbitMQ 3.13 - Message queue (payments, OTP, logging, game events)
+  # ---------------------------------------------------------------------------
+  rabbitmq:
+    image: rabbitmq:3.13-management-alpine
+    container_name: sunwinkr-rabbitmq
+    restart: unless-stopped
+    # SUN-1034: persistent-queue + mnesia consistency require a graceful
+    # stop. Hard SIGKILL mid-flush = potentially lost persistent messages
+    # and slow-recovery on next boot.
+    stop_grace_period: 60s
+    environment:
+      RABBITMQ_DEFAULT_USER: ${RABBITMQ_USER:-demo}
+      RABBITMQ_DEFAULT_PASS: ${RABBITMQ_PASSWORD:?Set RABBITMQ_PASSWORD in .env}
+      # Limit Erlang schedulers — default matches nproc (10) but under high
+      # steal time each scheduler competes for CPU slices. 2 schedulers is
+      # enough for our message throughput and drops idle CPU burn ~80%.
+      RABBITMQ_SERVER_ADDITIONAL_ERL_ARGS: "+S 2:2"
+      # Reduce management stats collection interval (default 5s → 30s).
+      RABBITMQ_COLLECT_STATISTICS_INTERVAL: "30000"
+    volumes:
+      - rabbitmq-data:/var/lib/rabbitmq
+    networks:
+      - messaging
+      - database    # Some services need both
+    # Uncomment to access management UI from host
+    # ports:
+    #   - "127.0.0.1:5672:5672"
+    #   - "127.0.0.1:15672:15672"
+    healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics", "-q", "ping"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 30s
+    deploy:
+      resources:
+        limits:
+          memory: 1G
+          cpus: "2.0"
+    logging:
+      driver: json-file
+      options:
+        max-size: "20m"
+        max-file: "3"
+
+  # ---------------------------------------------------------------------------
+  # Hazelcast 3.12 - 3-node TCP-IP cluster (SUN-WS-STAB)
+  #
+  # Why 3 nodes: with backup-count=1 on the `users` and `cacheToken` IMaps
+  # (see install/config/hazelcast/hazelcast.xml), the loss of any single
+  # member preserves all session/balance data. Restarts can roll one-at-a-
+  # time without kicking every player. With a single member (the prior
+  # config) every Hazelcast restart wiped cache and force-logged everyone.
+  # ---------------------------------------------------------------------------
+  hazelcast-1:
+    image: hazelcast/hazelcast:3.12
+    container_name: sunwinkr-hazelcast-1
+    hostname: hazelcast-1
+    restart: unless-stopped
+    stop_grace_period: 15s
+    environment:
+      JAVA_OPTS: >
+        -Dhazelcast.config=/configFolder/hazelcast.xml
+        -Dgroup.name=${HAZELCAST_GROUP:-dev}
+        -Dgroup.password=${HAZELCAST_PASSWORD:?Set HAZELCAST_PASSWORD in .env}
+        -Xmx1g
+    volumes:
+      - ./install/config/hazelcast:/configFolder:ro
+    networks:
+      database:
+        # Backwards-compat: existing client config has address=hazelcast.
+        # Docker DNS resolves `hazelcast` to all aliased containers (round
+        # robin), so old clients still find a live member to bootstrap the
+        # cluster. After connect, the Hazelcast client auto-discovers the
+        # full member list from any one bootstrap address.
+        aliases: [hazelcast]
+    healthcheck:
+      test: ["CMD-SHELL", "nc -z localhost 5701 || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+    deploy:
+      resources:
+        limits:
+          memory: 2G
+    logging:
+      driver: json-file
+      options:
+        max-size: "20m"
+        max-file: "3"
+
+  hazelcast-2:
+    image: hazelcast/hazelcast:3.12
+    container_name: sunwinkr-hazelcast-2
+    hostname: hazelcast-2
+    restart: unless-stopped
+    stop_grace_period: 15s
+    environment:
+      JAVA_OPTS: >
+        -Dhazelcast.config=/configFolder/hazelcast.xml
+        -Dgroup.name=${HAZELCAST_GROUP:-dev}
+        -Dgroup.password=${HAZELCAST_PASSWORD:?Set HAZELCAST_PASSWORD in .env}
+        -Xmx1g
+    volumes:
+      - ./install/config/hazelcast:/configFolder:ro
+    networks:
+      database:
+        aliases: [hazelcast]
+    healthcheck:
+      test: ["CMD-SHELL", "nc -z localhost 5701 || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+    deploy:
+      resources:
+        limits:
+          memory: 2G
+    logging:
+      driver: json-file
+      options:
+        max-size: "20m"
+        max-file: "3"
+
+  hazelcast-3:
+    image: hazelcast/hazelcast:3.12
+    container_name: sunwinkr-hazelcast-3
+    hostname: hazelcast-3
+    restart: unless-stopped
+    stop_grace_period: 15s
+    environment:
+      JAVA_OPTS: >
+        -Dhazelcast.config=/configFolder/hazelcast.xml
+        -Dgroup.name=${HAZELCAST_GROUP:-dev}
+        -Dgroup.password=${HAZELCAST_PASSWORD:?Set HAZELCAST_PASSWORD in .env}
+        -Xmx1g
+    volumes:
+      - ./install/config/hazelcast:/configFolder:ro
+    networks:
+      database:
+        aliases: [hazelcast]
+    healthcheck:
+      test: ["CMD-SHELL", "nc -z localhost 5701 || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+    deploy:
+      resources:
+        limits:
+          memory: 2G
+    logging:
+      driver: json-file
+      options:
+        max-size: "20m"
+        max-file: "3"
+
+  # ---------------------------------------------------------------------------
+  # Autoheal 1.2 - Auto-restart unhealthy containers (SUN-1035)
+  # ---------------------------------------------------------------------------
+  # Docker Compose's `restart: unless-stopped` fires only on process exit.
+  # A stalled-but-alive container (e.g., a game loop frozen after a Redis
+  # blip, /health returning 503, but PID 1 still running) would stay sick
+  # forever without this. Autoheal watches the Docker API for containers
+  # labeled autoheal=true and restarts any reporting status=unhealthy.
+  # ---------------------------------------------------------------------------
+  autoheal:
+    image: willfarrell/autoheal:1.2.0
+    container_name: sunwinkr-autoheal
+    restart: unless-stopped
+    environment:
+      AUTOHEAL_CONTAINER_LABEL: autoheal
+      # Check every 10s. With HC interval=30s + retries=3, a newly-sick
+      # container gets killed within ~100s of first failure.
+      AUTOHEAL_INTERVAL: 10
+      # Defer to each service's own start_period (don't grace-shield here).
+      AUTOHEAL_START_PERIOD: 0
+      # Give the container 30s to respond to SIGTERM before SIGKILL —
+      # matches the SUN-1025 stateful-service graceful-stop budget.
+      AUTOHEAL_DEFAULT_STOP_TIMEOUT: 30
+      CURL_TIMEOUT: 30
+      DOCKER_SOCK: /var/run/docker.sock
+      TZ: UTC
+    volumes:
+      # Read-write on the socket is required for container restart. On
+      # production, front this with docker-socket-proxy for least-privilege.
+      - /var/run/docker.sock:/var/run/docker.sock
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+networks:
+  database:
+    external: true
+    name: sunkr-network
+  messaging:
+    external: true
+    name: sunkr-messaging
+  mysql-external:
+    driver: bridge
+
+volumes:
+  mysql-data:
+    external: true
+    name: sunwinkr-mysql-data
+  mongo-data:
+    external: true
+    name: sunwinkr-mongo-data
+  redis-data:
+    external: true
+    name: sunwinkr-redis-data
+  rabbitmq-data:
+    external: true
+    name: sunwinkr-rabbitmq-data

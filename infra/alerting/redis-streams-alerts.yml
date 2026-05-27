@@ -1,0 +1,224 @@
+# =============================================================================
+# Prometheus alert rules — Redis Streams transport (Task O2)
+# =============================================================================
+# Goal: page or warn ops the moment a Redis Streams queue starts misbehaving
+# during the S1 dual-write soak (and after). This file is the second of two
+# S1 gates filed by the !314 reviewer; the first (O1 metrics) shipped as
+# !323 and stood up the `oliver006/redis_exporter` sidecar these alerts
+# bind to.
+#
+# Loading
+# -------
+# Place a copy under the Prometheus config dir (typically
+# /etc/prometheus/rules/) and reference it from prometheus.yml's
+# `rule_files:` list. Reload with `kill -HUP <prometheus-pid>` or
+# `curl -X POST http://prometheus:9090/-/reload` if the lifecycle API is
+# enabled. See `docs/RMQ_TO_REDIS_STREAMS_MIGRATION_PLAN.md` § Ops follow-ups
+# for the full load/reload procedure.
+#
+# Metric source
+# -------------
+# All `redis_*` metrics come from the `oliver006/redis_exporter:v1.83.0`
+# container declared in `docker-compose.database.yml` (Task O1). It scrapes
+# the `redis` service on the internal `database` network and exposes
+# Prometheus metrics on :9121 (NOT host-published — Prometheus reaches it by
+# container DNS). The exporter is started with `--check-streams=*` which
+# enables the per-stream `redis_stream_length`, `redis_stream_group_pending`,
+# and `redis_stream_group_lag` series the DLQ + lag rules below depend on.
+#
+# Severity convention
+# -------------------
+#   severity=page  → wakes ops up. Pager-duty / phone.
+#   severity=warn  → daytime ticket. No page.
+#
+# All rules carry a `runbook_url` annotation pointing at
+# docs/RUNBOOK_REDIS_DOWN.md — that runbook is owned by Task O3 and does
+# NOT exist yet at the time this file landed. The link is a forward
+# reference; treat 404s as expected until O3 lands.
+# =============================================================================
+
+groups:
+  - name: redis-streams
+    interval: 30s
+    rules:
+
+      # -----------------------------------------------------------------
+      # 1. DLQ depth — anything > 100 entries means consumer-side failure
+      #    has piled up. The DLQ-promotion path is delivery-count driven
+      #    (see RedisStreamConsumer DLQ_LUA), so 100 dead-lettered
+      #    entries == ~500 failed deliveries upstream.
+      # -----------------------------------------------------------------
+      - alert: RedisStreamDLQNonEmpty
+        expr: redis_stream_length{stream=~".*\\.dlq"} > 100
+        for: 5m
+        labels:
+          severity: page
+          component: redis-streams
+        annotations:
+          summary: "Redis Streams DLQ depth exceeded (stream={{ $labels.stream }})"
+          description: |
+            DLQ {{ $labels.stream }} on {{ $labels.instance }} has been
+            above 100 entries for 5 minutes (current: {{ $value }}).
+            Investigate with `scripts/redis-dlq-inspect.sh`, then triage
+            and replay survivors with
+            `scripts/redis-replay-dlq.sh <queue> --apply`.
+          runbook_url: "https://gitlab/.../docs/RUNBOOK_REDIS_DOWN.md#dlq-non-empty"
+
+      # -----------------------------------------------------------------
+      # 2. Consumer-group lag — sustained > 30 seconds means a consumer
+      #    has fallen behind the producer. `redis_stream_group_lag` is
+      #    in Redis-stream entries (not seconds); 30 here corresponds to
+      #    the "30s sustained" threshold from the plan, calibrated for
+      #    our ~1 message/sec/queue baseline. Tune per-queue once we have
+      #    real S1 numbers.
+      # -----------------------------------------------------------------
+      - alert: RedisStreamConsumerLag
+        expr: redis_stream_group_lag > 30
+        for: 5m
+        labels:
+          severity: page
+          component: redis-streams
+        annotations:
+          summary: "Redis Streams consumer lag (stream={{ $labels.stream }} group={{ $labels.group }})"
+          description: |
+            Consumer group {{ $labels.group }} on stream
+            {{ $labels.stream }} is {{ $value }} entries behind the tail
+            and has been for 5 minutes. Either the consumer is stuck
+            (check vbee logs / restart loop), the workload spiked beyond
+            the prefetch budget, or the processor is throwing on every
+            message. See runbook → "Consumer lag triage".
+          runbook_url: "https://gitlab/.../docs/RUNBOOK_REDIS_DOWN.md#consumer-lag"
+
+      # -----------------------------------------------------------------
+      # 3. PEL pending stuck — 1000+ pending entries for 5 min means
+      #    XACKs are not flowing. Could be a hung worker, a poison-pill
+      #    in mid-process, or a Lua-script EVALSHA failure cascade.
+      # -----------------------------------------------------------------
+      - alert: RedisStreamPendingStuck
+        expr: redis_stream_group_pending > 1000
+        for: 5m
+        labels:
+          severity: warn
+          component: redis-streams
+        annotations:
+          summary: "Redis Streams PEL pending stuck (stream={{ $labels.stream }} group={{ $labels.group }})"
+          description: |
+            {{ $labels.group }} on {{ $labels.stream }} has
+            {{ $value }} entries in pending-entry-list (PEL) and they
+            are not draining. The XAUTOCLAIM watchdog should be reaping
+            stuck deliveries every 30s — if pending stays this high,
+            either the watchdog is not running or every reclaimed entry
+            is being re-pended. Check `XPENDING <stream> <group>`.
+          runbook_url: "https://gitlab/.../docs/RUNBOOK_REDIS_DOWN.md#pel-stuck"
+
+      # -----------------------------------------------------------------
+      # 4. Container restart — `changes(redis_uptime_in_seconds[10m])`
+      #    fires on any uptime reset within the last 10 minutes. Pages
+      #    immediately (`for: 0m`) because a restart during dual-write
+      #    soak means we may have lost AOF tail or PEL state and need
+      #    eyes on it before the consumer catches up.
+      # -----------------------------------------------------------------
+      - alert: RedisContainerRestart
+        expr: changes(redis_uptime_in_seconds[10m]) > 0
+        for: 0m
+        labels:
+          severity: page
+          component: redis
+        annotations:
+          summary: "Redis container restarted (instance={{ $labels.instance }})"
+          description: |
+            sunwinkr-redis uptime counter reset within the last 10 min.
+            Likely causes: OOM-kill, AOF corruption restart-loop (see
+            SUN-1025), planned bounce, or autoheal trip. Check
+            `docker logs sunwinkr-redis | tail -200` and verify AOF
+            replayed cleanly. If it is restart-looping, run
+            `scripts/recover-redis-aof.sh`.
+          runbook_url: "https://gitlab/.../docs/RUNBOOK_REDIS_DOWN.md#container-restart"
+
+      # -----------------------------------------------------------------
+      # 5. Memory pressure — `used_memory / maxmemory > 0.75`. We pin
+      #    `maxmemory 24gb` and `maxmemory-policy noeviction`, so 75%
+      #    is the warning threshold; at 100% writes start failing
+      #    (`OOM command not allowed`) which is a P0. The 10m window
+      #    smooths over the steady-state ~50% baseline.
+      # -----------------------------------------------------------------
+      - alert: RedisMemoryPressure
+        expr: redis_memory_used_bytes / redis_memory_max_bytes > 0.75
+        for: 10m
+        labels:
+          severity: warn
+          component: redis
+        annotations:
+          summary: "Redis memory > 75% of maxmemory (instance={{ $labels.instance }})"
+          description: |
+            sunwinkr-redis is using {{ $value | humanizePercentage }} of
+            its `maxmemory` cap and has been for 10 minutes. With
+            `maxmemory-policy noeviction`, hitting 100% means writes
+            start returning OOM errors. Investigate stream MAXLEN
+            settings, DLQ depth, and any non-stream keys (sessions,
+            cache) that may be growing unbounded.
+          runbook_url: "https://gitlab/.../docs/RUNBOOK_REDIS_DOWN.md#memory-pressure"
+
+      # -----------------------------------------------------------------
+      # 6. AOF rewrite slow — last rewrite took > 60 seconds. Indicates
+      #    write amplification or a fork stall; can starve normal AOF
+      #    appendfsync and back up commands. Warn-level: doesn't crash
+      #    Redis on its own but is a leading indicator of trouble.
+      # -----------------------------------------------------------------
+      - alert: RedisAofRewriteSlow
+        expr: redis_aof_last_rewrite_duration_seconds > 60
+        for: 0m
+        labels:
+          severity: warn
+          component: redis
+        annotations:
+          summary: "Redis AOF rewrite > 60s (instance={{ $labels.instance }})"
+          description: |
+            Last AOF rewrite on sunwinkr-redis took {{ $value }} seconds
+            (threshold 60s). This usually means the fork-and-rewrite is
+            CPU- or I/O-bound. Check host load, Redis dataset size,
+            and `auto-aof-rewrite-min-size` setting. A slow rewrite can
+            stall appendfsync and back up commands.
+          runbook_url: "https://gitlab/.../docs/RUNBOOK_REDIS_DOWN.md#aof-rewrite-slow"
+
+      # -----------------------------------------------------------------
+      # 7. Audit-row drops — fires if MessageBusAuditWriter is dropping
+      #    rows on its bounded in-memory queue (queue full, MySQL down,
+      #    audit table missing, etc.). Reconciliation in S1 reads the
+      #    `message_bus_audit` table; dropped rows == reconciliation
+      #    blind spots.
+      #
+      #    TODO(O2/follow-up): the `message_bus_audit_dropped_total`
+      #    metric does NOT YET EXIST as a Prometheus series. The
+      #    counter lives as an `AtomicLong` inside
+      #    `MessageBusAuditWriter#droppedCount` (see
+      #    backend-master/VbeeCommon/src/main/java/com/vinplay/vbee/common/messagebus/audit/MessageBusAuditWriter.java).
+      #    To make this rule fire, a future task needs to either:
+      #      (a) expose the AtomicLong via a Micrometer registry +
+      #          micrometer-registry-prometheus + a /metrics endpoint
+      #          on each producer JVM, or
+      #      (b) export it via JMX and scrape with `jmx_exporter`.
+      #    Tracked under O3 follow-ups. Until then this rule is inert
+      #    (the metric never appears, the expression never matches) —
+      #    it is left in the file so once the exporter ships, the
+      #    alert is already wired.
+      # -----------------------------------------------------------------
+      - alert: MessageBusAuditDropping
+        expr: rate(message_bus_audit_dropped_total[5m]) > 0
+        for: 5m
+        labels:
+          severity: warn
+          component: messagebus-audit
+        annotations:
+          summary: "MessageBusAuditWriter dropping rows (instance={{ $labels.instance }})"
+          description: |
+            The producer-side audit writer is dropping rows — its
+            bounded in-memory queue is full or the underlying MySQL
+            INSERT is failing. S1 dual-write reconciliation depends
+            on the `message_bus_audit` table, so dropped rows mean
+            reconciliation queries will under-report on whichever
+            transport experienced the drop.
+            NOTE: this metric is not yet exposed to Prometheus (see
+            comment in the YAML); the rule is inert until a future
+            follow-up wires the AtomicLong → Prometheus.
+          runbook_url: "https://gitlab/.../docs/RUNBOOK_REDIS_DOWN.md#audit-dropping"

@@ -1,0 +1,86 @@
+version: '3.8'
+
+services:
+  prometheus:
+    image: prom/prometheus:v2.55.0
+    container_name: sunwinkr-prometheus
+    restart: unless-stopped
+    command:
+      - --config.file=/etc/prometheus/prometheus.yml
+      - --storage.tsdb.path=/prometheus
+      - --storage.tsdb.retention.time=15d
+      - --web.console.libraries=/usr/share/prometheus/console_libraries
+      - --web.console.templates=/usr/share/prometheus/consoles
+      - --web.enable-lifecycle
+    volumes:
+      - ./install/config/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - prometheus-data:/prometheus
+    networks:
+      - sunkr-network
+    ports:
+      - "127.0.0.1:9090:9090"
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://localhost:9090/-/healthy"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+
+  grafana:
+    image: grafana/grafana:11.2.0
+    container_name: sunwinkr-grafana
+    restart: unless-stopped
+    user: "0"
+    environment:
+      GF_SECURITY_ADMIN_USER: ${GRAFANA_ADMIN_USER:-admin}
+      GF_SECURITY_ADMIN_PASSWORD: ${GRAFANA_ADMIN_PASSWORD:-sunwinkr-grafana-2026}
+      GF_USERS_ALLOW_SIGN_UP: "false"
+      GF_INSTALL_PLUGINS: ""
+      GF_FEATURE_TOGGLES_ENABLE: "publicDashboards"
+    volumes:
+      - grafana-data:/var/lib/grafana
+      - ./install/config/grafana/provisioning:/etc/grafana/provisioning:ro
+      - ./install/config/grafana/dashboards:/var/lib/grafana/dashboards:ro
+    networks:
+      - sunkr-network
+    ports:
+      - "127.0.0.1:3001:3000"
+    depends_on:
+      prometheus:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO- http://localhost:3000/api/health || exit 1"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+
+  mysqld-exporter:
+    image: prom/mysqld-exporter:v0.15.1
+    container_name: sunwinkr-mysqld-exporter
+    restart: unless-stopped
+    command:
+      - --config.my-cnf=/etc/mysqld_exporter/.my.cnf
+      - --collect.info_schema.processlist
+      - --collect.info_schema.innodb_metrics
+      - --collect.info_schema.innodb_tablespaces
+      - --collect.info_schema.innodb_cmp
+      - --collect.engine_innodb_status
+      - --collect.global_status
+      - --collect.global_variables
+      - --collect.slave_status
+    volumes:
+      - ./install/config/mysqld-exporter/.my.cnf:/etc/mysqld_exporter/.my.cnf:ro
+    networks:
+      - sunkr-network
+    depends_on:
+      - prometheus
+
+networks:
+  sunkr-network:
+    external: true
+    name: sunkr-network
+
+volumes:
+  prometheus-data:
+    name: sunwinkr-prometheus-data
+  grafana-data:
+    name: sunwinkr-grafana-data

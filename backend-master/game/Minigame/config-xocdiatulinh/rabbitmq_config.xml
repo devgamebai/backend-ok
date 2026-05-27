@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<rabbitmq>
+    <user>sunwinkr_rmq</user>
+    <pass>Si_KZOpA0qzus76PITozTi8sck__2RzN</pass>
+    <server_addr>rabbitmq</server_addr>
+    <port>5672</port>
+    <reconnect_delay>5000</reconnect_delay>
+    <connection_timeout>1000</connection_timeout>
+    <handshake_timeout>1000</handshake_timeout>
+    <queues>
+        <queue>
+            <name>queue_action_minigame</name>
+            <threads>1</threads>
+            <commands>
+                <command>
+                    <id>1</id>
+                    <name>Log CCU</name>
+                    <path>game.queue.LogCCUProcessor</path>
+                </command>
+            </commands>
+        </queue>
+    </queues>
+</rabbitmq>

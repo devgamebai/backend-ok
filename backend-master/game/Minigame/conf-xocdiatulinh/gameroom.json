@@ -1,0 +1,36 @@
+{
+  "roomList":[ 
+    {
+        "moneyType":1,
+        "moneyBet":100,
+        "requiredMoney":10000,
+        "maxUserPerRoom":2,
+        "commisionRate":2,
+        "jackpotRate":0
+    },
+    {
+        "moneyType":1,
+        "moneyBet":100,
+        "requiredMoney":10000,
+        "maxUserPerRoom":5,
+        "commisionRate":2,
+        "jackpotRate":0
+    },
+    {
+        "moneyType":2,
+        "moneyBet":100,
+        "requiredMoney":10000,
+        "maxUserPerRoom":2,
+        "commisionRate":2,
+        "jackpotRate":0
+    },
+    {
+        "moneyType":2,
+        "moneyBet":100,
+        "requiredMoney":10000,
+        "maxUserPerRoom":5,
+        "commisionRate":2,
+        "jackpotRate":0
+    }
+  ]
+}

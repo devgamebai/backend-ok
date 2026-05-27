@@ -1,0 +1,4 @@
+build/
+.jqwik-database
+out/
+.gradle/

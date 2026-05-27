@@ -1,0 +1,10 @@
+// Standalone settings for minigame-api.
+// Built with Gradle 7.6.4 (/opt/gradle-7.6.4/bin/gradle) because
+// Spring Boot 2.7.18 plugin requires Gradle 6.8+ while the parent
+// project uses Gradle 5.2.1.
+//
+// Upstream modules are resolved as pre-built JARs from the parent
+// Gradle 5.2.1 build (game/minigame-engine + shared libs).
+// Run: cd game/minigame-api && /opt/gradle-7.6.4/bin/gradle test bootJar
+
+rootProject.name = 'minigame-api'

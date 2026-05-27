@@ -1,0 +1,127 @@
+// lottery-api — Spring Boot 2.7.18 REST + STOMP module for the XSMB
+// lottery engine (PR-3/3 of docs/plans/lottery-extraction-plan.md §1.3,
+// §5, §6).
+//
+// Hosts:
+//   - REST controllers (/api/v2/lottery/*, /api/v2/lottery/admin/*)
+//   - STOMP broker (/ws/lottery) — chat + announce ONLY (no result frames)
+//   - Adapters (JdbcLotteryWalletPort, JdbcBetStore, JdbcResultStore,
+//     JdbcSettledFlagStore, OkHttpScrapeClient, TelegramAlertAdapter)
+//   - LotteryModuleBridge — BitZero ↔ engine translation layer
+//
+// CRITICAL TZ POLICY (also see lottery-engine LotteryClock):
+//   This module pins ZoneId.of("Asia/Ho_Chi_Minh") via LotteryClock.VN +
+//   @Scheduled(zone="Asia/Ho_Chi_Minh"). Global TZ=Asia/Seoul STAYS for
+//   the other games — DO NOT change .env:62 TZ. Cron expressions in
+//   DrawScheduler MUST carry zone="Asia/Ho_Chi_Minh" explicitly.
+//
+// CONSTRAINTS (parity with :game:minigame-api):
+//   - JDK 8 (Boot 2.7.18 is the last line supporting JDK 8).
+//   - Do NOT pull spring-boot-starter-hazelcast (would force Hazelcast 5.x;
+//     repo pins 3.12.13 for Cocos wire compatibility). HZ wired manually
+//     via @Bean in HazelcastConfig.
+//   - Root project uses Gradle 5.2.1. This module is built standalone with
+//     Gradle 7.6.4 (/opt/gradle-7.6.4/bin/gradle). Upstream shared-lib
+//     JARs are file deps built by the parent Gradle 5.2.1 build first
+//     (./gradlew :VbeeCommon:jar :VinPlayUserCore:jar :VinPlayDAL:jar
+//      :game:lottery-engine:jar).
+
+plugins {
+    id 'org.springframework.boot' version '2.7.18'
+    id 'io.spring.dependency-management' version '1.0.15.RELEASE'
+    id 'java'
+}
+
+group   = 'com.sunwinkr'
+version = '0.1.0-SNAPSHOT'
+
+sourceCompatibility = '1.8'
+targetCompatibility = '1.8'
+
+repositories {
+    mavenCentral()
+    mavenLocal()
+}
+
+// Relative paths from game/lottery-api/ to parent build output JARs.
+def parentBuild = file('../..').absolutePath
+def sharedLibJars = fileTree(dir: "${parentBuild}", includes: [
+    'VbeeCommon/build/libs/*.jar',
+    'VinPlayUserCore/build/libs/*.jar',
+    'VinPlayDAL/build/libs/*.jar',
+    'VinPlayCardLib/build/libs/*.jar',
+    'CardCoreLib/build/libs/*.jar',
+    'BitzeroAll/build/libs/*.jar',
+    'BitzeroMini/build/libs/*.jar',
+    'BitZeroMinigame/build/libs/*.jar',
+    'VBeeSecurity/build/libs/*.jar',
+])
+def engineJar = file("${parentBuild}/game/lottery-engine/build/libs/lottery-engine-0.1.0-SNAPSHOT.jar")
+
+dependencies {
+    // Engine + shared modules — pre-built JARs from Gradle 5.2.1 parent build.
+    implementation files(engineJar)
+    implementation sharedLibJars
+
+    // Spring Boot starters.
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-starter-websocket'
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
+    implementation 'org.springframework.boot:spring-boot-starter-security'
+    implementation 'org.springframework.boot:spring-boot-starter-actuator'
+
+    // Hazelcast 3.12.13 — manually wired, NOT spring-boot-starter-hazelcast
+    // (which would pull 5.x and break the Cocos wire protocol).
+    implementation 'com.zaxxer:HikariCP-java7:2.4.13'
+    implementation 'mysql:mysql-connector-java:8.0.33'
+    implementation 'org.json:json:20230618'
+    implementation 'com.rabbitmq:amqp-client:5.16.0'
+    implementation 'com.hazelcast:hazelcast:3.12.13'
+    implementation 'com.hazelcast:hazelcast-client:3.12.13'
+
+    // MongoDB driver — matches VbeeCommon / VinPlayDAL.
+    implementation 'org.mongodb:mongo-java-driver:3.12.14'
+
+    // Gson — used by OkHttpScrapeClient + ingest JSON renderer (preserves
+    // the literal ĐB Unicode field name on LotteryResult.Results).
+    implementation 'com.google.code.gson:gson:2.9.0'
+
+    // OkHttp — XSMB scraper HTTP boundary (replaces legacy in-module
+    // OkHttpClient + Request usage at LotteryModule:106-108).
+    implementation 'com.squareup.okhttp3:okhttp:4.10.0'
+
+    // Logging: VbeeCommon uses log4j 1.x API. Bridge log4j → SLF4J → Logback.
+    // Without this, BalanceGuard.<clinit> throws NoClassDefFoundError: log4j/Logger.
+    implementation 'org.slf4j:log4j-over-slf4j:1.7.36'
+    implementation 'ch.qos.logback:logback-classic:1.2.12'
+    implementation 'ch.qos.logback:logback-core:1.2.12'
+
+    testImplementation('org.springframework.boot:spring-boot-starter-test') {
+        exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
+    }
+    testImplementation 'org.springframework.security:spring-security-test'
+    testImplementation 'org.springframework:spring-messaging'
+    testImplementation 'org.junit.jupiter:junit-jupiter:5.10.2'
+    testImplementation 'org.mockito:mockito-core:4.11.0'
+    testImplementation 'org.assertj:assertj-core:3.24.2'
+}
+
+test {
+    useJUnitPlatform()
+    testLogging {
+        events 'passed', 'failed', 'skipped'
+        showStandardStreams = false
+    }
+}
+
+bootJar {
+    enabled = true
+    mainClass = 'com.sunwinkr.lottery.api.LotteryApiApplication'
+    archiveClassifier = 'boot'
+}
+
+// Keep the plain jar so the BitZero Minigame module can depend on the
+// LotteryModuleBridge for in-process wiring without needing the executable jar.
+jar {
+    enabled = true
+}

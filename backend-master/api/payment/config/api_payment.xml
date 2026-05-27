@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<portal>
+    <http_port>28081</http_port>
+    <ssl_port>28643</ssl_port>
+    <idle_timeout>30000</idle_timeout>
+    <commands>
+        <command>
+            <id>1</id>
+            <name>get history</name>
+            <path>com.vinplay.payment.processors.HistoryProcessor</path>
+        </command>
+    </commands>
+</portal>

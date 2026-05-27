@@ -1,0 +1,33 @@
+.gradle
+.omc
+
+# SUN-980 follow-up: exclude host-side build outputs so the Docker builder
+# starts from a pristine tree and re-compiles everything from source. Prior
+# incident on prod (2026-04-22): a stale BitzeroMini-1.0.jar left over from
+# pre-GitLab-#9 checkouts sat under libs/ on the host. Dockerfile does
+# `COPY . /build/` which drags it into the builder. game/Minigame's
+# fileTree(dir:'../../libs') picked it up onto classpath. Since BitzeroMini
+# has the same bitzero.util.ExtensionUtility class path as
+# BitZeroMinigame (the source fork that has sendLogoutOK), the stale jar
+# shadowed the source fork and game/Minigame compiled against the wrong
+# class → missing sendLogoutOK at runtime.
+#
+# Excluding these dirs here is defence-in-depth — the builder compiles
+# every module from source via `./gradlew build copyRuntimeDeps` regardless
+# of what jars happen to sit on the host.
+libs/
+all-libs/
+runtime-libs/
+game/*/libs/
+
+# Per-module build outputs on host — equally stale, equally regenerable.
+**/build/
+
+# Runtime logs directory — grew to 18 GB on prod and was silently being
+# copied into the build context every rebuild (tonight's deploy transferred
+# 9+ GB before we caught it). Never needed for build.
+logs/
+**/logs/
+
+# Stale quarantine dirs left from previous deploys' disaster recovery.
+_quarantine_*/

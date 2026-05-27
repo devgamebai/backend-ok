@@ -1,0 +1,38 @@
+plugins {
+    id 'java'
+}
+
+group 'com.vingame'
+version ''
+compileJava.options.encoding = 'UTF-8'
+compileTestJava.options.encoding = 'UTF-8'
+javadoc.options.encoding = 'UTF-8'
+sourceCompatibility = 1.8
+
+// XocDia depends on missing game libs — exclude from compile
+compileJava.exclude '**/XocDia/**'
+//buildDir = "../../../dist/build"
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    testCompile group: 'junit', name: 'junit', version: '4.12'
+    compile project(':VinPlayUserCore')
+    compile project(':VinPlayDAL')
+    compile project(':VinPlayCardLib')
+	implementation 'com.google.code.gson:gson:2.9.0'
+    compile project(':BitZeroMinigame')
+    // SUN-980 note: LobbyModule depends on classes from libs/archive/*-original.jar
+    // (attempted to tighten glob to app/+runtime/ only, broke compile with
+    // cannot-find-symbol for SecurityService / RechargeService / DoipassResponse).
+    // Defence against shadowing lives in backend-master/.dockerignore — Docker
+    // builder excludes host libs/ entirely and compiles from source, so a
+    // stray pre-GitLab-#9 BitzeroMini-1.0.jar can't shadow BitZeroMinigame's
+    // ExtensionUtility in the image build even if the host dir is dirty.
+    compile fileTree(include: ['*.jar'], dir: '../../libs', exclude: 'bz-allinone.jar')
+    // SUN-13xx PR-4: minigame-api Spring bridge (optional — BridgeFeatureFlag.isEnabled() defaults OFF)
+    // NOTE: minigame-api is built standalone with Gradle 7.6.4 (Spring Boot 2.7.18 requires Gradle 6.8+).
+    // The Minigame container picks up the minigame-api JAR at runtime via fileTree classpath.
+    // compile project(':game:minigame-api')
+}

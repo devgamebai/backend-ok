@@ -1,0 +1,22 @@
+plugins {
+    id 'java'
+}
+
+group 'backend'
+
+sourceCompatibility = 1.8
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    testCompile group: 'junit', name: 'junit', version: '4.12'
+}
+
+// Forward test.mysql.password and MYSQL_PASSWORD into the test worker JVM so
+// MoneyLedgerTest can read them via System.getProperty / System.getenv.
+test {
+    // Pass the -Dtest.mysql.password=... value from the Gradle JVM into the test JVM.
+    systemProperty 'test.mysql.password', System.getProperty('test.mysql.password', '')
+}

@@ -1,0 +1,51 @@
+package bitzero.server.util;
+
+import java.text.DecimalFormat;
+import java.text.Format;
+
+public class ServerUptime {
+     private static final int ONE_DAY = 86400000;
+     private static final int ONE_HOUR = 3600000;
+     private static final int ONE_MINUTE = 60000;
+     private static final int ONE_SECOND = 1000;
+     private int days;
+     private int hours;
+     private int minutes;
+     private int seconds;
+
+     public ServerUptime(long unixTime) {
+          this.days = (int)Math.floor((double)(unixTime / 86400000L));
+          unixTime -= 86400000L * (long)this.days;
+          this.hours = (int)Math.floor((double)(unixTime / 3600000L));
+          unixTime -= (long)(3600000 * this.hours);
+          this.minutes = (int)Math.floor((double)(unixTime / 60000L));
+          unixTime -= (long)('\uea60' * this.minutes);
+          this.seconds = (int)Math.floor((double)(unixTime / 1000L));
+     }
+
+     public int[] toArray() {
+          int[] data = new int[]{this.days, this.hours, this.minutes, this.seconds};
+          return data;
+     }
+
+     public int getDays() {
+          return this.days;
+     }
+
+     public int getHours() {
+          return this.hours;
+     }
+
+     public int getMinutes() {
+          return this.minutes;
+     }
+
+     public int getSeconds() {
+          return this.seconds;
+     }
+
+     public String toString() {
+          Format fmt = new DecimalFormat("##00");
+          return String.format("%s days, %s:%s:%s", this.days, fmt.format(this.hours), fmt.format(this.minutes), fmt.format(this.seconds));
+     }
+}

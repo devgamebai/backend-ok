@@ -1,0 +1,60 @@
+Wrote 48 rows → /root/sunwinkr/sunwinkr/tools/rtp-strategy-test/results_matrix.csv
+
+==============================================================================================================
+TIER    GAME     MODE                    MEAN NET    RTP%  BUST%  ROUNDS       HOUSE NET
+--------------------------------------------------------------------------------------------------------------
+small   slot     passive                   -1,456   92.72    0.0    2000          43,680
+small   slot     active                    -4,666   76.67    0.0    2000         140,000
+small   slot     aggressive                -7,194   64.03    0.0    2000         215,840
+small   slot     whale_targeted            -1,870   90.65    0.0    2000          56,100
+small   taixiu   passive                      112  100.56    0.0    2000          -3,360
+small   taixiu   active                      -163   99.18    0.0    2000           4,900
+small   taixiu   aggressive                    80  100.40    0.0    2000          -2,400
+small   taixiu   whale_targeted                -6   99.97    0.0    2000             200
+small   baucua   passive                     -941   92.15    0.0    2000          28,246
+small   baucua   active                    -2,723   77.30    0.0    2000          81,712
+small   baucua   aggressive                -2,726   77.28    0.0    2000          81,809
+small   baucua   whale_targeted            -1,999   83.34    0.0    2000          59,990
+medium  slot     passive                  -20,326   89.84    0.0    2000         609,800
+medium  slot     active                   -48,760   75.62    0.0    2000       1,462,800
+medium  slot     aggressive               -70,266   64.87    0.0    2000       2,108,000
+medium  slot     whale_targeted           -15,313   92.34    0.0    2000         459,400
+medium  taixiu   passive                      106  100.05    0.0    2000          -3,200
+medium  taixiu   active                       420  100.21    0.0    2000         -12,600
+medium  taixiu   aggressive                   373  100.19    0.0    2000         -11,200
+medium  taixiu   whale_targeted              -740   99.63    0.0    2000          22,200
+medium  baucua   passive                  -15,171   92.10    0.0    2000         455,136
+medium  baucua   active                   -43,537   77.32    0.0    2000       1,306,128
+medium  baucua   aggressive               -43,580   77.30    0.0    2000       1,307,424
+medium  baucua   whale_targeted           -32,003   83.33    0.0    2000         960,112
+big     slot     passive                 -169,000   91.55    0.0    2000       5,070,000
+big     slot     active                  -467,466   76.63    0.0    2000      14,024,000
+big     slot     aggressive              -680,333   65.98    0.0    2000      20,410,000
+big     slot     whale_targeted          -161,133   91.94    0.0    2000       4,834,000
+big     taixiu   passive                    2,733  100.14    0.0    2000         -82,000
+big     taixiu   active                     7,866  100.39    0.0    2000        -236,000
+big     taixiu   aggressive                15,466  100.77    0.0    2000        -464,000
+big     taixiu   whale_targeted             5,466  100.27    0.0    2000        -164,000
+big     baucua   passive                 -157,622   92.09    0.0    2000       4,728,676
+big     baucua   active                  -451,990   77.31    0.0    2000      13,559,710
+big     baucua   aggressive              -452,161   77.30    0.0    2000      13,564,856
+big     baucua   whale_targeted          -332,044   83.33    0.0    2000       9,961,328
+whale   slot     passive               -1,695,333   91.52    0.0    2000      50,860,000
+whale   slot     active                -4,548,666   77.26    0.0    2000     136,460,000
+whale   slot     aggressive            -6,910,000   65.45    0.0    2000     207,300,000
+whale   slot     whale_targeted        -8,586,666   57.07    0.0    2000     257,600,000
+whale   taixiu   passive                  -58,000   99.71    0.0    2000       1,740,000
+whale   taixiu   active                    41,333  100.21    0.0    2000      -1,240,000
+whale   taixiu   aggressive                22,666  100.11    0.0    2000        -680,000
+whale   taixiu   whale_targeted           -48,666   99.76    0.0    2000       1,460,000
+whale   baucua   passive               -1,562,541   92.18    0.0    2000      46,876,242
+whale   baucua   active                -4,534,130   77.32    0.0    2000     136,023,902
+whale   baucua   aggressive            -4,533,963   77.32    0.0    2000     136,018,904
+whale   baucua   whale_targeted        -4,526,910   77.36    0.0    2000     135,807,322
+==============================================================================================================
+
+HOUSE NET BY MODE (sum across all tiers + games):
+  whale_targeted          411,056,652
+  aggressive              379,849,233
+  active                  301,574,552
+  passive                 110,323,220

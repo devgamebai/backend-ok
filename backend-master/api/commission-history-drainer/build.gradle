@@ -1,0 +1,29 @@
+// SUN-1112 (CQRS Phase 0) — commission-history-drainer module.
+//
+// Phase 0 ships an idle shell: container builds, deploys, starts up, and
+// heartbeats every 60s. No DB read, no Mongo write. Phase 1 wires up the
+// outbox → Mongo loop.
+
+plugins {
+    id 'java'
+    id 'application'
+}
+
+group 'backend'
+sourceCompatibility = 1.8
+
+repositories {
+    mavenCentral()
+}
+
+application {
+    mainClassName = 'com.vinplay.drainer.HistoryDrainerMain'
+}
+
+dependencies {
+    // Phase 0 keeps deps minimal — log4j + connection pool helpers reused
+    // from VbeeCommon. MySQL driver and Mongo driver land in Phase 1.
+    compile project(':VbeeCommon')
+
+    testCompile group: 'junit', name: 'junit', version: '4.12'
+}

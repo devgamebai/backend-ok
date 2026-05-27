@@ -1,0 +1,77 @@
+{
+  "environment": "pro",
+  "CREATE_USER_TIME": "01",
+  "cmd": {
+    "SPORTS_BOOK_MAINTENANCE_FLAG": "0",
+    "SPORTS_BOOK_API_SERVER_ROOT": "http://api.1win888.net",
+    "SPORTS_BOOK_CURRENCY": "VD",
+    "SPORTS_BOOK_PARTNER_KEY": "8189606376628338",
+    "SPORTS_BOOK_WEB_ROOT": "https://lot79.1win888.net",
+    "SPORTS_BOOK_MOBILE_ROOT": "https://lot79mobile.1win888.net",
+    "SPORTS_BOOK_NEW_MOBILE_ROOT": "https://lot79smart.1win888.net",
+    "SPORTS_BOOK_SECRET_KEY": "",
+    "SPORTS_BOOK_RATE": "1000",
+    "SPORTS_BOOK_OUR_SECRET_KEY": "a123456",
+    "SPORTS_BOOK_START_USER_ID": "1",
+    "SPORTS_BOOK_USER_NAME_PREFIX": "ltet_"
+  },
+  "ibc2": {
+    "STATUS": 0,
+    "IBC2_URL": "http://...tsa.l0030.ig128.com/api/",
+    "IBC2_PLAYER_PREFIX": "lot_",
+    "IBC2_OPERATORID": "lot",
+    "IBC2_VENDOR_ID": "c126rz6ynl",
+    "START_IBCID": 100,
+    "CURRENCY_ID": 20,
+    "IBC2_SUFFIX": "_test"
+  },
+  "wm": {
+    "WM_STATUS": false,
+    "WM_URL": "https://api.a45.me/api/public/Gateway.php?",
+    "WM_PLAYER_PREFIX": "slt_",
+    "WM_OPERATORID": "Slotvnapi",
+    "WM_VENDOR_ID": "e072aaa59fcdb69b2ccaa5603317aabb",
+    "WM_START_IBCID": 1,
+    "WM_TIMEZONE": "Asia/Manila",
+    "WM_SUFFIX": "_test",
+    "WM_RATE": 1000
+  },
+  "ag": {
+    "AG_STATUS": false,
+    "AG_PREFIX": "lot",
+    "AG_PREFIX_USER_AGENT": "WEB_LIB_GI_JG0_AGIN",
+    "AG_LANG_CODE": 8,
+    "AG_GAME_TYPE": 2,
+    "AG_RATE": 1000,
+    "AG_CURRENCY": "VND",
+    "AG_TIMEZONE": "PRT",
+    "AG_REPORT_CAGENT": "JG0",
+    "AG_DATA_API_URL": "http://jtg1g0.gdcapi.com:3333/",
+    "AG_DATA_API_CODE": "F97368304218D6A9A1761108C0596507",
+    "AG_CAGENT": "JG0_AGIN",
+    "AG_MD5": "jg06xjvDXvnT",
+    "AG_ENCRYPT": "jg0bCQts",
+    "AG_API_URL": "https://gi.apislotvn.com/doBusiness.do?",
+    "AG_AC_TYPE": 1,
+    "AG_ODD_TYPE": "A",
+    "AG_API_FORWARD_GAME": "https://gci.apislotvn.com/forwardGame.do?"
+  },
+  "sbo": {
+    "SBO_STATUS": false,
+    "SBO_API_URL": "http://ex-api-demo-yy.568win.com/",
+    "SBO_CURRENCY": "VND",
+    "SBO_SECRET_KEY": "LOT79-TEST",
+    "SBO_OPERATOR_TOKEN": "419C0E602D4640099A79D64BF94C02AE",
+    "SBO_RATE": "1000",
+    "SBO_START_USER_ID": "1",
+    "SBO_USER_NAME_PREFIX": "lot_",
+    "SBO_AGENT": "LOT79T"
+  },
+  "ebet": {
+    "EBET_STATUS": true,
+    "EBET_PRIVATE_KEY": "MIIBVgIBADANBgkqhkiggE8AgEAAkEAsT31yytJMkQL6cc9aGCOQCRR3WyprztlDN3/d9ddC6mbM5keLK4/034mOJNkpP48vz9mYDfx3Ym31PYFgQOTlwIDAQABAkBfw8yUc9TetemB7Mb/KHxzp6wb6WRda8gThbdMty5s59M5jSo5T/LaHqZnjv9rahu+TWx1sLSsN1mOuHa6gWwxAiEA/p6iauSvhwl4J8/vWFvvhIDwsSjqIMctAeUQTZBLvDMCIQCyM/COiXcJHAZsfC3z48Y2gzYmkWtw5ex3MrpCF0PnDQIhAIofxDv4kr/Og0AVrOFh/i0DRY7Vgy0E34WHnbB19p/BAiEAl1frRnLS6Kangf0Y3dglX+ih1bGNKQ3sfPNVIoo1vgUCIQCcKnGzMDVPHTzWzEbNi7vsL8AZDjCfV22URhDBTtazgg==",
+    "EBET_PUBLIC_KEY": "MFwwDQYJKoZIhvcNAQEBBQADSwAwSAJBALE99csrSTJEC+nHPWAAQ==",
+    "EBET_HOST_URL": "http://zf749vn79vnd.ebet.im:8888/",
+    "EBET_CHANNEL_ID": "26178"
+  }
+}

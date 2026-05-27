@@ -1,0 +1,120 @@
+// minigame-api — Spring Boot 2.7.18 REST + STOMP module for TaiXiu engine.
+//
+// PR-4/4 of the TaiXiu extraction (docs/plans/taixiu-extraction-plan.md §1.3,
+// §5, §6). Hosts:
+//   - REST controllers (/api/v2/taixiu/*, /api/v2/admin/taixiu/*)
+//   - STOMP broker (/ws/minigame)
+//   - Adapters (JdbcWalletPort, HazelcastForceResultStore, MongoBetRecorder,
+//     RmqHistoryPublisher, etc.) that wrap legacy infra
+//   - TaiXiuModuleBridge — BitZero ↔ engine translation layer
+//
+// CONSTRAINT: do NOT pull spring-boot-starter-hazelcast. Repo pins Hazelcast
+// 3.12.13 for Cocos client wire compatibility; Boot 2.7 starter wants 5.x.
+// We expose HazelcastInstance manually via @Bean.
+//
+// CONSTRAINT: JDK 8 target. Spring Boot 2.7.18 is the last line that supports
+// JDK 8; later versions require 17.
+//
+// CONSTRAINT: Root project uses Gradle 5.2.1. This module is built standalone
+// with Gradle 7.6.4 (/opt/gradle-7.6.4/bin/gradle) because Spring Boot 2.7.18
+// plugin requires Gradle 6.8+. Upstream shared-lib JARs are file deps built by
+// the parent Gradle 5.2.1 build first (./gradlew :VbeeCommon:jar ... :game:minigame-engine:jar).
+
+plugins {
+    id 'org.springframework.boot' version '2.7.18'
+    id 'io.spring.dependency-management' version '1.0.15.RELEASE'
+    id 'java'
+}
+
+group   = 'com.sunwinkr'
+version = '0.1.0-SNAPSHOT'
+
+sourceCompatibility = '1.8'
+targetCompatibility = '1.8'
+
+repositories {
+    mavenCentral()
+    mavenLocal()
+}
+
+// Relative paths from game/minigame-api/ to parent build output JARs.
+def parentBuild = file('../..').absolutePath
+def sharedLibJars = fileTree(dir: "${parentBuild}", includes: [
+    'VbeeCommon/build/libs/*.jar',
+    'VinPlayUserCore/build/libs/*.jar',
+    'VinPlayDAL/build/libs/*.jar',
+    'VinPlayCardLib/build/libs/*.jar',
+    'CardCoreLib/build/libs/*.jar',
+    'BitzeroAll/build/libs/*.jar',
+    'BitzeroMini/build/libs/*.jar',
+    'BitZeroMinigame/build/libs/*.jar',
+    'VBeeSecurity/build/libs/*.jar',
+])
+def engineJar = file("${parentBuild}/game/minigame-engine/build/libs/minigame-engine-0.1.0-SNAPSHOT.jar")
+
+dependencies {
+    // Engine + legacy modules — pre-built JARs from Gradle 5.2.1 parent build.
+    implementation files(engineJar)
+    implementation sharedLibJars
+
+    // Spring Boot starters.
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-starter-websocket'
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
+    implementation 'org.springframework.boot:spring-boot-starter-security'
+    implementation 'org.springframework.boot:spring-boot-starter-actuator'
+
+    // Hazelcast 3.12.13 — manually wired, NOT spring-boot-starter-hazelcast
+    // (which would pull 5.x and break the Cocos wire protocol).
+    // hazelcast-client does NOT include IMap/core API classes — need hazelcast full jar.
+    implementation 'com.zaxxer:HikariCP-java7:2.4.13'
+    implementation 'mysql:mysql-connector-java:8.0.33'
+    implementation 'org.json:json:20230618'
+    implementation 'com.hazelcast:hazelcast:3.12.13'
+    implementation 'com.hazelcast:hazelcast-client:3.12.13'
+
+    // MongoDB driver — same version as VbeeCommon/VinPlayDAL use.
+    implementation 'org.mongodb:mongo-java-driver:3.12.14'
+
+    // RabbitMQ — matches the legacy stack version.
+    implementation 'com.rabbitmq:amqp-client:5.16.0'
+
+    // No spring-boot-starter-hazelcast — see header note.
+
+    // Logging: VbeeCommon uses log4j 1.x API. Bridge log4j → SLF4J → Logback
+    // (same pattern as root build.gradle subprojects block in the parent build).
+    // Without this, BalanceGuard.<clinit> throws NoClassDefFoundError: log4j/Logger.
+    implementation 'org.slf4j:log4j-over-slf4j:1.7.36'
+    implementation 'ch.qos.logback:logback-classic:1.2.12'
+    implementation 'ch.qos.logback:logback-core:1.2.12'
+
+    testImplementation('org.springframework.boot:spring-boot-starter-test') {
+        // Boot test bundle pulls junit-vintage; we want clean junit5.
+        exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
+    }
+    testImplementation 'org.springframework.security:spring-security-test'
+    testImplementation 'org.springframework:spring-messaging'
+    testImplementation 'org.junit.jupiter:junit-jupiter:5.10.2'
+    testImplementation 'org.mockito:mockito-core:4.11.0'
+    testImplementation 'org.assertj:assertj-core:3.24.2'
+}
+
+test {
+    useJUnitPlatform()
+    testLogging {
+        events 'passed', 'failed', 'skipped'
+        showStandardStreams = false
+    }
+}
+
+bootJar {
+    enabled = true
+    mainClass = 'com.sunwinkr.minigame.api.MinigameApiApplication'
+    archiveClassifier = 'boot'
+}
+
+// Keep the plain jar so other modules (Minigame BitZero handler) can depend on
+// the API classes for in-process bridging without needing the executable jar.
+jar {
+    enabled = true
+}

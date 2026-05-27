@@ -1,0 +1,12 @@
+services:
+  fish:
+    image: bancodegame/fish:${TAG}
+    ports:
+      - "127.0.0.1:2083:2083"
+    build:
+      context: .
+      dockerfile: Dockerfile
+    network_mode: host
+    volumes:
+      - /etc/timezone:/etc/timezone:ro
+      - /etc/localtime:/etc/localtime:ro

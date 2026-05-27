@@ -1,0 +1,733 @@
+<?xml version="1.0"?>
+<rabbitmq>
+    <user>sunwinkr_rmq</user>
+    <pass>Si_KZOpA0qzus76PITozTi8sck__2RzN</pass>
+    <server_addr>rabbitmq</server_addr>
+    <port>5672</port>
+    <reconnect_delay>5000</reconnect_delay>
+    <connection_timeout>5000</connection_timeout>
+    <handshake_timeout>5000</handshake_timeout>
+    <queues>
+        <queue>
+            <name>queue_server_info</name>
+            <threads>1</threads>
+            <commands>
+                <command>
+                    <id>1</id>
+                    <name>Log CCU</name>
+                    <path>com.vinplay.vbee.rmq.serverinfo.processor.LogCCUProcessor
+                    </path>
+                </command>
+            </commands>
+        </queue>
+        <queue>
+            <name>queue_payment</name>
+            <threads>30</threads>
+            <commands>
+                <command>
+                    <id>10</id>
+                    <name>update money game bai</name>
+                    <path>com.vinplay.vbee.rmq.payment.processor.UpdateMoneyInGameProcessor
+                    </path>
+                </command>
+                <command>
+                    <id>12</id>
+                    <name>freeze money</name>
+                    <path>com.vinplay.vbee.rmq.payment.processor.FreezeMoneyInGameProcessor
+                    </path>
+                </command>
+                <command>
+                    <id>13</id>
+                    <name>restore money</name>
+                    <path>com.vinplay.vbee.rmq.payment.processor.RestoreMoneyInGameProcessor
+                    </path>
+                </command>
+                <command>
+                    <id>14</id>
+                    <name>safe money</name>
+                    <path>com.vinplay.vbee.rmq.payment.processor.SafeMoneyProcessor
+                    </path>
+                </command>
+                <command>
+                    <id>16</id>
+                    <name>update money</name>
+                    <path>com.vinplay.vbee.rmq.payment.processor.UpdateMoneyProcessor
+                    </path>
+                </command>
+                <command>
+                    <id>18</id>
+                    <name>update vippoint</name>
+                    <path>com.vinplay.vbee.rmq.payment.processor.UpdateVippointProcessor
+                    </path>
+                </command>
+                <command>
+                    <id>19</id>
+                    <name>no hu game bai</name>
+                    <path>com.vinplay.vbee.rmq.payment.processor.NoHuGameBaiProcessor
+                    </path>
+                </command>
+            </commands>
+        </queue>
+        <queue>
+            <name>queue_payment_minigame</name>
+            <threads>30</threads>
+            <commands>
+                <command>
+                    <id>30</id>
+                    <name>update money minigame</name>
+                    <path>com.vinplay.vbee.rmq.payment.processor.UpdateMoneyProcessor</path>
+                </command>
+            </commands>
+        </queue>
+
+        <queue>
+            <name>queue_payment_gamebai</name>
+            <threads>1</threads>
+            <commands>
+                <command>
+                    <id>40</id>
+                    <name>update money game bai</name>
+                    <path>com.vinplay.vbee.rmq.payment.processor.UpdateMoneyInGameProcessor</path>
+                </command>
+                <command>
+                    <id>41</id>
+                    <name>freeze money</name>
+                    <path>com.vinplay.vbee.rmq.payment.processor.FreezeMoneyInGameProcessor</path>
+                </command>
+                <command>
+                    <id>42</id>
+                    <name>restore money</name>
+                    <path>com.vinplay.vbee.rmq.payment.processor.RestoreMoneyInGameProcessor</path>
+                </command>
+            </commands>
+        </queue>
+        <queue>
+            <name>queue_pot</name>
+            <threads>10</threads>
+            <commands>
+                <command>
+                    <id>106</id>
+                    <name>update pot</name>
+                    <path>com.vinplay.vbee.rmq.minigame.processor.UpdatePotProcessor
+                    </path>
+                </command>
+            </commands>
+        </queue>
+
+        <queue>
+            <name>queue_fund</name>
+            <threads>10</threads>
+            <commands>
+                <command>
+                    <id>110</id>
+                    <name>update fund</name>
+                    <path>com.vinplay.vbee.rmq.minigame.processor.UpdateFundProcessor
+                    </path>
+                </command>
+            </commands>
+        </queue>
+
+        <queue>
+            <name>queue_vqmm</name>
+            <threads>1</threads>
+            <commands>
+                <command>
+                    <id>105</id>
+                    <name>save result vqmm</name>
+                    <path>com.vinplay.vbee.rmq.minigame.processor.SaveResultLuckyProcessor
+                    </path>
+                </command>
+            </commands>
+        </queue>
+
+        <queue>
+            <name>queue_taixiu</name>
+            <threads>10</threads>
+            <commands>
+                <command>
+                    <id>100</id>
+                    <name>save transactions tai xiu</name>
+                    <path>com.vinplay.vbee.rmq.minigame.processor.SaveTransactionTaiXiuProcessor
+                    </path>
+                </command>
+                <command>
+                    <id>101</id>
+                    <name>save result tai xiu</name>
+                    <path>com.vinplay.vbee.rmq.minigame.processor.SaveResultTaiXiuProcessor
+                    </path>
+                </command>
+                <command>
+                    <id>102</id>
+                    <name>save transaction tai xiu detail</name>
+                    <path>com.vinplay.vbee.rmq.minigame.processor.SaveTransactionDetailTaiXiuProcessor
+                    </path>
+                </command>
+                <command>
+                    <id>103</id>
+                    <name>update transaction tai xiu detail</name>
+                    <path>com.vinplay.vbee.rmq.minigame.processor.UpdateTransactionDetailTaiXiuProcessor
+                    </path>
+                </command>
+				<command>
+                    <id>104</id>
+                    <name>update transaction tai xiu detail</name>
+                    <path>com.vinplay.vbee.rmq.minigame.processor.ThanhDuProcessor
+                    </path>
+                </command>
+                <!-- Cleanup: removed cmd 105 SaveResultTaiXiuMd5Processor — class
+                     deleted with the legacy MD5 minigame; was an orphaned
+                     duplicate of the queue_taixiu_md5 block below (now also
+                     removed). -->
+            </commands>
+        </queue>
+
+        <!-- Cleanup: removed queue_taixiu_md5 (cmds 1100/1101/1102/1103) —
+             SaveTransactionTaiXiuMd5Processor, SaveResultTaiXiuMd5Processor,
+             SaveTransactionDetailTaiXiuMd5Processor,
+             UpdateTransactionDetailTaiXiuMd5Processor classes deleted with
+             the TaiXiu-MD5 game retirement. The queue itself is no longer
+             produced to. -->
+
+        <queue>
+            <name>queue_taixiu_sicbo</name>
+            <threads>10</threads>
+            <commands>
+                <command>
+                    <id>28100</id>
+                    <name>save transactions tai xiu sicbo</name>
+                    <path>com.vinplay.vbee.rmq.minigame.processor.SaveTransactionTaiXiuSicboProcessor
+                    </path>
+                </command>
+                <command>
+                    <id>28101</id>
+                    <name>save result tai xiu sicbo</name>
+                    <path>com.vinplay.vbee.rmq.minigame.processor.SaveResultTaiXiuSicboProcessor
+                    </path>
+                </command>
+                <command>
+                    <id>28102</id>
+                    <name>save transaction tai xiu sicbo detail md5</name>
+                    <path>com.vinplay.vbee.rmq.minigame.processor.SaveTransactionDetailTaiXiuSicboProcessor
+                    </path>
+                </command>
+                <command>
+                    <id>28103</id>
+                    <name>update transaction tai xiu sicbo detail</name>
+                    <path>com.vinplay.vbee.rmq.minigame.processor.UpdateTransactionDetailTaiXiuSicboProcessor
+                    </path>
+                </command>
+            </commands>
+        </queue>
+
+        <!-- Cleanup: removed queue_taixiu_live (cmds 29101/29102/29103) —
+             SaveResultTaiXiuLiveProcessor, SaveTransactionDetailTaiXiuLiveProcessor,
+             UpdateTransactionDetailTaiXiuLiveProcessor classes were deleted with
+             the TaiXiu-Live retirement. The live-stream variant is no longer
+             served. -->
+
+        <queue>
+            <name>queue_minipoker</name>
+            <threads>10</threads>
+            <commands>
+                <command>
+                    <id>111</id>
+                    <name>log MiniPoker</name>
+                    <path>com.vinplay.vbee.rmq.minigame.processor.LogMiniPokerProcessor
+                    </path>
+                </command>
+            </commands>
+        </queue>
+
+        <queue>
+            <name>queue_pokego</name>
+            <threads>10</threads>
+            <commands>
+                <command>
+                    <id>134</id>
+                    <name>Log Poke Go</name>
+                    <path>com.vinplay.vbee.rmq.minigame.processor.LogPokeGoProcessor
+                    </path>
+                </command>
+            </commands>
+        </queue>
+
+        <!-- Cleanup: removed queue_galaxy (cmd 141) — LogGalaxyProcessor
+             class was deleted with the Galaxy slot retirement. -->
+
+        <queue>
+            <name>queue_caothap</name>
+            <threads>10</threads>
+            <commands>
+                <command>
+                    <id>112</id>
+                    <name>log cao thap</name>
+                    <path>com.vinplay.vbee.rmq.minigame.processor.LogCaoThapProcessor
+                    </path>
+                </command>
+                <command>
+                    <id>113</id>
+                    <name>log cao thap win</name>
+                    <path>com.vinplay.vbee.rmq.minigame.processor.LogCaoThapWinProcessor
+                    </path>
+                </command>
+            </commands>
+        </queue>
+
+        <queue>
+            <name>queue_baucua</name>
+            <threads>10</threads>
+            <commands>
+                <command>
+                    <id>130</id>
+                    <name>save transaction bau cua detail</name>
+                    <path>com.vinplay.vbee.rmq.minigame.processor.SaveTransactionDetailBauCuaProcessor
+                    </path>
+                </command>
+                <command>
+                    <id>131</id>
+                    <name>save transaction bau cua</name>
+                    <path>com.vinplay.vbee.rmq.minigame.processor.SaveTransactionBauCuaProcessor
+                    </path>
+                </command>
+                <command>
+                    <id>132</id>
+                    <name>save result bau cua</name>
+                    <path>com.vinplay.vbee.rmq.minigame.processor.SaveResultBauCuaProcessor
+                    </path>
+                </command>
+                <command>
+                    <id>133</id>
+                    <name>update toi chon ca</name>
+                    <path>com.vinplay.vbee.rmq.minigame.processor.UpdateToiChonCaProcessor
+                    </path>
+                </command>
+            </commands>
+        </queue>
+
+       <!--  <queue>
+            <name>queue_otp</name>
+            <threads>1</threads>
+            <commands>
+                <command>
+                    <id>201</id>
+                    <name>log otp</name>
+                    <path>com.vinplay.vbee.rmq.otp.processor.SaveLogOTPProcessor</path>
+                </command>
+                <command>
+                    <id>202</id>
+                    <name>log brandname</name>
+                    <path>com.vinplay.vbee.rmq.otp.processor.SaveLogBrandnameProcessor</path>
+                </command>
+                <command>
+                    <id>203</id>
+                    <name>log brandname dlvr</name>
+                    <path>com.vinplay.vbee.rmq.otp.processor.SaveLogBrandnameDLVRProcessor</path>
+                </command>
+            </commands>
+        </queue>
+ -->
+
+        <queue>
+            <name>queue_hu_gamebai</name>
+            <threads>1</threads>
+            <commands>
+                <command>
+                    <id>401</id>
+                    <name>cong tien hu game bai</name>
+                    <path>com.vinplay.vbee.rmq.gamebai.processor.CongTienHuGameBaiProcessor</path>
+                </command>
+                <command>
+                    <id>402</id>
+                    <name>log no hu game bai</name>
+                    <path>com.vinplay.vbee.rmq.gamebai.processor.SaveLogNoHuGameBaiProcessor</path>
+                </command>
+            </commands>
+        </queue>
+
+        <queue>
+            <name>queue_log_gamebai</name>
+            <threads>10</threads>
+            <commands>
+                <command>
+                    <id>501</id>
+                    <name>save log game</name>
+                    <path>com.vinplay.vbee.rmq.gamebai.processor.SaveLogGameByNickNameProcessor
+                    </path>
+                </command>
+                <command>
+                    <id>502</id>
+                    <name>save log game detail</name>
+                    <path>com.vinplay.vbee.rmq.gamebai.processor.SaveLogGameDetailProcessor
+                    </path>
+                </command>
+            </commands>
+        </queue>
+
+        <queue>
+            <name>queue_log_money</name>
+            <threads>30</threads>
+            <commands>
+                <command>
+                    <id>601</id>
+                    <name>log money user</name>
+                    <path>com.vinplay.vbee.rmq.log.processor.LogMoneyUserProcessor</path>
+                </command>
+            </commands>
+        </queue>
+
+        <queue>
+            <name>queue_log_report_user_balance</name>
+            <threads>30</threads>
+            <commands>
+                <command>
+                    <id>602</id>
+                    <name>log report balance user all game</name>
+                    <path>com.vinplay.vbee.rmq.loguserinday.LogSumReportUserSQLProcessor
+                    </path>
+                </command>
+            </commands>
+        </queue>
+
+        <queue>
+            <name>queue_log_chuyen_tien_dai_ly</name>
+            <threads>10</threads>
+            <commands>
+                <command>
+                    <id>603</id>
+                    <name>log chuyen tien dai ly</name>
+                    <path>com.vinplay.vbee.rmq.log.processor.LogChuyenTienDaiLyProcessor</path>
+                </command>
+                <command>
+                    <id>11</id>
+                    <name>freeze money tranfer agent</name>
+                    <path>com.vinplay.vbee.rmq.payment.processor.FreezeMoneyTranferAgentProcessor</path>
+                </command>
+                <command>
+                    <id>15</id>
+                    <name>restore money tranfer agent</name>
+                    <path>com.vinplay.vbee.rmq.payment.processor.RestoreMoneyTranferAgentProcessor</path>
+                </command>
+            </commands>
+        </queue>
+
+        <queue>
+            <name>queue_kho_bau</name>
+            <threads>10</threads>
+            <commands>
+                <command>
+                    <id>135</id>
+                    <name>log kho bau</name>
+                    <path>com.vinplay.vbee.rmq.slot.processor.LogSlotMachineProcessor
+                    </path>
+                </command>
+            </commands>
+        </queue>
+
+        <queue>
+            <name>queue_audition</name>
+            <threads>10</threads>
+            <commands>
+                <command>
+                    <id>8001</id>
+                    <name>log audition</name>
+                    <path>com.vinplay.vbee.rmq.slot.processor.LogSlotMachineProcessor
+                    </path>
+                </command>
+            </commands>
+        </queue>
+        
+        
+        <queue>
+            <name>queue_chiemtinh</name>
+            <threads>10</threads>
+            <commands>
+                <command>
+                    <id>141</id>
+                    <name>log chiem tinh</name>
+                    <path>com.vinplay.vbee.rmq.slot.processor.LogSlotMachineProcessor
+                    </path>
+                </command>
+            </commands>
+        </queue>
+
+        <queue>
+            <name>queue_thanden</name>
+            <threads>10</threads>
+            <commands>
+                <command>
+                    <id>142</id>
+                    <name>log than den</name>
+                    <path>com.vinplay.vbee.rmq.slot.processor.LogSlotMachineProcessor
+                    </path>
+                </command>
+            </commands>
+        </queue>
+
+        <queue>
+            <name>queue_bikini</name>
+            <threads>10</threads>
+            <commands>
+                <command>
+                    <id>8011</id>
+                    <name>log bikini</name>
+                    <path>com.vinplay.vbee.rmq.slot.processor.LogSlotMachineProcessor
+                    </path>
+                </command>
+            </commands>
+        </queue>
+
+        <queue>
+            <name>queue_range_rover</name>
+            <threads>10</threads>
+            <commands>
+                <command>
+                    <id>8002</id>
+                    <name>log range rover</name>
+                    <path>com.vinplay.vbee.rmq.slot.processor.LogSlotMachineProcessor
+                    </path>
+                </command>
+            </commands>
+        </queue>
+
+        <queue>
+            <name>queue_maybach</name>
+            <threads>10</threads>
+            <commands>
+                <command>
+                    <id>8003</id>
+                    <name>log maybach</name>
+                    <path>com.vinplay.vbee.rmq.slot.processor.LogSlotMachineProcessor
+                    </path>
+                </command>
+            </commands>
+        </queue>
+
+        <queue>
+            <name>queue_tamhung</name>
+            <threads>10</threads>
+            <commands>
+                <command>
+                    <id>8004</id>
+                    <name>log tamhung</name>
+                    <path>com.vinplay.vbee.rmq.slot.processor.LogSlotMachineProcessor
+                    </path>
+                </command>
+            </commands>
+        </queue>
+
+        <queue>
+            <name>queue_roll_roye</name>
+            <threads>10</threads>
+            <commands>
+                <command>
+                    <id>8005</id>
+                    <name>log queue_roll_roye</name>
+                    <path>com.vinplay.vbee.rmq.slot.processor.LogSlotMachineProcessor
+                    </path>
+                </command>
+            </commands>
+        </queue>
+
+        <queue>
+            <name>queue_benley</name>
+            <threads>10</threads>
+            <commands>
+                <command>
+                    <id>8006</id>
+                    <name>log queue_benley</name>
+                    <path>com.vinplay.vbee.rmq.slot.processor.LogSlotMachineProcessor
+                    </path>
+                </command>
+            </commands>
+        </queue>
+
+        <queue>
+            <name>queue_avengers</name>
+            <threads>10</threads>
+            <commands>
+                <command>
+                    <id>136</id>
+                    <name>log avengers</name>
+                    <path>com.vinplay.vbee.rmq.slot.processor.LogSlotMachineProcessor
+                    </path>
+                </command>
+            </commands>
+        </queue>
+
+        <queue>
+            <name>queue_spartan</name>
+            <threads>10</threads>
+            <commands>
+                <command>
+                    <id>10136</id>
+                    <name>log spata</name>
+                    <path>com.vinplay.vbee.rmq.slot.processor.LogSlotMachineProcessor
+                    </path>
+                </command>
+            </commands>
+        </queue>
+
+        <queue>
+            <name>queue_my_nhan_ngu</name>
+            <threads>10</threads>
+            <commands>
+                <command>
+                    <id>137</id>
+                    <name>log my nhan ngu</name>
+                    <path>com.vinplay.vbee.rmq.slot.processor.LogSlotMachineProcessor
+                    </path>
+                </command>
+            </commands>
+        </queue>
+
+        <queue>
+            <name>queue_nu_diep_vien</name>
+            <threads>10</threads>
+            <commands>
+                <command>
+                    <id>138</id>
+                    <name>log nu diep vien</name>
+                    <path>com.vinplay.vbee.rmq.slot.processor.LogSlotMachineProcessor</path>
+                </command>
+            </commands>
+        </queue>
+
+        <queue>
+            <name>queue_vqv</name>
+            <threads>10</threads>
+            <commands>
+                <command>
+                    <id>139</id>
+                    <name>log vuong quoc vin</name>
+                    <path>com.vinplay.vbee.rmq.slot.processor.LogSlotMachineProcessor</path>
+                </command>
+            </commands>
+        </queue>
+
+        <queue>
+            <name>queue_log_nohu</name>
+            <threads>10</threads>
+            <commands>
+                <command>
+                    <id>140</id>
+                    <name>log no hu slot</name>
+                    <path>com.vinplay.vbee.rmq.slot.processor.LogNoHuSlotProcessor</path>
+                </command>
+            </commands>
+        </queue>
+
+        <queue>
+            <name>queue_report</name>
+            <threads>10</threads>
+            <commands>
+                <command>
+                    <id>701</id>
+                    <name>report money</name>
+                    <path>com.vinplay.vbee.rmq.report.processor.ReportMoneyProcessor</path>
+                </command>
+            </commands>
+        </queue>
+
+        <queue>
+            <name>queue_vippoint_event</name>
+            <threads>10</threads>
+            <commands>
+                <command>
+                    <id>801</id>
+                    <name>update vippoint event</name>
+                    <path>com.vinplay.vbee.rmq.vippoint.processor.UpdateVippointEventProcessor</path>
+                </command>
+            </commands>
+        </queue>
+        <queue>
+            <name>queue_login_info</name>
+            <threads>5</threads>
+            <commands>
+                <command>
+                    <id>50</id>
+                    <name>log login info</name>
+                    <path>com.vinplay.vbee.rmq.statistic.processor.LoginPortalInfoProcessor</path>
+                </command>
+            </commands>
+        </queue>
+        <!-- Cleanup: removed queue_user_mission (cmds 903/904) —
+             LogUpdateUserMissionProcessor + ReceivedRewardMissionProcessor
+             classes were deleted with the user-mission feature retirement.
+             The producers (Mission entities and old reward flow) were
+             removed in earlier cleanups; this RMQ binding was the last
+             dangling reference. -->
+
+        <queue>
+            <name>queue_log_money_extra</name>
+            <threads>30</threads>
+            <commands>
+                <command>
+                    <id>1001</id>
+                    <name>log money user extra</name>
+                    <path>com.vinplay.vbee.rmq.log.processor.LogMoneyUserExtraProcessor</path>
+                </command>
+            </commands>
+        </queue>
+        <queue>
+            <name>queue_gift_code</name>
+            <threads>1</threads>
+            <commands>
+                <command>
+                    <id>1200</id>
+                    <name>update bang gift_code_store khi xuat giftcode</name>
+                    <path>com.vinplay.vbee.rmq.giftcode.processor.UpdateGiftCodeStoreProcessor</path>
+                </command>
+                <command>
+                    <id>1201</id>
+                    <name>lock giftcode de thu hoi</name>
+                    <path>com.vinplay.vbee.rmq.giftcode.processor.LockGiftCodeProcessor</path>
+                </command>
+            </commands>
+        </queue>
+        <queue>
+            <name>queue_log_sent_sms</name>
+            <threads>1</threads>
+            <commands>
+                <command>
+                    <id>1310</id>
+                    <name>Ghi log lich su gui tin nhan</name>
+                    <path>com.vinplay.vbee.rmq.processor.sentsms.LogSentSmsProcessor</path>
+                </command>
+            </commands>
+        </queue>
+        <queue>
+            <name>deposit_bank_queue</name>
+            <threads>1</threads>
+            <prefetch>1</prefetch>
+            <commands>
+                <command>
+                    <id>700</id>
+                    <name>deposit bank notification</name>
+                    <path>com.vinplay.vbee.deposit.DepositQueueConsumer</path>
+                </command>
+            </commands>
+        </queue>
+        <queue>
+            <name>queue_crypto_deposit</name>
+            <threads>5</threads>
+            <commands>
+                <command>
+                    <id>2001</id>
+                    <name>crypto deposit confirmed</name>
+                    <path>com.vinplay.vbee.rmq.processor.crypto.CryptoDepositEventProcessor</path>
+                </command>
+            </commands>
+        </queue>
+        <queue>
+            <name>queue_crypto_withdrawal</name>
+            <threads>5</threads>
+            <commands>
+                <command>
+                    <id>2002</id>
+                    <name>crypto withdrawal event</name>
+                    <path>com.vinplay.vbee.rmq.processor.crypto.CryptoWithdrawalEventProcessor</path>
+                </command>
+            </commands>
+        </queue>
+    </queues>
+</rabbitmq>

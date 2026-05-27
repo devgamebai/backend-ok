@@ -1,0 +1,9 @@
+{
+  "rateIcon": [5, 1, 2, 6, 6, 3, 3, 3, 3],
+  "totalRate": 32,
+  "RATE_TO_JACKPOT": 1,
+  "RATE_TO_FUND_JACKPOT": 1,
+  "RATE_TO_FUND_MINIGAME": 1,
+  "FEE": 4,
+  "MULTI_JACKPOT": 3
+}

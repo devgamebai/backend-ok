@@ -1,0 +1,171 @@
+# =============================================================================
+# MAGNAMATE CASINO PLATFORM - Git Ignore
+# =============================================================================
+
+# === Secrets & Environment ===
+.env
+*.env.local
+secrets/
+nginx/ssl/*.pem
+nginx/ssl/*.key
+nginx/ssl/*.crt
+
+# === Java Build Artifacts ===
+*.class
+*.iml
+Backend2Dx/all-libs/
+Backend2Dx/runtime-libs/
+backend-master/libs
+
+# === Compiled JARs — built from source by Dockerfile multi-stage ===
+# These are build output; the Dockerfile compiles from source every time.
+# Only gradle-wrapper.jar and precompiled/ fat JARs (no source) are kept.
+backend-master/all-libs/*.jar
+backend-master/runtime-libs/
+backend-master/api/**/libs/*.jar
+backend-master/game/**/libs/*.jar
+backend-master/libs/app/
+backend-master/libs/runtime/
+backend-master/libs/archive/
+
+# === Java Keystores ===
+*.jks
+*.pfx
+
+# === .NET Build Artifacts ===
+banca/BanCaLiteNet/out/
+banca/BanCaLiteNet/publish/logs/
+**/obj/
+**/bin/Release/
+**/bin/Debug/
+
+# === Python (generator scripts, ad-hoc tooling) ===
+__pycache__/
+*.pyc
+*.pyo
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+*.egg-info/
+
+# === Claude Code / agent harness local state ===
+.claude/settings.local.json
+.claude/cache/
+
+# === Node.js ===
+node_modules/
+npm-debug.log*
+
+# === Python ===
+__pycache__/
+*.pyc
+*.pyo
+
+# === Local backup snapshots (pre-deploy jar/sql backups, gitignored) ===
+snapshots/
+
+# === IDE ===
+.idea/
+BackendMaster/.idea
+.vscode/
+*.swp
+*.swo
+*~
+
+# === Logs ===
+*.log
+logs/
+
+# === Data Files ===
+data.sql
+data-collector/data/
+data-collector/.playwright-session/
+data-collector/reports/
+
+# === OS Files ===
+.DS_Store
+Thumbs.db
+
+# === Frontend Build (served from nginx, not source) ===
+www/webbuild/
+
+# === Docker Volumes / Runtime Data ===
+cdn/
+upload/
+
+# === Gradle Build Cache ===
+**/build/
+**/.gradle/
+
+# === Keep precompiled JARs needed for Dockerfile ===
+!backend-master/precompiled/*.jar
+
+# === Config files with injected secrets (generated at runtime) ===
+Backend2Dx/**/config/db_pool.properties
+Backend2Dx/**/config/hazelcast.properties
+Backend2Dx/**/config/mongo.properties
+Backend2Dx/**/config/rmq.properties
+backend-master/**/config/db_pool.properties
+backend-master/**/config/hazelcast.properties
+backend-master/**/config/mongo.properties
+backend-master/**/config/rmq.properties
+
+# === Compiled JARs (rebuilt from source) ===
+Backend2Dx/**/libs/*.jar
+Backend2Dx/**/build/
+
+# === oh-my-claudecode State ===
+.omc/
+**/.omc/
+
+# === Temp/Backup Files ===
+*.tmp
+*.bak
+
+# === Legacy/Archive ===
+archive/
+bugs/
+**/build/classes/**
+
+# === Transient agent/tool state (added 2026-04-04) ===
+.omc/state/
+.omc/project-memory.json
+**/.omc/state/
+
+# === Antigravity Agent & Gradle Docker Cache ===
+.agent/
+backend-master/.gradle-docker/
+
+# deploy.sh preflight quarantine (GitLab #27) — never commit stale module jars
+backend-master/_quarantine_*/
+
+# Security — never commit env snapshots, credential backups, or secret configs
+*.env
+*.env.bak-*
+.env.bak-*
+**/config.json.bak-*
+**/config.json.bak-before-*
+**/*.bak-before-prod-run
+deploy.sh.bak*
+docker-compose*.bak*
+
+# Don't track sub-service .env files
+api-xsmb-today-main/.env
+www/landing/
+nginx/conf.d/prod-play.conf
+.claude/
+# === Huge runtime logs / csv ===
+logs/vbee/
+logs/game-slot/
+
+# === Distribution packages ===
+*.tar
+*.tar.gz
+*.zip
+
+# === Gradle history/cache ===
+*.bin
+
+# === Runtime generated csv ===
+*.csv

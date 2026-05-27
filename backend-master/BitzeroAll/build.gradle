@@ -1,0 +1,52 @@
+plugins {
+    id 'java'
+}
+
+group 'com.vingame'
+version '1.0-SNAPSHOT'
+compileJava.options.encoding = 'UTF-8'
+compileTestJava.options.encoding = 'UTF-8'
+javadoc.options.encoding = 'UTF-8'
+sourceCompatibility = 1.8
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    testCompile group: 'junit', name: 'junit', version: '4.10'
+    compile project(':VbeeCommon')
+    compile project(':VinPlayDAL')
+	implementation 'com.google.code.gson:gson:2.9.0'
+    // SUN-1171 follow-up: exclude internal-project jars from the libs/ fileTree.
+    // Those projects are already wired in as `compile project(':...')` (or
+    // depend on BitzeroAll, which would create a circular reference). Pulling
+    // their stale pre-built jars from libs/ shadows the freshly-compiled
+    // classes — e.g. an outdated VinPlayDAL-1.0.jar without
+    // `systemRecoveryReset` poisoned every downstream compile and broke the
+    // VinPlayPortal/vbee builds.
+    compile fileTree(
+        include: ['*.jar'],
+        exclude: [
+            'VbeeCommon-*.jar',
+            'VinPlayDAL-*.jar',
+            'VinPlayUserCore-*.jar',
+            'VinPlayCardLib-*.jar',
+            'CardCoreLib-*.jar',
+            'BitzeroAll-*.jar',
+            'BitZeroMinigame-*.jar',
+            'BitzeroMini-*.jar'
+        ],
+        dir: '../libs'
+    )
+}
+
+// Exclude Scribe logging (Facebook Scribe is not on Maven Central)
+sourceSets {
+    main {
+        java {
+            exclude '**/scribe/**'
+            exclude '**/logcontroller/**'
+        }
+    }
+}

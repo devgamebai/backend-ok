@@ -1,0 +1,50 @@
+{
+  "join_room_interval_time": 10000,
+  "big_win": 100000,
+  "roomList": [
+    {
+      "moneyType": 1,
+      "moneyBet": 1000,
+      "requiredMoney": 10000,
+      "outMoney": 1,
+      "maxUserPerRoom": 2000,
+      "commisionRate": 2,
+      "rule": 1,
+      "numberOfInitialRoom": 1,
+      "roomName": "Kênh thế giới"
+    },
+    {
+      "moneyType": 1,
+      "moneyBet": 1000,
+      "requiredMoney": 10000,
+      "outMoney": 1,
+      "maxUserPerRoom": 10,
+      "commisionRate": 2,
+      "rule": 0,
+      "numberOfInitialRoom": 1,
+      "roomName": "Bàn thường"
+    },
+    {
+      "moneyType": 1,
+      "moneyBet": 2000,
+      "requiredMoney": 20000,
+      "outMoney": 1,
+      "maxUserPerRoom": 10,
+      "commisionRate": 2,
+      "rule": 0,
+      "numberOfInitialRoom": 1,
+      "roomName": "Bàn thường"
+    },
+    {
+      "moneyType": 1,
+      "moneyBet": 5000,
+      "requiredMoney": 50000,
+      "outMoney": 1,
+      "maxUserPerRoom": 10,
+      "commisionRate": 2,
+      "rule": 0,
+      "numberOfInitialRoom": 1,
+      "roomName": "Bàn thường"
+    }
+  ]
+}

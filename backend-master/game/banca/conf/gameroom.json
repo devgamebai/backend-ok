@@ -1,0 +1,39 @@
+{
+  "join_room_interval_time": 1,
+  "big_win": 100000,
+  "roomList": [
+    {
+      "moneyType": 1,
+      "moneyBet": 100,
+      "requiredMoney": 100,
+      "outMoney": 30,
+      "maxUserPerRoom": 6,
+      "commisionRate": 5,
+      "rule": 0,
+      "numberOfInitialRoom": 5,
+      "roomName": "Try it out"
+    },
+    {
+      "moneyType": 1,
+      "moneyBet": 100,
+      "requiredMoney": 10,
+      "outMoney": 30,
+      "maxUserPerRoom": 6,
+      "commisionRate": 5,
+      "rule": 1,
+      "numberOfInitialRoom": 5,
+      "roomName": "Normal"
+    },
+    {
+      "moneyType": 1,
+      "moneyBet": 1000,
+      "requiredMoney": 10,
+      "outMoney": 30,
+      "maxUserPerRoom": 6,
+      "commisionRate": 2,
+      "rule": 2,
+      "numberOfInitialRoom": 5,
+      "roomName": "Vip"
+    }
+  ]
+}

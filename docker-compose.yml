@@ -1,0 +1,56 @@
+# =============================================================================
+# SUNWINKR CASINO PLATFORM - MASTER DOCKER COMPOSE
+# =============================================================================
+# This is the main orchestrator. It includes all component compose files.
+# Usage:
+#   docker compose up -d                    # Start everything
+#   docker compose up -d database           # Start databases only
+#   docker compose --profile games up -d    # Start with game servers
+#   docker compose logs -f backend-api      # Follow specific service logs
+#
+# Components are split into separate files for clarity:
+#   docker-compose.yml          ← This file (master + networks + volumes)
+#   docker-compose.database.yml ← MySQL, MongoDB, Redis, RabbitMQ, Hazelcast
+#   docker-compose.backend.yml  ← Java API servers (Portal, Backend, Payment, VBee)
+#   docker-compose.games.yml    ← Game servers (Slot, Minigame, TLMN, XocDia, BaCay, etc.)
+#   docker-compose.banca.yml    ← Fish shooting game (.NET)
+#   docker-compose.web.yml      ← PHP admin panel, agency portal, nginx
+#   docker-compose.lottery.yml  ← XSMB lottery API (Node.js)
+# =============================================================================
+
+# --- Networks (Isolated per tier) ---
+networks:
+  frontend:
+    driver: bridge
+    name: sunkr-network
+
+  backend:
+    driver: bridge
+    internal: true
+    name: sunkr-network
+
+  gameservers:
+    driver: bridge
+    internal: true
+    name: sunkr-games
+
+  database:
+    driver: bridge
+    internal: true
+    name: sunkr-network
+
+  messaging:
+    driver: bridge
+    internal: true
+    name: sunkr-messaging
+
+# --- Volumes (Persistent data) ---
+volumes:
+  mysql-data:
+    name: sunwinkr-mysql-data
+  mongo-data:
+    name: sunwinkr-mongo-data
+  redis-data:
+    name: sunwinkr-redis-data
+  rabbitmq-data:
+    name: sunwinkr-rabbitmq-data

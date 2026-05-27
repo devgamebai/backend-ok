@@ -1,0 +1,8 @@
+sed*
+
+# Build outputs
+runtime-libs/
+decompiled/
+**/build/
+**/build/libs/*.jar
+**/build/tmp/jar/MANIFEST.MF

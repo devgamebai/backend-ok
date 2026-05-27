@@ -1,0 +1,19 @@
+plugins {
+    id 'java'
+}
+
+group 'backend'
+
+sourceCompatibility = 1.8
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {  
+    testCompile group: 'junit', name: 'junit', version: '4.10'    
+    compile project(':VbeeCommon')
+    compile project(':VinPlayDAL')
+    compile project(':VinPlayUserCore')    
+    compile project(':BitzeroAll')   
+}

@@ -1,0 +1,2314 @@
+<?xml version="1.0"?>
+<backend>
+	<port>19082</port>
+  <type>1</type>
+	<commands>
+		<!-- Legacy endpoints 2-30, 71-77 mostly removed (Phase 1 cleanup per
+		     endpoint-audit.md). c=2 restored 2026-04-27 because admin-next
+		     /logs/game-bai page still calls it; class never deleted. -->
+		<command>
+			<id>2</id>
+			<name>search log game-bai by nickname (admin)</name>
+			<path>com.vinplay.api.backend.processors.SearchLogGameByNickNameProcessor</path>
+		</command>
+
+		<command>
+			<id>100</id>
+			<name>update money user</name>
+			<path>com.vinplay.api.backend.processors.money.UpdateMoneyUserProcessor</path>
+		</command>
+
+		<command>
+			<id>102</id>
+			<name>get user by nickname</name>
+			<path>com.vinplay.api.backend.processors.GetUserByNickNameProcessor</path>
+		</command>
+		<command>
+			<id>103</id>
+			<name>update status dai ly</name>
+			<path>com.vinplay.api.backend.processors.UpdateStatusDailybyNickNameProcessor</path>
+		</command>
+		<command>
+			<id>104</id>
+			<name>search list user</name>
+			<path>com.vinplay.api.backend.processors.SearchUserAdminProcessor</path>
+		</command>
+		<command>
+			<id>105</id>
+			<name>update status user</name>
+			<path>com.vinplay.api.backend.processors.UpdateStatusUserProcessor</path>
+		</command>
+		<command>
+			<id>106</id>
+			<name>search agent tranfer</name>
+			<path>com.vinplay.api.backend.processors.SearchAgentTranferMoneyProcessor</path>
+		</command>
+		<command>
+			<id>107</id>
+			<name>search agent total tranfer</name>
+			<path>com.vinplay.api.backend.processors.SearchAgentTranferProcessor</path>
+		</command>
+		<command>
+			<id>108</id>
+			<name>get ccu</name>
+			<path>com.vinplay.api.backend.processors.GetCCUProcessor</path>
+		</command>
+		<command>
+			<id>1080</id>
+			<name>get ccu filtered</name>
+			<path>com.vinplay.api.backend.processors.report.GetCCUFilteredProcessor</path>
+		</command>
+		<command>
+			<id>109</id>
+			<name>get user info</name>
+			<path>com.vinplay.api.backend.processors.ListUserInfoProcessor</path>
+		</command>
+		<command>
+			<id>110</id>
+			<name>List duplicate-IP login groups</name>
+			<path>com.vinplay.api.backend.processors.login.LoginLogDuplicateProcessor</path>
+		</command>
+		<command>
+			<id>9733</id>
+			<name>List user login logs</name>
+			<path>com.vinplay.api.backend.processors.login.ListUserLoginLogsProcessor</path>
+		</command>
+		<command>
+			<id>111</id>
+			<name>get user info</name>
+			<path>com.vinplay.api.backend.processors.SendMailGiftCodeProcessor</path>
+		</command>
+		<command>
+			<id>116</id>
+			<name>Export gift code machine</name>
+			<path>com.vinplay.api.backend.processors.GiftCodeMachineProcessor</path>
+		</command>
+		<command>
+			<id>117</id>
+			<name>Update gift code machine</name>
+			<path>com.vinplay.api.backend.processors.UpdateGiftCodeMachineProcessor</path>
+		</command>
+		<command>
+			<id>118</id>
+			<name>Lich su mua ban vin dai ly</name>
+			<path>com.vinplay.api.backend.processors.SearchAgentTranferMoneyStatusProcessor</path>
+		</command>
+		<command>
+			<id>119</id>
+			<name>Lich su bau cua</name>
+			<path>com.vinplay.api.backend.processors.LogBauCuaResultProcessor</path>
+		</command>
+		<command>
+			<id>120</id>
+			<name>Lich su mua ban vin dai ly</name>
+			<path>com.vinplay.api.backend.processors.GiftCodeRestoreProcessor</path>
+		</command>
+  		<command>
+			<id>121</id>
+			<name>Log pokego</name>
+			<path>com.vinplay.api.backend.processors.LogPoKeGoProcessor</path>
+		<command>
+			<id>122</id>
+			<name>Log Game Slot </name>
+			<path>com.vinplay.api.backend.processors.LogSlotProcessor</path>
+		</command>
+		</command>
+		<command>
+			<id>123</id>
+			<name>Top RechargeMoney</name>
+			<path>com.vinplay.api.backend.processors.TopRechargeMoneyProcessor</path>
+		</command>
+		<command>
+			<id>124</id>
+			<name>get captcha</name>
+			<path>com.vinplay.api.backend.processors.security.CaptchaProcessor</path>
+		</command>
+		<command>
+			<id>125</id>
+			<name>Block User</name>
+			<path>com.vinplay.api.backend.processors.BlockUserProcessor</path>
+		</command>
+		<command>
+			<id>126</id>
+			<name>Get User By list Nick Name</name>
+			<path>com.vinplay.api.backend.processors.GetListNickNameProcessor</path>
+		</command>
+		<command>
+			<id>127</id>
+			<name>Update top doanh so from agent</name>
+			<path>com.vinplay.api.backend.processors.UpdateTopDsFromAgentProcessor</path>
+		</command><command>
+			<id>128</id>
+			<name>export giftcode game store</name>
+			<path>com.vinplay.api.backend.processors.exportGiftCodeGameStoreProcessor</path>
+		</command>
+		<command>
+			<id>129</id>
+			<name>export giftcode game</name>
+			<path>com.vinplay.api.backend.processors.exportGiftCodeGameProcessor</path>
+		</command>
+		<command>
+			<id>130</id>
+			<name>Log vipoint event</name>
+			<path>com.vinplay.api.backend.processors.LogVipPointEventProcessor</path>
+		</command>
+		<command>
+			<id>131</id>
+			<name>user vipoint event</name>
+			<path>com.vinplay.api.backend.processors.UserVipPointEventProcessor</path>
+		</command>
+		<command>
+			<id>132</id>
+			<name>search all gift code game store </name>
+			<path>com.vinplay.api.backend.processors.searchAllGiftCodeGameStoreProcessor</path>
+		</command>
+		<command>
+			<id>133</id>
+			<name>search all gift code game  </name>
+			<path>com.vinplay.api.backend.processors.searchAllGiftCodeGameProcessor</path>
+		</command>
+		<command>
+			<id>134</id>
+			<name>Block gift code game  </name>
+			<path>com.vinplay.api.backend.processors.BlockGiftCodeProcessor</path>
+		</command>
+		<command>
+			<id>135</id>
+			<name>check giftcode by nickName  </name>
+			<path>com.vinplay.api.backend.processors.GiftCodeByNickNameProcessor</path>
+		</command>
+		<command>
+			<id>136</id>
+			<name>send mail giftcode auto  </name>
+			<path>com.vinplay.api.backend.processors.SendMailGiftCodeAutoProcessor</path>
+		</command>
+		<command>
+			<id>137</id>
+			<name>search tai xiu result  </name>
+			<path>com.vinplay.api.backend.processors.SearchLogTaiXiuResultProcessor</path>
+		</command>
+		<command>
+			<id>138</id>
+			<name>search agent total tranfer Admin</name>
+			<path>com.vinplay.api.backend.processors.SearchAgentTranferAdminProcessor</path>
+		</command>
+		<command>
+			<id>139</id>
+			<name>search agent  tranfer money by nickName</name>
+			<path>com.vinplay.api.backend.processors.SeachAgentTranferMoneyByNickNameProcessor</path>
+		</command>
+		<command>
+			<id>140</id>
+			<name>list total doanh so cap 2</name>
+			<path>com.vinplay.api.backend.processors.ListTotalDoanhSoLevel2Processor</path>
+		</command>
+    		<command>
+			<id>142</id>
+			<name>Lay cac chi so ve user</name>
+			<path>com.vinplay.api.backend.processors.GetUserIndexProcessor</path>
+		</command>
+		<command>
+			<id>143</id>
+			<name>Freeze Money transfer Agent</name>
+			<path>com.vinplay.api.backend.processors.FreezeMoneyTranferAgentProcessor</path>
+		</command>
+		<command>
+			<id>144</id>
+			<name>get list freeze money tranfer agent</name>
+			<path>com.vinplay.api.backend.processors.money.GetListFreezeMoneyTranferAgentProcessor</path>
+		</command>
+		<command>
+			<id>145</id>
+			<name>restore freeze money tranfer agent</name>
+			<path>com.vinplay.api.backend.processors.money.RestoreFreezeMoneyTranferAgentProcessor</path>
+		</command>
+		<!-- <command>
+			<id>148</id>
+			<name>doi soat nap vin 8x98</name>
+			<path>com.vinplay.api.backend.processors.doisoat.DoiSoatSms8x98Processor</path>
+		</command>
+		<command>
+			<id>149</id>
+			<name>doi soat nap vin 9029</name>
+			<path>com.vinplay.api.backend.processors.doisoat.DoiSoatSmsPlus9029Processor</path>
+		</command>
+		<command>
+			<id>150</id>
+			<name>doi soat nap th? vinplay card</name>
+			<path>com.vinplay.api.backend.processors.doisoat.DoiSoatRechargeByVinplayCardProcessor</path>
+		</command>
+		<command>
+			<id>151</id>
+			<name>Export data recharge by card</name>
+			<path>com.vinplay.api.backend.processors.doisoat.ExportDataRechargeByCardProcessor</path>
+		</command>
+		<command>
+			<id>152</id>
+			<name>Export data recharge by sms</name>
+			<path>com.vinplay.api.backend.processors.doisoat.ExportDataRechargeBySmsProcessor</path>
+		</command>
+		<command>
+			<id>153</id>
+			<name>Export data recharge by sms plus</name>
+			<path>com.vinplay.api.backend.processors.doisoat.ExportDataRechargeBySmsPlusProcessor</path>
+		</command> -->
+		<command>
+			<id>155</id>
+			<name>Lich su chuyen khoan cua dai ly tong</name>
+			<path>com.vinplay.api.backend.processors.SearchAgentTongTranferMoneyProcessor</path>
+		</command>
+   <!-- KhanhNV add 2017/03/06 - dai ly dang ky nhan thuong vincard - start -->
+		<command>
+			<id>156</id>
+			<name>Hien thi ty le nhan thuong vincard cua dai ly</name>
+			<path>com.vinplay.api.backend.processors.bonusAgent.ShowPercentBonusVincardProcessor</path>
+		</command>
+		<!-- KhanhNV add 2017/03/06 - dai ly dang ky nhan thuong vincard - end -->
+		<command>
+			<id>160</id>
+			<name>Get log nhan thuong nhiem vu</name>
+			<path>com.vinplay.api.backend.processors.userMission.GetLogReceivedRewardProcessor</path>
+		</command>
+		<command>
+			<id>162</id>
+			<name>Log phien tai xiu sieu toc</name>
+			<path>com.vinplay.api.backend.processors.gamelog.SearchLogTaiXiuSieuTocProcessor</path>
+		</command>
+		<command>
+			<id>163</id>
+			<name>Chi tiet log phien tai xiu sieu toc</name>
+			<path>com.vinplay.api.backend.processors.gamelog.SearchDetailLogTaiXiuSieuTocProcessor</path>
+		</command>
+
+		<command>
+			<id>301</id>
+			<name>save gift code</name>
+			<path>com.vinplay.api.backend.processors.GiftCodeProcessor</path>
+		</command>
+		<command>
+			<id>302</id>
+			<name>update gift code</name>
+			<path>com.vinplay.api.backend.processors.GiftCodeUpdateProcessor</path>
+		</command>
+		<command>
+			<id>303</id>
+			<name>search all gift code</name>
+			<path>com.vinplay.api.backend.processors.GiftCodeSearchAllProcessor</path>
+		</command>
+		<command>
+			<id>304</id>
+			<name>count price gift code</name>
+			<path>com.vinplay.api.backend.processors.CountGiftCodeByPriceProcessor</path>
+		</command>
+		<command>
+			<id>305</id>
+			<name>tool report gift code</name>
+			<path>com.vinplay.api.backend.processors.GiftCodeToolReportProcessor</path>
+		</command>
+		<command>
+			<id>306</id>
+			<name>save gift code admin</name>
+			<path>com.vinplay.api.backend.processors.GiftCodeAdminProcessor</path>
+		</command>
+		<command>
+			<id>307</id>
+			<name>search all gift code admin</name>
+			<path>com.vinplay.api.backend.processors.GiftCodeSearchAllAdminProcessor</path>
+		</command>
+		<command>
+			<id>308</id>
+			<name>count price gift code admin</name>
+			<path>com.vinplay.api.backend.processors.CountGiftCodeByPriceAdminProcessor</path>
+		</command>
+		<command>
+			<id>309</id>
+			<name>tool report gift code by source</name>
+			<path>com.vinplay.api.backend.processors.GiftCodeToolReportBySourceProcessor</path>
+		</command>
+		<command>
+			<id>310</id>
+			<name>upload gift code</name>
+			<path>com.vinplay.api.backend.processors.UploadGiftCodeProcessor</path>
+		</command>
+		<command>
+			<id>311</id>
+			<name>xuat giftcode dai ly</name>
+			<path>com.vinplay.api.backend.processors.ExportGiftCodeAgentProcessor</path>
+		</command>
+		<command>
+			<id>319</id>
+			<name>get GiftCode by nickName </name>
+			<path>com.vinplay.api.backend.processors.GetNickNameByGiftCodeProcessor</path>
+		</command>
+		<command>
+			<id>401</id>
+			<name>create mail box</name>
+			<path>com.vinplay.api.backend.processors.SendMailProcessor</path>
+		</command>
+		<command>
+			<id>402</id>
+			<name>list mail box </name>
+			<path>com.vinplay.api.backend.processors.ListMailBoxProcessor</path>
+		</command>
+		<command>
+			<id>403</id>
+			<name>delete mail box </name>
+			<path>com.vinplay.api.backend.processors.DeleteMailBoxProcessor</path>
+		</command>
+		<command>
+			<id>404</id>
+			<name>update status mail box </name>
+			<path>com.vinplay.api.backend.processors.UpdateStatusMailProcessor</path>
+		</command>
+		
+		<!-- <command>
+			<id>405</id>
+			<name>Search log tranfer money </name>
+			<path>com.vinplay.api.backend.processors.SearchLogTranferMoneyUserProcessor</path>
+		</command> -->
+		<command>
+			<id>406</id>
+			<name>Delete mail box admin</name>
+			<path>com.vinplay.api.backend.processors.DeleteMailBoxAdminProcessor</path>
+		</command>
+		<command>
+			<id>407</id>
+			<name>Get total vin By nickName </name>
+			<path>com.vinplay.api.backend.processors.GetTotalVinByUserProcessor</path>
+		</command>
+		<command>
+			<id>408</id>
+			<name>Tim kiem vong quay may man vip </name>
+			<path>com.vinplay.api.backend.processors.LuckyVipHistoryProcessor</path>
+		</command>
+		<command>
+			<id>409</id>
+			<name>Tim kiem vong quay may man  </name>
+			<path>com.vinplay.api.backend.processors.LuckyNewHistoryProcessor</path>
+		</command>
+		<command>
+			<id>501</id>
+			<name>list log bau cua </name>
+			<path>com.vinplay.api.backend.processors.LogBauCuaTransactionProcessor</path>
+		</command>
+		<command>
+			<id>502</id>
+			<name>get log bau cau detail</name>
+			<path>com.vinplay.api.backend.processors.LogBauCuaTransactionDetailProcesssor</path>
+		</command>
+		<command>
+			<id>503</id>
+			<name>list log cao thap</name>
+			<path>com.vinplay.api.backend.processors.ListCaoThapProcessor</path>
+		</command>
+		<command>
+			<id>504</id>
+			<name>list log mini poker</name>
+			<path>com.vinplay.api.backend.processors.ListMiniPokerProcessor</path>
+		</command>
+		<command>
+			<id>505</id>
+			<name>list log tai xiu</name>
+			<path>com.vinplay.api.backend.processors.LogTaiXiuTransactionProcessor</path>
+		</command>
+		<command>
+			<id>506</id>
+			<name>list log tai xiu detail</name>
+			<path>com.vinplay.api.backend.processors.ListTaiXiuTransactionDetailProcessor</path>
+		</command>
+
+		<command>
+			<id>507</id>
+			<name>list log tai xiu now</name>
+			<path>com.vinplay.api.backend.processors.ListTaiXiuTransactionDetailNowProcessor</path>
+		</command>
+		<command>
+			<id>509</id>
+			<name>search mobile user</name>
+			<path>com.vinplay.api.backend.processors.UserNewMobileProcessor</path>
+		</command>
+		<command>
+			<id>511</id>
+			<name>list log xocdia now</name>
+			<path>com.vinplay.api.backend.processors.ListXocDiaTransactionDetailNowProcessor</path>
+		</command>
+		<command>
+			<id>512</id>
+			<name>list log sibo now</name>
+			<path>com.vinplay.api.backend.processors.ListSicboTransactionDetailNowProcessor</path>
+		</command>
+		<command>
+			<id>513</id>
+			<name>list log lode</name>
+			<path>com.vinplay.api.backend.processors.lottery.ListLotteryTransactionProcessor</path>
+		</command>
+		<command>
+			<id>516</id>
+			<name>Get log slot</name>
+			<path>com.vinplay.api.backend.processors.logSlotGame.logSlotProcessor.LogSlotProcessor</path>
+		</command>
+		<command>
+			<id>601</id>
+			<name>get game config</name>
+			<path>com.vinplay.api.backend.processors.GetGameConfigProcessor</path>
+		</command>
+		<command>
+			<id>602</id>
+			<name>create game config</name>
+			<path>com.vinplay.api.backend.processors.CreateGameConfigProcessor</path>
+		</command>
+		<command>
+			<id>603</id>
+			<name>update game config</name>
+			<path>com.vinplay.api.backend.processors.UpdateGameConfigProcessor</path>
+		</command>
+		<command>
+			<id>604</id>
+			<name>del gift code</name>
+			<path>com.vinplay.api.backend.processors.DeleteGiftCodeProcessor</path>
+		</command>
+		<command>
+			<id>606</id>
+			<name>report money user by nickname</name>
+			<path>com.vinplay.api.backend.processors.report.ReportMoneyUserByNickNameProcessor</path>
+		</command>
+		<command>
+			<id>607</id>
+			<name>send mail vincard</name>
+			<path>com.vinplay.api.backend.processors.SendMailCardMobileProcessor</path>
+		</command>
+		<command>
+			<id>608</id>
+			<name>get user info by phone</name>
+			<path>com.vinplay.api.backend.processors.GetUserInfoByPhoneProcessor</path>
+		</command>
+		<command>
+			<id>701</id>
+			<name>login admin</name>
+			<path>com.vinplay.api.backend.processors.login.LoginAdminProcessor</path>
+		</command>
+
+		<command>
+			<id>703</id>
+			<name>remove cache</name>
+			<path>com.vinplay.api.backend.processors.cache.RemoveCacheProcessor</path>
+		</command>
+		<command>
+			<id>704</id>
+			<name>update vp cache</name>
+			<path>com.vinplay.api.backend.processors.cache.UpdateVippointProcessor</path>
+		</command>
+		
+		
+		
+		<command>
+			<id>712</id>
+			<name>log refund fee agent</name>
+			<path>com.vinplay.api.backend.processors.money.LogRefundFeeAgentProcessor</path>
+		</command>
+		<command>
+			<id>713</id>
+			<name>get list freeze money</name>
+			<path>com.vinplay.api.backend.processors.money.GetListFreezeMoneyProcessor</path>
+		</command>
+		<command>
+			<id>714</id>
+			<name>restore freeze money</name>
+			<path>com.vinplay.api.backend.processors.money.RestoreFreezeMoneyProcessor</path>
+		</command>
+		<command>
+			<id>715</id>
+			<name>update cache freeze</name>
+			<path>com.vinplay.api.backend.processors.cache.UpdateCacheFreezeProcessor</path>
+		</command>
+		<command>
+			<id>716</id>
+			<name>check nickname</name>
+			<path>com.vinplay.api.backend.processors.login.CheckNicknameProcessor</path>
+		</command>
+		<command>
+			<id>717</id>
+			<name>get otp app</name>
+			<path>com.vinplay.api.backend.processors.otp.GetOtpAppProcessor</path>
+		</command>
+		<command>
+			<id>718</id>
+			<name>send SMS</name>
+			<path>com.vinplay.api.backend.processors.brandname.SendSMSProcessor</path>
+		</command>
+
+		<command>
+			<id>722</id>
+			<name>get log sms otp</name>
+			<path>com.vinplay.api.backend.processors.log.LogSmsOtpProcessor</path>
+		</command>
+		<command>
+			<id>723</id>
+			<name>write - log mkt info </name>
+			<path>com.vinplay.api.backend.processors.schedules.StatisticUserMakertingProcessor</path>
+		</command>
+		<command>
+			<id>725</id>
+			<name>log bonus top ds</name>
+			<path>com.vinplay.api.backend.processors.money.LogBonusTopDSAgentProcessor</path>
+		</command>
+		<command>
+			<id>726</id>
+			<name>update vp event</name>
+			<path>com.vinplay.api.backend.processors.vippoint.UpdateVippointEventProcessor</path>
+		</command>
+		
+		<command>
+			<id>729</id>
+			<name>get jackpot</name>
+			<path>com.vinplay.api.backend.processors.jackpot.GetListJackpotUserProcessor</path>
+		</command>
+		<command>
+			<id>730</id>
+			<name>set jackpot</name>
+			<path>com.vinplay.api.backend.processors.jackpot.SetJackpotProcessor</path>
+		</command>
+		<command>
+			<id>731</id>
+			<name>set result game</name>
+			<path>com.vinplay.api.backend.processors.jackpot.SetResultGameProcessor</path>
+		</command>
+		<command>
+			<id>732</id>
+			<name>list result game</name>
+			<path>com.vinplay.api.backend.processors.jackpot.GetSetDataResultProcessor</path>
+		</command>
+		<command>
+			<id>733</id>
+			<name>delete result game</name>
+			<path>com.vinplay.api.backend.processors.jackpot.DeleteSetDataResultProcessor</path>
+		</command>
+		<command>
+			<id>734</id>
+			<name>set jackpot tai xiu</name>
+			<path>com.vinplay.api.backend.processors.jackpot.SetJackpotTaiXiuProcessor</path>
+		</command>
+
+
+		<command>
+			<id>1992</id>
+			<name>Check cache processor</name>
+			<path>com.vinplay.api.backend.processors.CheckCacheProcessor</path>
+		</command>
+		<command>
+			<id>1993</id>
+			<name>Check cache processor</name>
+			<path>com.vinplay.api.backend.processors.chat.AdminChatProcessor</path>
+		</command>
+		<command>
+			<id>1994</id>
+			<name>Bot ban vin</name>
+			<path>com.vinplay.api.backend.processors.ad.BotProcessor</path>
+		</command>
+		<command>
+			<id>1995</id>
+			<name>Bot cao thap</name>
+			<path>com.vinplay.api.backend.processors.ad.BotCaoThapProcessor</path>
+		</command>
+
+		<command>
+			<id>8797</id>
+			<name>Update fish money</name>
+			<path>com.vinplay.api.backend.processors.money.UpdateMoneyUserBanCaProcessor</path>
+		</command>
+		<command>
+			<id>8798</id>
+			<name>Force Result taixiu</name>
+			<path>com.vinplay.api.backend.processors.taixiu.ForceResultTaiXiu</path>
+		</command>
+		<command>
+			<id>8799</id>
+			<name>Force User Jackpot Slot</name>
+			<path>com.vinplay.api.backend.processors.slot.SetSlotJackpot</path>
+		</command>
+		<command>
+			<id>8800</id>
+			<name>Reset slot pot</name>
+			<path>com.vinplay.api.backend.processors.slot.ResetSlotPot</path>
+		</command>
+		<command>
+			<id>8804</id>
+			<name>Force Result Sicbo</name>
+			<path>com.vinplay.api.backend.processors.taixiu.ForceResultSicbo</path>
+		</command>
+		<command>
+			<id>8807</id>
+			<name>Get Live Bet List (TaiXiu/Sicbo — current round, real players)</name>
+			<path>com.vinplay.api.backend.processors.taixiu.GetLiveBetListProcessor</path>
+		</command>
+		<command>
+			<id>8805</id>
+			<name>Get Game Fund (taixiu/sicbo)</name>
+			<path>com.vinplay.api.backend.processors.taixiu.GetGameFundProcessor</path>
+		</command>
+		<command>
+			<id>8806</id>
+			<name>Set Game Fund (taixiu/sicbo)</name>
+			<path>com.vinplay.api.backend.processors.taixiu.SetGameFundProcessor</path>
+		</command>
+
+		<!-- Remapped: legacy processors were class-not-found -->
+		<command>
+			<id>8801</id>
+			<name>Insert or update player bank</name>
+			<path>com.vinplay.api.backend.processors.bank.AdminUpdateBankProcessor</path>
+		</command>
+		<command>
+			<id>8802</id>
+			<name>Search player bank</name>
+			<path>com.vinplay.api.backend.processors.bank.AdminSearchPlayerBankProcessor</path>
+		</command>
+		<command>
+			<id>8803</id>
+			<name>Bank delete</name>
+			<path>com.vinplay.api.backend.processors.payment.DeleteBankProcessor</path>
+		</command>
+		<!--		thay boi 92xx-->
+		<command>
+			<id>8810</id>
+			<name>Search deposit</name>
+			<path>com.vinplay.api.backend.processors.payment.SearchDepositProcessor</path>
+		</command>
+<!--		thay boi 92xx-->
+		<command>
+			<id>8811</id>
+			<name>Search withdraw</name>
+			<path>com.vinplay.api.backend.processors.payment.SearchWithdrawProcessor</path>
+		</command>
+		<command>
+			<id>8812</id>
+			<name>Get list provider support withdraw of bankcode request</name>
+			<path>com.vinplay.api.backend.processors.payment.GetListProviderSupportWithdrawProcessor</path>
+		</command>
+		<command>
+			<id>8814</id>
+			<name>Reject request withdraw</name>
+			<path>com.vinplay.api.backend.processors.payment.RejectWithdrawProcessor</path>
+		</command>
+		<!--		co the xoa boi 93xx-->
+		<command>
+			<id>8816</id>
+			<name>Log IBC</name>
+			<path>com.vinplay.api.backend.processors.game3rd.IbcGameReportProcessor</path>
+		</command>
+		<!--		co the xoa boi 93xx-->
+		<command>
+			<id>8817</id>
+			<name>Log AG</name>
+			<path>com.vinplay.api.backend.processors.game3rd.AgGameReportProcessor</path>
+		</command>
+		<!--		co the xoa boi 93xx-->
+		<command>
+			<id>8818</id>
+			<name>Log WM</name>
+			<path>com.vinplay.api.backend.processors.game3rd.WmGameReportProcessor</path>
+		</command>
+		<command>
+			<id>8819</id>
+			<name>create or update bank name</name>
+			<path>com.vinplay.api.backend.processors.bank.BankNameCrudProcessor</path>
+		</command>
+		<command>
+			<id>8820</id>
+			<name>list bank names</name>
+			<path>com.vinplay.api.backend.processors.bank.BankNameListProcessor</path>
+		</command>
+		<command>
+			<id>8821</id>
+			<name>delete bank name</name>
+			<path>com.vinplay.api.backend.processors.bank.BankNameDeleteProcessor</path>
+		</command>
+		<command>
+			<id>8822</id>
+			<name>Transaction Detail</name>
+			<path>com.vinplay.api.backend.processors.log.ReportTransactionDetailProcessor</path>
+		</command>
+		<command>
+			<id>8823</id>
+			<name>Log Money User Nap Vin</name>
+			<path>com.vinplay.api.backend.processors.log.LogMoneyUserNapVinProcessor</path>
+		</command>
+		<command>
+			<id>8824</id>
+			<name>Log Money User Tieu Vin</name>
+			<path>com.vinplay.api.backend.processors.log.LogMoneyUserTieuVinProcessor</path>
+		</command>
+		<command>
+			<id>8825</id>
+			<name>Log Money User Vin</name>
+			<path>com.vinplay.api.backend.processors.log.LogMoneyUserVinProcessor</path>
+		</command>
+		<command>
+			<id>8826</id>
+			<name>Show List Agent</name>
+			<path>com.vinplay.api.backend.processors.agent.ListAgentProcessor</path>
+		</command>
+		<command>
+			<id>8827</id>
+			<name>Show User Of Agent, Sum Nap,Rut</name>
+			<path>com.vinplay.api.backend.processors.agent.ListUserOfAgentProcessor</path>
+		</command>
+		<command>
+			<id>8829</id>
+			<name>List Child Agent by level</name>
+			<path>com.vinplay.api.backend.processors.agent.ListChildAgentProcessor</path>
+		</command>
+		<command>
+			<id>8830</id>
+			<name>List Member Of Agent (dai_ly=0)</name>
+			<path>com.vinplay.api.backend.processors.agent.ListMemberOfAgentProcessor</path>
+		</command>
+<!--		replace with 895x for user detail-->
+		<command>
+			<id>8828</id>
+			<name>Show Detail User, DB Log_report_user</name>
+			<path>com.vinplay.api.backend.processors.agent.DetailUserOfAgentProcessor</path>
+		</command>
+		<command>
+			<id>8834</id>
+			<name>UserBonusSearchAPI</name>
+			<path>com.vinplay.api.backend.processors.payment.UserBonusSearchAPI</path>
+		</command>
+		<command>
+			<id>8840</id>
+			<name>Count User In Agent</name>
+			<path>com.vinplay.api.backend.processors.agent.CountUserInAgentProcessor</path>
+		</command>
+
+		<!--		89xx for hoan tra user group-->
+		<command>
+			<id>8900</id>
+			<name>cac thao tac hoan tra</name>
+			<path>com.vinplay.api.backend.processors.hoantra.CalculateDataHoanTraProcessor</path>
+		</command>
+		<command>
+			<id>8902</id>
+			<name>show du lieu hoan tra ngay hom truoc</name>
+			<path>com.vinplay.api.backend.processors.hoantra.GetDataHoanTraProcessor</path>
+		</command>
+		<command>
+			<id>8903</id>
+			<name>show lich su hoan tra</name>
+			<path>com.vinplay.api.backend.processors.hoantra.GetDataHoanTraHistoriesProcessor</path>
+		</command>
+		<command>
+			<id>8904</id>
+			<name>user ti le thang cao</name>
+			<path>com.vinplay.api.backend.processors.jackpot.GetSetDataUserWinProcessor</path>
+		</command>
+
+		<command>
+			<id>8850</id>
+			<name>Show Detail User, DB Log_report_user</name>
+			<path>com.vinplay.api.backend.processors.agent.SearchLogUserDetailProccessor</path>
+		</command>
+
+		<!--		90xx for giftcode group-->
+		<command>
+			<id>9000</id>
+			<name>insert new gift code</name>
+			<path>com.vinplay.api.backend.processors.giftcode.CreateGiftCodeProcessor</path>
+		</command>
+		<command>
+			<id>9001</id>
+			<name>show gift code </name>
+			<path>com.vinplay.api.backend.processors.giftcode.ShowGiftCodeProcessor</path>
+		</command>
+		<command>
+			<id>9002</id>
+			<name>show gift code đã sử dụng</name>
+			<path>com.vinplay.api.backend.processors.giftcode.ShowGiftCodeUsedProcessor</path>
+		</command>
+		<command>
+			<id>9003</id>
+			<name>create gift code for list user and send mail</name>
+			<path>com.vinplay.api.backend.processors.giftcode.CreateGiftCodeAndSendMaiProcessor</path>
+		</command>
+		<command>
+			<id>9004</id>
+			<name>insert gift code local-only (giftCode, Amount)</name>
+			<path>com.vinplay.api.backend.processors.giftcode.CreateGiftCodeLocalProcessor</path>
+		</command>
+
+		<command>
+			<id>9005</id>
+			<name>create gift code bundle</name>
+			<path>com.vinplay.api.backend.processors.giftcode.CreateGiftCodeBundleProcessor</path>
+		</command>
+
+		<command>
+			<id>9006</id>
+			<name>show used gift code in bundle</name>
+			<path>com.vinplay.api.backend.processors.giftcode.ShowUsedGiftCodeBundleProcessor</path>
+		</command>
+
+		<command>
+			<id>9007</id>
+			<name>show gift code bundle list</name>
+			<path>com.vinplay.api.backend.processors.giftcode.ShowGiftCodeBundleProcessor</path>
+		</command>
+
+		<command>
+			<id>9008</id>
+			<name>show gift code bundle</name>
+			<path>com.vinplay.api.backend.processors.giftcode.ShowGiftCodeBundleDetailProcessor</path>
+		</command>
+
+		<!--		91xx for user-->
+		<command>
+			<id>9101</id>
+			<name>doi mat khau user</name>
+			<path>com.vinplay.api.backend.processors.user.ChangePasswordUserProcessor</path>
+		</command>
+		<command>
+			<id>9102</id>
+			<name>dem user nap moi trong ngay</name>
+			<path>com.vinplay.api.backend.processors.user.CountListUserRechargeInDay</path>
+		</command>
+
+
+		<!--		92xx for deposit withdraw-->
+		<command>
+			<id>9200</id>
+			<name>Search withdraw</name>
+			<path>com.vinplay.api.backend.processors.report.WithdrawalListProcessor</path>
+		</command>
+		<command>
+			<id>9201</id>
+			<name>Search deposit</name>
+			<path>com.vinplay.api.backend.processors.report.DepositLogProcessor</path>
+		</command>
+
+		<!--		93xx for log game thirdparty TODO change query to new flow -->
+		<command>
+			<id>9300</id>
+			<name>Log IBC</name>
+			<path>com.vinplay.api.backend.processors.game3rd.IbcGameReportProcessor</path>
+		</command>
+		<command>
+			<id>9301</id>
+			<name>Log AG</name>
+			<path>com.vinplay.api.backend.processors.game3rd.AgGameReportProcessor</path>
+		</command>
+		<command>
+			<id>9302</id>
+			<name>Log WM</name>
+			<path>com.vinplay.api.backend.processors.game3rd.WmGameReportProcessor</path>
+		</command>
+		<command>
+			<id>9304</id>
+			<name>Log CMD</name>
+			<path>com.vinplay.api.backend.processors.game3rd.CmdGameReportProcessor</path>
+		</command>
+
+		<command>
+			<id>9310</id>
+			<name>show Detail IBC</name>
+			<path>com.vinplay.api.backend.processors.game3rd.ShowDetailIBCGameProcessor</path>
+		</command>
+		<command>
+			<id>9311</id>
+			<name>show Detail AG</name>
+			<path>com.vinplay.api.backend.processors.game3rd.ShowDetailAGGameProcessor</path>
+		</command>
+		<command>
+			<id>9312</id>
+			<name>show Detail WM</name>
+			<path>com.vinplay.api.backend.processors.game3rd.ShowDetailWMGameProcessor</path>
+		</command>
+		<command>
+			<id>9313</id>
+			<name>show Detail WM</name>
+			<path>com.vinplay.api.backend.processors.game3rd.ShowDetailCMDGameProcessor</path>
+		</command>
+
+		<!--		940x for CRUD Banner TODO change query to new flow -->
+		<command>
+			<id>9400</id>
+			<name>Add banner</name>
+			<path>com.vinplay.api.backend.processors.banner.AddNewBannerProcessor</path>
+		</command>
+		<command>
+			<id>9401</id>
+			<name>Update banner</name>
+			<path>com.vinplay.api.backend.processors.banner.UpdateBannerProcessor</path>
+		</command>
+		<command>
+			<id>9402</id>
+			<name>Delete banner</name>
+			<path>com.vinplay.api.backend.processors.banner.DeleteBannerProcessor</path>
+		</command>
+		<command>
+			<id>9403</id>
+			<name>Show banner</name>
+			<path>com.vinplay.api.backend.processors.banner.ShowListBannerProcessor</path>
+		</command>
+
+		<!--		941x for CRUD Banner TODO change query to new flow -->
+		<command>
+			<id>9410</id>
+			<name>Add Event</name>
+			<path>com.vinplay.api.backend.processors.event.AddNewEventProcessor</path>
+		</command>
+		<command>
+			<id>9411</id>
+			<name>Update Event</name>
+			<path>com.vinplay.api.backend.processors.event.UpdateEventProcessor</path>
+		</command>
+		<command>
+			<id>9412</id>
+			<name>Delete Event</name>
+			<path>com.vinplay.api.backend.processors.event.DeleteEventProcessor</path>
+		</command>
+		<command>
+			<id>9413</id>
+			<name>Show Event</name>
+			<path>com.vinplay.api.backend.processors.event.ShowListEventProcessor</path>
+		</command>
+
+		<!--		942x for CRUD Agent TODO change query to new flow -->
+		<command>
+			<id>9420</id>
+			<name>Search agency</name>
+			<path>com.vinplay.api.backend.processors.agent.ListUserAgentProcessor</path>
+		</command>
+		<command>
+			<id>9421</id>
+			<name>Delete Agent</name>
+			<path>com.vinplay.api.backend.processors.agent.DeleteUserAgentProcessor</path>
+		</command>
+		<command>
+			<id>9422</id>
+			<name>Add New Agent</name>
+			<path>com.vinplay.api.backend.processors.agent.AddNewUserAgentProcessor</path>
+		</command>
+		<command>
+			<id>9423</id>
+			<name>Update Agent</name>
+			<path>com.vinplay.api.backend.processors.agent.UpdateUserAgentProcessor</path>
+		</command>
+		<command>
+			<id>9424</id>
+			<name>Detail Agent</name>
+			<path>com.vinplay.api.backend.processors.agent.DetailUserAgentProcessor</path>
+		</command>
+		<command>
+			<id>9425</id>
+			<name>list User of Agent</name>
+			<path>com.vinplay.api.backend.processors.agent.ListUserOfUserAgentProcessor</path>
+		</command>
+		<command>
+			<id>9426</id>
+			<name>change password Agent</name>
+			<path>com.vinplay.api.backend.processors.agent.ChangePasswordUserAgentProcessor</path>
+		</command>
+		<command>
+			<id>9428</id>
+			<name>Login agent</name>
+			<path>com.vinplay.api.backend.processors.agent.LoginAgentProcessor</path>
+		</command>
+		<command>
+			<id>9429</id>
+			<name>Export user of agency</name>
+			<path>com.vinplay.api.backend.processors.agent.ExportUsersProcessor</path>
+		</command>
+		<command>
+			<id>9430</id>
+			<name>Update agency code for user play</name>
+			<path>com.vinplay.api.backend.processors.agent.UpdateAgencyCode4UserplayProcessor</path>
+		</command>
+		<command>
+			<id>9431</id>
+			<name>Report general for agency</name>
+			<path>com.vinplay.api.backend.processors.agent.ReportGeneral4AgencyProcessor</path>
+		</command>
+		<command>
+			<id>9537</id>
+			<name>Report general for agency (alias)</name>
+			<path>com.vinplay.api.backend.processors.agent.ReportGeneral4AgencyProcessor</path>
+		</command>
+		<command>
+			<id>9538</id>
+			<name>Chart deposit withdraw for agency</name>
+			<path>com.vinplay.api.backend.processors.agent.ChartDepositWithdraw4AgencyProcessor</path>
+		</command>
+		<command>
+			<id>9539</id>
+			<name>Today report overview and games for agency</name>
+			<path>com.vinplay.api.backend.processors.agent.TodayReport4AgencyProcessor</path>
+		</command>
+		<command>
+			<id>9540</id>
+			<name>Get rebate commission config for agency</name>
+			<path>com.vinplay.api.backend.processors.agent.GetRebateConfig4AgencyProcessor</path>
+		</command>
+		<command>
+			<id>9541</id>
+			<name>Get rebate logs for agency</name>
+			<path>com.vinplay.api.backend.processors.agent.GetRebateLogs4AgencyProcessor</path>
+		</command>
+		<command>
+			<id>9542</id>
+			<name>Search game wallet fluctuation log for agency downlines</name>
+			<path>com.vinplay.api.backend.processors.agent.SearchLogMoney4AgencyProcessor</path>
+		</command>
+		<command>
+			<id>9543</id>
+			<name>Get detailed info for a downline agency member</name>
+			<path>com.vinplay.api.backend.processors.agent.DetailMemberOfAgencyProcessor</path>
+		</command>
+		<command>
+			<id>9544</id>
+			<name>Search partner settlement by day</name>
+			<path>com.vinplay.api.backend.processors.agent.PartnerSettlement4AgencyProcessor</path>
+		</command>
+		<command>
+			<id>9545</id>
+			<name>Search Third-Party Casino betting history for agency</name>
+			<path>com.vinplay.api.backend.processors.agent.SearchGame3rdBettingHistory4AgencyProcessor</path>
+		</command>
+		<command>
+			<id>9546</id>
+			<name>Top Partners for agency</name>
+			<path>com.vinplay.api.backend.processors.agent.TopPartners4AgencyProcessor</path>
+		</command>
+		<command>
+			<id>9432</id>
+			<name>Change status transaction withdraw</name>
+			<path>com.vinplay.api.backend.processors.payment.UpdateWithdrawalStatusProcessor</path>
+		</command>
+		<command>
+			<id>9433</id>
+			<name>log count user</name>
+			<path>com.vinplay.api.backend.processors.report.LogCountUserApi</path>
+		</command>
+		<command>
+			<id>9434</id>
+			<name>Search log bet shot fish game</name>
+			<path>com.vinplay.api.backend.processors.game3rd.FishLogSearchProcessor</path>
+		</command>
+		<command>
+			<id>9435</id>
+			<name>Search log bet sbo game</name>
+			<path>com.vinplay.api.backend.processors.game3rd.SboGameReportProcessor</path>
+		</command>
+		<command>
+			<id>9436</id>
+			<name>Get balance of shot fish game</name>
+			<path>com.vinplay.api.backend.processors.game3rd.FishCheckBalanceProcessor</path>
+		</command>
+		<command>
+			<id>9437</id>
+			<name>Get sum play games</name>
+			<path>com.vinplay.api.backend.processors.user.SumPlayGame</path>
+		</command>
+		<command>
+			<id>9438</id>
+			<name>Search log Ebet game</name>
+			<path>com.vinplay.api.backend.processors.game3rd.EbetLogSearchProcessor</path>
+		</command>
+		<command>
+			<id>9439</id>
+			<name>Search log attendance</name>
+			<path>com.vinplay.api.backend.processors.attendance.AttendanceLogSearchProcessor</path>
+		</command>
+		<command>
+			<id>9440</id>
+			<name>Add new agent children</name>
+			<path>com.vinplay.api.backend.processors.agent.AddNewUserAgentChildProcessor</path>
+		</command>
+		<command>
+			<id>9441</id>
+			<name>Get list children of agent</name>
+			<path>com.vinplay.api.backend.processors.agent.GetChilds4AgentProcessor</path>
+		</command>
+		<command>
+			<id>9442</id>
+			<name>Create new bank of agent</name>
+			<path>com.vinplay.api.backend.processors.agent.CreateAgentBankProcessor</path>
+		</command>
+		<command>
+			<id>9443</id>
+			<name>Update bank of agent</name>
+			<path>com.vinplay.api.backend.processors.agent.UpdateAgentBankProcessor</path>
+		</command>
+		<command>
+			<id>9444</id>
+			<name>Delete bank of agent</name>
+			<path>com.vinplay.api.backend.processors.agent.DeleteAgentBankProcessor</path>
+		</command>
+		<command>
+			<id>9445</id>
+			<name>Get detail bank of agent</name>
+			<path>com.vinplay.api.backend.processors.agent.GetDetailAgentBankProcessor</path>
+		</command>
+		<command>
+			<id>9446</id>
+			<name>Search detail bank of agent</name>
+			<path>com.vinplay.api.backend.processors.agent.SearchAgentBankProccessor</path>
+		</command>
+		<command>
+			<id>9447</id>
+			<name>Search bank for agent admin</name>
+			<path>com.vinplay.api.backend.processors.agent.BankSearchAPI</path>
+		</command>
+		<command>
+			<id>9448</id>
+			<name>Create transaction topup for agent admin</name>
+			<path>com.vinplay.api.backend.processors.agent.CreateAgentTransactionProccessor</path>
+		</command>
+		<command>
+			<id>9449</id>
+			<name>Reject transaction topup for agent admin</name>
+			<path>com.vinplay.api.backend.processors.agent.RejectAgentTransactionProccessor</path>
+		</command>
+		<command>
+			<id>9450</id>
+			<name>Search transaction topup for for agent admin</name>
+			<path>com.vinplay.api.backend.processors.agent.SearchAgentTransactionProccessor</path>
+		</command>
+		<command>
+			<id>9451</id>
+			<name>Approved transaction topup for BO</name>
+			<path>com.vinplay.api.backend.processors.agent.ApproveAgentTransactionByBOProccessor</path>
+		</command>
+		<command>
+			<id>9452</id>
+			<name>Reject transaction topup for BO</name>
+			<path>com.vinplay.api.backend.processors.agent.RejectAgentTransactionByBOProccessor</path>
+		</command>
+		<command>
+			<id>9453</id>
+			<name>Search transaction topup for BO</name>
+			<path>com.vinplay.api.backend.processors.agent.SearchAgentTransactionByBOProccessor</path>
+		</command>
+		<command>
+			<id>9454</id>
+			<name>Approved or Reject deposit for admin agent</name>
+			<path>com.vinplay.api.backend.processors.agent.Deposit4AgentAdminProccessor</path>
+		</command>
+		<command>
+			<id>9455</id>
+			<name>Search deposit for admin agent</name>
+			<path>com.vinplay.api.backend.processors.agent.SearchDeposit4AgentAdminProccessor</path>
+		</command>
+		<command>
+			<id>9456</id>
+			<name>Search deposit for BO</name>
+			<path>com.vinplay.api.backend.processors.agent.SearchDeposit4BOProccessor</path>
+		</command>
+		<command>
+			<id>9457</id>
+			<name>Approved or Reject withdraw for admin agent</name>
+			<path>com.vinplay.api.backend.processors.agent.Withdraw4AgentAdminProccessor</path>
+		</command>
+		<command>
+			<id>9458</id>
+			<name>Search withdraw for admin agent</name>
+			<path>com.vinplay.api.backend.processors.agent.SearchWithdraw4AgentAdminProccessor</path>
+		</command>
+		<command>
+			<id>9459</id>
+			<name>Search withdraw for BO</name>
+			<path>com.vinplay.api.backend.processors.agent.SearchWithdraw4BOProccessor</path>
+		</command>
+		<command>
+			<id>9460</id>
+			<name>Get agency wallet balance</name>
+			<path>com.vinplay.api.backend.processors.agent.GetAgencyWalletProcessor</path>
+		</command>
+		<command>
+			<id>9890</id>
+			<name>Convert agency wallet to game wallet (1:1)</name>
+			<path>com.vinplay.api.backend.processors.agent.WithdrawAgencyWalletProcessor</path>
+		</command>
+		<command>
+			<id>9891</id>
+			<name>Agency wallet transaction history</name>
+			<path>com.vinplay.api.backend.processors.agent.GetAgencyWalletHistoryProcessor</path>
+		</command>
+		<command>
+			<id>9892</id>
+			<name>Get agent hierarchy tree</name>
+			<path>com.vinplay.api.backend.processors.agentcode.GetAgentHierarchyTreeProcessor</path>
+		</command>
+		<!-- SUN-865 commission UI: provider + game catalog for admin dropdowns -->
+		<command>
+			<id>9893</id>
+			<name>SUN-885 list GSC providers</name>
+			<path>com.vinplay.api.backend.processors.gsc.ListGSCProvidersProcessor</path>
+		</command>
+		<command>
+			<id>9894</id>
+			<name>SUN-886 list GSC games per provider</name>
+			<path>com.vinplay.api.backend.processors.gsc.ListGSCGamesProcessor</path>
+		</command>
+		<!-- AWC (Asia Win Connect) — SUN-944 admin endpoints -->
+		<command>
+			<id>9895</id>
+			<name>SUN-944 AWC bet history</name>
+			<path>com.vinplay.api.backend.processors.awc.GetAwcBetHistoryProcessor</path>
+		</command>
+		<command>
+			<id>9896</id>
+			<name>SUN-944 sync AWC game catalog</name>
+			<path>com.vinplay.api.backend.processors.awc.SyncAwcGameCatalogProcessor</path>
+		</command>
+		<command>
+			<id>9897</id>
+			<name>GitLab #19 toggle gsc_game_catalog.active</name>
+			<path>com.vinplay.api.backend.processors.gsc.SetGSCGameAvailableProcessor</path>
+		</command>
+		<!-- Unified game-catalog admin (AWC + GSC) — list providers / list games / toggle active / sync from provider -->
+		<command>
+			<id>9980</id>
+			<name>list providers under platform (awc|gsc)</name>
+			<path>com.vinplay.api.backend.processors.gamecatalog.ListGameCatalogProvidersProcessor</path>
+		</command>
+		<command>
+			<id>9981</id>
+			<name>list games for platform/provider with paging</name>
+			<path>com.vinplay.api.backend.processors.gamecatalog.ListGameCatalogProcessor</path>
+		</command>
+		<command>
+			<id>9982</id>
+			<name>toggle one or many games active/inactive</name>
+			<path>com.vinplay.api.backend.processors.gamecatalog.SetGameCatalogActiveProcessor</path>
+		</command>
+		<command>
+			<id>9983</id>
+			<name>sync awc game catalog from provider getGameListByAgent</name>
+			<path>com.vinplay.api.backend.processors.gamecatalog.SyncGameCatalogProcessor</path>
+		</command>
+		<!-- Per-user block list: refuse bets for a player on a chosen provider/platform/game/category -->
+		<command>
+			<id>9984</id>
+			<name>list user game blocks</name>
+			<path>com.vinplay.api.backend.processors.userblock.ListUserGameBlocksProcessor</path>
+		</command>
+		<command>
+			<id>9985</id>
+			<name>add user game block</name>
+			<path>com.vinplay.api.backend.processors.userblock.AddUserGameBlockProcessor</path>
+		</command>
+		<command>
+			<id>9986</id>
+			<name>remove user game block</name>
+			<path>com.vinplay.api.backend.processors.userblock.RemoveUserGameBlockProcessor</path>
+		</command>
+		<command>
+			<id>9818</id>
+			<name>SUN-968 delete user (cascade MySQL + MongoDB + Hazelcast)</name>
+			<path>com.vinplay.api.backend.processors.admin.DeleteUserProcessor</path>
+		</command>
+		<command>
+			<id>9461</id>
+			<name>Update info of Agent for admin agent</name>
+			<path>com.vinplay.api.backend.processors.agent.UpdateInfoAgentProcessor</path>
+		</command>
+		<command>
+			<id>9462</id>
+			<name>Topup for user for admin agent by CASH</name>
+			<path>com.vinplay.api.backend.processors.agent.TopupUser4AgentAdminProccessor</path>
+		</command>
+		<command>
+			<id>9464</id>
+			<name>Send OTP for agent topup</name>
+			<path>com.vinplay.api.backend.processors.agent.SendOtp4AgentProcessor</path>
+		</command>
+		<command>
+			<id>9465</id>
+			<name>Search deposit for user to agent</name>
+			<path>com.vinplay.api.backend.processors.agent.SearchDepositUserToAgentProccessor</path>
+		</command>
+		<command>
+			<id>9466</id>
+			<name>Search all transactions of agent</name>
+			<path>com.vinplay.api.backend.processors.agent.GetTotalTransactionAgentProccessor</path>
+		</command>
+		<command>
+			<id>9467</id>
+			<name>Update comment withdraw for user to agent</name>
+			<path>com.vinplay.api.backend.processors.agent.UpdateDepositUserToAgentProccessor</path>
+		</command>
+		<command>
+			<id>9481</id>
+			<name>Create Send Mail Content</name>
+			<path>com.vinplay.api.backend.processors.sendMailContent.CreateSendMailProcessor</path>
+		</command>
+		<command>
+			<id>9482</id>
+			<name>Update Send Mail Content</name>
+			<path>com.vinplay.api.backend.processors.sendMailContent.UpdateSendMailProcessor</path>
+		</command>
+		<command>
+			<id>9483</id>
+			<name>Delete Send Mail Content</name>
+			<path>com.vinplay.api.backend.processors.sendMailContent.DeleteSendMailProcessor</path>
+		</command>
+		<command>
+			<id>9491</id>
+			<name>Create Live User Game</name>
+			<path>com.vinplay.api.backend.processors.liveUserGame.CreateLiveUserGameProcessor</path>
+		</command>
+		<command>
+			<id>9492</id>
+			<name>Update Live User Game</name>
+			<path>com.vinplay.api.backend.processors.liveUserGame.UpdateLiveUserGameProcessor</path>
+		</command>
+		<command>
+			<id>9493</id>
+			<name>Delete Live User Game</name>
+			<path>com.vinplay.api.backend.processors.liveUserGame.DeleteLiveUserGameProcessor</path>
+		</command>
+		<command>
+			<id>9495</id>
+			<name>Create Live User Deposit</name>
+			<path>com.vinplay.api.backend.processors.liveUserGame.CreateLiveUserDepositProcessor</path>
+		</command>
+		<command>
+			<id>9496</id>
+			<name>Get Live User Game</name>
+			<path>com.vinplay.api.backend.processors.liveUserGame.GetLiveUserGameProcessor</path>
+		</command>
+		<command>
+			<id>9500</id>
+			<name>Search Event Mission</name>
+			<path>com.vinplay.api.backend.processors.eventMission.SearchEventMissionProcessor</path>
+		</command>
+		<command>
+			<id>9501</id>
+			<name>Add Event Mission</name>
+			<path>com.vinplay.api.backend.processors.eventMission.AddEventMissionProcessor</path>
+		</command>
+		<command>
+			<id>9502</id>
+			<name>Update Event Mission</name>
+			<path>com.vinplay.api.backend.processors.eventMission.UpdateEventMissionProcessor</path>
+		</command>
+		<command>
+			<id>9503</id>
+			<name>Delete Event Mission</name>
+			<path>com.vinplay.api.backend.processors.eventMission.DeleteEventMissionProcessor</path>
+		</command>
+		<command>
+			<id>9504</id>
+			<name>Get Event Mission</name>
+			<path>com.vinplay.api.backend.processors.eventMission.GetEventMissionProcessor</path>
+		</command>
+		<command>
+			<id>9505</id>
+			<name>Get All Event Mission Available</name>
+			<path>com.vinplay.api.backend.processors.eventMission.GetEventMissionAvailableProcessor</path>
+		</command>
+		<command>
+			<id>9510</id>
+			<name>Search Mission</name>
+			<path>com.vinplay.api.backend.processors.mission.SearchMissionProcessor</path>
+		</command>
+		<command>
+			<id>9511</id>
+			<name>Add Mission</name>
+			<path>com.vinplay.api.backend.processors.mission.AddMissionProcessor</path>
+		</command>
+		<command>
+			<id>9512</id>
+			<name>Update Mission</name>
+			<path>com.vinplay.api.backend.processors.mission.UpdateMissionProcessor</path>
+		</command>
+		<command>
+			<id>9513</id>
+			<name>Delete Mission</name>
+			<path>com.vinplay.api.backend.processors.mission.DeleteMissionProcessor</path>
+		</command>
+		<command>
+			<id>9514</id>
+			<name>Get Mission</name>
+			<path>com.vinplay.api.backend.processors.mission.GetMissionProcessor</path>
+		</command>
+		<command>
+			<id>9515</id>
+			<name>Get Mission</name>
+			<path>com.vinplay.api.backend.processors.GetGameProcessor</path>
+		</command>
+		<command>
+			<id>9516</id>
+			<name>List all live users</name>
+			<path>com.vinplay.api.backend.processors.user.ListLiveUserProcessor</path>
+		</command>
+        <!-- 952x - Admin bank account -->
+        <command>
+            <id>9520</id>
+            <name>Search Admin Bank</name>
+            <path>com.vinplay.api.backend.processors.bank.AdminBankSearchProcessor</path>
+        </command>
+        <command>
+            <id>9521</id>
+            <name>Insert or Update Admin Bank</name>
+            <path>com.vinplay.api.backend.processors.bank.InsertOrUpdateAdminBankProcessor</path>
+        </command>
+        <command>
+            <id>9522</id>
+            <name>Delete Admin Bank</name>
+            <path>com.vinplay.api.backend.processors.bank.DeleteAdminBankProcessor</path>
+        </command>
+		<!-- SUN-14: Admin update user bank -->
+		<command>
+			<id>9600</id>
+			<name>admin update user bank</name>
+			<path>com.vinplay.api.backend.processors.bank.AdminUpdateBankProcessor</path>
+		</command>
+		<!-- Deposit Admin (SUN-15, SUN-16) -->
+		<command>
+			<id>9610</id>
+			<name>list pending deposits</name>
+			<path>com.vinplay.api.backend.processors.deposit.ListPendingDepositsProcessor</path>
+		</command>
+		<command>
+			<id>9611</id>
+			<name>pick deposit</name>
+			<path>com.vinplay.api.backend.processors.deposit.PickDepositProcessor</path>
+		</command>
+		<command>
+			<id>9612</id>
+			<name>approve deposit</name>
+			<path>com.vinplay.api.backend.processors.deposit.ApproveDepositProcessor</path>
+		</command>
+		<command>
+			<id>9613</id>
+			<name>reject deposit</name>
+			<path>com.vinplay.api.backend.processors.deposit.RejectDepositProcessor</path>
+		</command>
+		<command>
+			<id>9614</id>
+			<name>release deposit lock</name>
+			<path>com.vinplay.api.backend.processors.deposit.ReleaseDepositLockProcessor</path>
+		</command>
+		<command>
+			<id>9616</id>
+			<name>list all deposits (bank + crypto)</name>
+			<path>com.vinplay.api.backend.processors.deposit.ListAllDepositsProcessor</path>
+		</command>
+		<command>
+			<id>9615</id>
+			<name>force approve expired</name>
+			<path>com.vinplay.api.backend.processors.deposit.ForceApproveExpiredProcessor</path>
+		</command>
+
+		<!-- Force Slot Result (SUN-68/69) -->
+		<command>
+			<id>9620</id>
+			<name>set force slot result</name>
+			<path>com.vinplay.api.backend.processors.slot.SetForceSlotResultProcessor</path>
+		</command>
+		<command>
+			<id>9621</id>
+			<name>get slot game symbols</name>
+			<path>com.vinplay.api.backend.processors.slot.GetSlotGameSymbolsProcessor</path>
+		</command>
+		<command>
+			<id>9622</id>
+			<name>list pending force results</name>
+			<path>com.vinplay.api.backend.processors.slot.ListForceSlotResultsProcessor</path>
+		</command>
+		<command>
+			<id>9623</id>
+			<name>delete force slot result</name>
+			<path>com.vinplay.api.backend.processors.slot.DeleteForceSlotResultProcessor</path>
+		</command>
+		<!-- Crypto Admin (SUN-78/79) -->
+		<command><id>9630</id><name>list pending crypto withdrawals</name><path>com.vinplay.api.backend.processors.crypto.ListPendingCryptoWithdrawalsProcessor</path></command>
+		<command><id>9631</id><name>approve crypto withdrawal</name><path>com.vinplay.api.backend.processors.crypto.ApproveCryptoWithdrawalProcessor</path></command>
+		<command><id>9632</id><name>reject crypto withdrawal</name><path>com.vinplay.api.backend.processors.crypto.RejectCryptoWithdrawalProcessor</path></command>
+		<command><id>9633</id><name>get crypto settings</name><path>com.vinplay.api.backend.processors.crypto.GetCryptoSettingsProcessor</path></command>
+		<command><id>9634</id><name>update crypto settings</name><path>com.vinplay.api.backend.processors.crypto.UpdateCryptoSettingsProcessor</path></command>
+		<!-- Deposit Promotion Admin (SUN-125/129) -->
+		<command>
+			<id>9640</id>
+			<name>create deposit promotion</name>
+			<path>com.vinplay.api.backend.processors.promotion.CreateDepositPromotionProcessor</path>
+		</command>
+		<command>
+			<id>9641</id>
+			<name>list deposit promotions</name>
+			<path>com.vinplay.api.backend.processors.promotion.ListDepositPromotionProcessor</path>
+		</command>
+		<command>
+			<id>9642</id>
+			<name>update deposit promotion</name>
+			<path>com.vinplay.api.backend.processors.promotion.UpdateDepositPromotionProcessor</path>
+		</command>
+		<command>
+			<id>9643</id>
+			<name>list deposit promotion logs</name>
+			<path>com.vinplay.api.backend.processors.promotion.ListDepositPromotionLogsProcessor</path>
+		</command>
+		<command>
+			<id>9644</id>
+			<name>delete deposit promotion</name>
+			<path>com.vinplay.api.backend.processors.promotion.DeleteDepositPromotionProcessor</path>
+		</command>
+		<!-- Bank Withdrawal Admin (SUN-89/93) -->
+		<command><id>9650</id><name>get withdrawal settings</name><path>com.vinplay.api.backend.processors.withdraw.GetWithdrawalSettingsProcessor</path></command>
+		<command><id>9651</id><name>update withdrawal settings</name><path>com.vinplay.api.backend.processors.withdraw.UpdateWithdrawalSettingsProcessor</path></command>
+		<command><id>9652</id><name>list bank withdrawals</name><path>com.vinplay.api.backend.processors.withdraw.ListBankWithdrawalsProcessor</path></command>
+		<command><id>9653</id><name>approve bank withdrawal</name><path>com.vinplay.api.backend.processors.withdraw.ApproveBankWithdrawalProcessor</path></command>
+		<command><id>9654</id><name>reject bank withdrawal</name><path>com.vinplay.api.backend.processors.withdraw.RejectBankWithdrawalProcessor</path></command>
+		<!-- Game Volume Config (SUN-90) -->
+		<command><id>9655</id><name>get game volume config</name><path>com.vinplay.api.backend.processors.withdraw.GetGameVolumeConfigProcessor</path></command>
+		<command><id>9656</id><name>update game volume config</name><path>com.vinplay.api.backend.processors.withdraw.UpdateGameVolumeConfigProcessor</path></command>
+		<!-- RBAC Admin Role Management (SUN-49) -->
+		<command><id>9700</id><name>list roles</name><path>com.vinplay.api.backend.processors.role.ListRolesProcessor</path></command>
+		<command><id>9701</id><name>create role</name><path>com.vinplay.api.backend.processors.role.CreateRoleProcessor</path></command>
+		<command><id>9702</id><name>update role</name><path>com.vinplay.api.backend.processors.role.UpdateRoleProcessor</path></command>
+		<command><id>9703</id><name>assign permissions to role</name><path>com.vinplay.api.backend.processors.role.AssignPermissionsProcessor</path></command>
+		<command><id>9704</id><name>list permissions</name><path>com.vinplay.api.backend.processors.role.ListPermissionsProcessor</path></command>
+		<command><id>9705</id><name>assign role to admin</name><path>com.vinplay.api.backend.processors.role.AssignRoleToAdminProcessor</path></command>
+		<command><id>9706</id><name>list admin roles</name><path>com.vinplay.api.backend.processors.role.ListAdminRolesProcessor</path></command>
+		<command><id>9707</id><name>check permission</name><path>com.vinplay.api.backend.processors.role.CheckPermissionProcessor</path></command>
+		<command><id>9708</id><name>get my permissions</name><path>com.vinplay.api.backend.processors.role.GetMyPermissionsProcessor</path></command>
+		<command><id>9709</id><name>create permission</name><path>com.vinplay.api.backend.processors.role.CreatePermissionProcessor</path></command>
+		<command><id>9710</id><name>update permission</name><path>com.vinplay.api.backend.processors.role.UpdatePermissionProcessor</path></command>
+		<command><id>9711</id><name>delete permission</name><path>com.vinplay.api.backend.processors.role.DeletePermissionProcessor</path></command>
+		<command><id>9712</id><name>list rbac audit logs</name><path>com.vinplay.api.backend.processors.role.ListRbacAuditLogsProcessor</path></command>
+		<command><id>9716</id><name>delete role</name><path>com.vinplay.api.backend.processors.role.DeleteRoleProcessor</path></command>
+		<!-- Rebate Module (SUN-263-269) -->
+		<command><id>9750</id><name>list rebate dashboard</name><path>com.vinplay.api.backend.processors.rebate.ListRebateDashboardProcessor</path></command>
+		<command><id>9751</id><name>get rebate detail</name><path>com.vinplay.api.backend.processors.rebate.GetRebateDetailProcessor</path></command>
+		<command><id>9752</id><name>get rebate logs</name><path>com.vinplay.api.backend.processors.rebate.GetRebateLogsProcessor</path></command>
+		<command><id>9753</id><name>trigger rebate payout</name><path>com.vinplay.api.backend.processors.rebate.TriggerRebatePayoutProcessor</path></command>
+		<command><id>9754</id><name>batch rebate payout</name><path>com.vinplay.api.backend.processors.rebate.BatchRebatePayoutProcessor</path></command>
+		<command><id>9755</id><name>update rebate config</name><path>com.vinplay.api.backend.processors.rebate.UpdateRebateConfigProcessor</path></command>
+		<command><id>9756</id><name>get rebate config</name><path>com.vinplay.api.backend.processors.rebate.GetRebateConfigProcessor</path></command>
+		<command><id>9757</id><name>list rebate config</name><path>com.vinplay.api.backend.processors.rebate.ListRebateConfigProcessor</path></command>
+		<command><id>9758</id><name>calc differential commission</name><path>com.vinplay.api.backend.processors.rebate.CalcDifferentialCommissionProcessor</path></command>
+		<command><id>9767</id><name>trigger commission cron</name><path>com.vinplay.api.backend.processors.rebate.TriggerCommissionCronProcessor</path></command>
+		<command><id>9759</id><name>revert rebate log</name><path>com.vinplay.api.backend.processors.rebate.RevertRebateLogProcessor</path></command>
+		<command><id>9766</id><name>check abuse patterns</name><path>com.vinplay.api.backend.processors.abuse.CheckAbusePatternsProcessor</path></command>
+		<!-- RTP Config (win-rate control feature, Phase 1) -->
+		<command><id>9770</id><name>list game rtp config</name><path>com.vinplay.api.backend.processors.rtp.ListGameRtpConfigProcessor</path></command>
+		<!-- 9771-9775 + 9780-9784 defined in expanded block below (same paths) — duplicates removed -->
+		<!-- RTP P/L dashboard + aggregator (Phase 2) -->
+		<command><id>9779</id><name>run rtp aggregator</name><path>com.vinplay.api.backend.processors.rtp.RunRtpAggregatorProcessor</path></command>
+		<!-- Agent Code Request (vanity referral codes, SUN-603) -->
+		<command><id>9830</id><name>request agent code</name><path>com.vinplay.api.backend.processors.agentcode.RequestAgentCodeProcessor</path></command>
+		<command><id>9832</id><name>list pending code requests</name><path>com.vinplay.api.backend.processors.agentcode.ListPendingCodeRequestsProcessor</path></command>
+		<command><id>9833</id><name>approve code request</name><path>com.vinplay.api.backend.processors.agentcode.ApproveCodeRequestProcessor</path></command>
+		<command><id>9834</id><name>reject code request</name><path>com.vinplay.api.backend.processors.agentcode.RejectCodeRequestProcessor</path></command>
+		<command><id>9831</id><name>list my code requests</name><path>com.vinplay.api.backend.processors.agentcode.ListMyCodeRequestsProcessor</path></command>
+		<command><id>9835</id><name>list reserved codes</name><path>com.vinplay.api.backend.processors.agentcode.ListReservedCodesProcessor</path></command>
+		<command><id>9836</id><name>add reserved code</name><path>com.vinplay.api.backend.processors.agentcode.AddReservedCodeProcessor</path></command>
+		<command><id>9837</id><name>delete reserved code</name><path>com.vinplay.api.backend.processors.agentcode.DeleteReservedCodeProcessor</path></command>
+		<command><id>9838</id><name>list all players under agent</name><path>com.vinplay.api.backend.processors.agentcode.ListAllPlayersUnderAgentProcessor</path></command>
+		<command><id>9839</id><name>list all agents under agent</name><path>com.vinplay.api.backend.processors.agentcode.ListAllAgentsUnderAgentProcessor</path></command>
+		<command><id>9840</id><name>promote player to agent</name><path>com.vinplay.api.backend.processors.agentcode.PromotePlayerToAgentProcessor</path></command>
+		<command><id>9841</id><name>admin promote demote master</name><path>com.vinplay.api.backend.processors.agentcode.AdminPromoteDemoteMasterProcessor</path></command>
+		<command><id>9842</id><name>admin branch revenue</name><path>com.vinplay.api.backend.processors.agentcode.AdminBranchRevenueProcessor</path></command>
+		<command><id>9843</id><name>betting history by agent</name><path>com.vinplay.api.backend.processors.agentcode.GetBettingHistoryByAgentProcessor</path></command>
+		<command><id>9844</id><name>agent settlement summary</name><path>com.vinplay.api.backend.processors.agentcode.GetAgentSettlementProcessor</path></command>
+		<command><id>9845</id><name>list online offline members</name><path>com.vinplay.api.backend.processors.agentcode.ListOnlineOfflineMembersProcessor</path></command>
+		<!-- Admin: unified make agent (create/promote/update any player to any agent level) -->
+		<command><id>9847</id><name>admin make agent</name><path>com.vinplay.api.backend.processors.agent.AdminMakeAgentProcessor</path></command>
+		<command><id>9848</id><name>list game commission config</name><path>com.vinplay.api.backend.processors.agent.ListGameCommissionConfigProcessor</path></command>
+		<command><id>9849</id><name>set game commission rates</name><path>com.vinplay.api.backend.processors.agent.SetGameCommissionRateProcessor</path></command>
+		<!-- Deposit Commission (Hoa hồng tiền nạp) -->
+		<command><id>9846</id><name>get deposit commission logs for agency</name><path>com.vinplay.api.backend.processors.agent.GetDepositCommissionLogs4AgencyProcessor</path></command>
+		<!-- Signing Bonus (SUN-172) -->
+		<command>
+			<id>9760</id>
+			<name>track device install</name>
+			<path>com.vinplay.api.backend.processors.signingbonus.TrackDeviceInstallProcessor</path>
+		</command>
+		<command>
+			<id>9761</id>
+			<name>get signing bonus config</name>
+			<path>com.vinplay.api.backend.processors.signingbonus.GetSigningBonusConfigProcessor</path>
+		</command>
+		<command>
+			<id>9762</id>
+			<name>update signing bonus config</name>
+			<path>com.vinplay.api.backend.processors.signingbonus.UpdateSigningBonusConfigProcessor</path>
+		</command>
+		<command>
+			<id>9763</id>
+			<name>list signing bonus logs</name>
+			<path>com.vinplay.api.backend.processors.signingbonus.ListSigningBonusLogProcessor</path>
+		</command>
+		<command>
+			<id>9764</id>
+			<name>manual payout signing bonus</name>
+			<path>com.vinplay.api.backend.processors.signingbonus.ManualPayoutSigningBonusProcessor</path>
+		</command>
+		<command>
+			<id>9765</id>
+			<name>toggle user signing bonus config</name>
+			<path>com.vinplay.api.backend.processors.signingbonus.ToggleUserSigningBonusProcessor</path>
+		</command>
+		<!-- Loss Rebate / Cashback config (SUN-257 to SUN-305).
+		     SUN-1099 cleanup: tbl_cashback_logs orphan flow removed.
+		     Live SELF rebate now flows via rebate_logs (RealTimeCommission),
+		     claim via portal c=3083. Only the rate-config CRUD endpoints
+		     remain here; the 10 dead-table/orphan-class registrations
+		     (9802, 9803, 9804, 9806, 9807, 9808, 9809, 9810, 9811, 9814)
+		     have been deleted. -->
+		<!-- c=9804 + c=9810 restored 2026-04-27. SUN-1099 cleanup migrated the
+		     live cashback FLOW to rebate_logs (claim via portal c=3083), but
+		     admin CMS still needs the historical-list (c=9804) and config-
+		     audit-log (c=9810) views, which read tbl_cashback_logs and
+		     tbl_cashback_changelog respectively. Classes restored from 55344ed6^. -->
+		<command>
+			<id>9804</id>
+			<name>list cashback logs (admin history view)</name>
+			<path>com.vinplay.api.backend.processors.cashback.ListCashbackLogsProcessor</path>
+		</command>
+		<command>
+			<id>9810</id>
+			<name>get cashback config changelog</name>
+			<path>com.vinplay.api.backend.processors.cashback.GetCashbackChangelogProcessor</path>
+		</command>
+
+		<command>
+			<id>9800</id>
+			<name>get cashback config</name>
+			<path>com.vinplay.api.backend.processors.cashback.GetCashbackConfigProcessor</path>
+		</command>
+		<command>
+			<id>9801</id>
+			<name>list cashback configs</name>
+			<path>com.vinplay.api.backend.processors.cashback.ListCashbackConfigProcessor</path>
+		</command>
+		<!-- Cashback per-game % config (live, drives RealTimeCommission rate lookup) -->
+		<command>
+			<id>9812</id>
+			<name>upsert cashback game config</name>
+			<path>com.vinplay.api.backend.processors.cashback.UpsertCashbackGameConfigProcessor</path>
+		</command>
+		<command>
+			<id>9813</id>
+			<name>delete cashback game config</name>
+			<path>com.vinplay.api.backend.processors.cashback.DeleteCashbackGameConfigProcessor</path>
+		</command>
+
+		<!-- Game RTP / Win Rate Config (game_win_rate_feature) -->
+		<command>
+			<id>9829</id>
+			<name>list game rtp configs</name>
+			<path>com.vinplay.api.backend.processors.rtp.ListGameRtpConfigProcessor</path>
+		</command>
+		<!-- 9831/9832/9770 removed: duplicate IDs, no processor path -->
+
+		<!-- Game Win-Rate Control + Dashboard -->
+		<command>
+			<id>9771</id>
+			<name>update game rtp config</name>
+			<path>com.vinplay.api.backend.processors.rtp.UpdateGameRtpConfigProcessor</path>
+		</command>
+		<command>
+			<id>9772</id>
+			<name>list user rtp overrides</name>
+			<path>com.vinplay.api.backend.processors.rtp.ListUserRtpOverrideProcessor</path>
+		</command>
+		<command>
+			<id>9773</id>
+			<name>set user rtp override</name>
+			<path>com.vinplay.api.backend.processors.rtp.SetUserRtpOverrideProcessor</path>
+		</command>
+		<command>
+			<id>9774</id>
+			<name>delete user rtp override</name>
+			<path>com.vinplay.api.backend.processors.rtp.DeleteUserRtpOverrideProcessor</path>
+		</command>
+		<command>
+			<id>9775</id>
+			<name>get rtp config audit</name>
+			<path>com.vinplay.api.backend.processors.rtp.GetRtpConfigAuditProcessor</path>
+		</command>
+		<!-- Pha 2: P/L Dashboard APIs (9780-9784) -->
+		<command>
+			<id>9780</id>
+			<name>get house overall pnl</name>
+			<path>com.vinplay.api.backend.processors.rtp.GetHouseOverallPnlProcessor</path>
+		</command>
+		<command>
+			<id>9781</id>
+			<name>list top winners</name>
+			<path>com.vinplay.api.backend.processors.rtp.ListTopWinnersProcessor</path>
+		</command>
+		<command>
+			<id>9782</id>
+			<name>list top losers</name>
+			<path>com.vinplay.api.backend.processors.rtp.ListTopLosersProcessor</path>
+		</command>
+		<command>
+			<id>9783</id>
+			<name>get user pnl detail</name>
+			<path>com.vinplay.api.backend.processors.rtp.GetUserPnlDetailProcessor</path>
+		</command>
+		<command>
+			<id>9784</id>
+			<name>get player distribution</name>
+			<path>com.vinplay.api.backend.processors.rtp.GetPlayerDistributionProcessor</path>
+		</command>
+
+		<!-- Admin CMS API Migration -->
+		<command>
+			<id>9901</id>
+			<name>admin login verify</name>
+			<path>com.vinplay.api.backend.processors.admin.AdminLoginVerifyProcessor</path>
+		</command>
+		<command>
+			<id>9902</id>
+			<name>get admin info</name>
+			<path>com.vinplay.api.backend.processors.admin.GetAdminInfoProcessor</path>
+		</command>
+		<command>
+			<id>9903</id>
+			<name>get admin menu permissions</name>
+			<path>com.vinplay.api.backend.processors.admin.GetAdminMenuPermissionsProcessor</path>
+		</command>
+		<command>
+			<id>9904</id>
+			<name>log admin login</name>
+			<path>com.vinplay.api.backend.processors.admin.LogAdminLoginProcessor</path>
+		</command>
+		<command>
+			<id>9905</id>
+			<name>Update user bank status</name>
+			<path>com.vinplay.api.backend.processors.bank.UpdateUserBankStatusProcessor</path>
+		</command>
+		<command>
+			<id>9906</id>
+			<name>List admin money logs</name>
+			<path>com.vinplay.api.backend.processors.admin.ListAdminMoneyLogProcessor</path>
+		</command>
+		<!-- Admin CRUD moved to 9820-9822 to avoid conflict with cashback 9810-9814 -->
+		<command>
+			<id>9820</id>
+			<name>list admin users</name>
+			<path>com.vinplay.api.backend.processors.admin.ListAdminUsersProcessor</path>
+		</command>
+		<command>
+			<id>9821</id>
+			<name>create admin user</name>
+			<path>com.vinplay.api.backend.processors.admin.CreateAdminUserProcessor</path>
+		</command>
+		<command>
+			<id>9822</id>
+			<name>update admin user</name>
+			<path>com.vinplay.api.backend.processors.admin.UpdateAdminUserProcessor</path>
+		</command>
+		<command>
+			<id>9713</id>
+			<name>get admin detail</name>
+			<path>com.vinplay.api.backend.processors.admin.GetAdminDetailProcessor</path>
+		</command>
+		<command>
+			<id>9714</id>
+			<name>assign admin groups</name>
+			<path>com.vinplay.api.backend.processors.admin.AssignAdminGroupsProcessor</path>
+		</command>
+		<command>
+			<id>9715</id>
+			<name>get admin permissions</name>
+			<path>com.vinplay.api.backend.processors.admin.GetAdminPermissionsProcessor</path>
+		</command>
+		<command>
+			<id>9720</id>
+			<name>list groups</name>
+			<path>com.vinplay.api.backend.processors.admin.ListGroupsProcessor</path>
+		</command>
+		<command>
+			<id>9721</id>
+			<name>create update group</name>
+			<path>com.vinplay.api.backend.processors.admin.CreateUpdateGroupProcessor</path>
+		</command>
+		<command>
+			<id>9722</id>
+			<name>list menus</name>
+			<path>com.vinplay.api.backend.processors.admin.ListMenusProcessor</path>
+		</command>
+		<command>
+			<id>9723</id>
+			<name>crud menu</name>
+			<path>com.vinplay.api.backend.processors.admin.CrudMenuProcessor</path>
+		</command>
+		<command>
+			<id>9724</id>
+			<name>get group menus</name>
+			<path>com.vinplay.api.backend.processors.admin.GetGroupMenusProcessor</path>
+		</command>
+		<command>
+			<id>9730</id>
+			<name>log admin action</name>
+			<path>com.vinplay.api.backend.processors.admin.LogAdminActionProcessor</path>
+		</command>
+		<command>
+			<id>9731</id>
+			<name>list action logs</name>
+			<path>com.vinplay.api.backend.processors.admin.ListActionLogsProcessor</path>
+		</command>
+		<command>
+			<id>9732</id>
+			<name>list login logs</name>
+			<path>com.vinplay.api.backend.processors.admin.ListLoginLogsProcessor</path>
+		</command>
+		<command>
+			<id>9740</id>
+			<name>search users</name>
+			<path>com.vinplay.api.backend.processors.admin.SearchUsersProcessor</path>
+		</command>
+		<command>
+			<id>9741</id>
+			<name>user game list</name>
+			<path>com.vinplay.api.backend.processors.admin.UserGameListProcessor</path>
+		</command>
+		<command>
+			<id>9742</id>
+			<name>user aggregate</name>
+			<path>com.vinplay.api.backend.processors.admin.UserAggregateProcessor</path>
+		</command>
+		<command>
+			<id>9950</id>
+			<name>list game config (admin)</name>
+			<path>com.vinplay.api.backend.processors.admin.ListGameConfigProcessor</path>
+		</command>
+		<command>
+			<id>9951</id>
+			<name>crud game config (admin)</name>
+			<path>com.vinplay.api.backend.processors.admin.CrudGameConfigProcessor</path>
+		</command>
+		<command>
+			<id>9952</id>
+			<name>list utm (admin)</name>
+			<path>com.vinplay.api.backend.processors.admin.ListUtmProcessor</path>
+		</command>
+		<command>
+			<id>9953</id>
+			<name>crud utm (admin)</name>
+			<path>com.vinplay.api.backend.processors.admin.CrudUtmProcessor</path>
+		</command>
+		<command>
+			<id>9954</id>
+			<name>list gift code sources (admin)</name>
+			<path>com.vinplay.api.backend.processors.admin.ListGiftCodeSourcesProcessor</path>
+		</command>
+		<command>
+			<id>9960</id>
+			<name>tai xiu results (admin)</name>
+			<path>com.vinplay.api.backend.processors.admin.TaiXiuResultsProcessor</path>
+		</command>
+		<command>
+			<id>9961</id>
+			<name>tai xiu transactions (admin)</name>
+			<path>com.vinplay.api.backend.processors.admin.TaiXiuTransactionsProcessor</path>
+		</command>
+		<command>
+			<id>9962</id>
+			<name>lucky rotation (admin)</name>
+			<path>com.vinplay.api.backend.processors.admin.LuckyRotationProcessor</path>
+		</command>
+		<command>
+			<id>9999</id>
+			<name>Bulk load user cache</name>
+			<path>com.vinplay.api.backend.processors.admin.BulkLoadCacheProcessor</path>
+		</command>
+		<!-- IDs 18-19 removed (Phase 1 cleanup — replaced by c=9537 dashboard) -->
+		<command>
+			<id>112</id>
+			<name>transaction detail</name>
+			<path>com.vinplay.api.backend.processors.report.TransactionDetailProcessor</path>
+		</command>
+		<command>
+			<id>1122</id>
+			<name>transaction detail alt</name>
+			<path>com.vinplay.api.backend.processors.report.TransactionDetailProcessor</path>
+		</command>
+		<command>
+			<id>721</id>
+			<name>withdrawal list</name>
+			<path>com.vinplay.api.backend.processors.report.WithdrawalListProcessor</path>
+		</command>
+		<command>
+			<id>9104</id>
+			<name>deposit log</name>
+			<path>com.vinplay.api.backend.processors.report.DepositLogProcessor</path>
+		</command>
+		<command>
+			<id>115</id>
+			<name>bank report</name>
+			<path>com.vinplay.api.backend.processors.report.BankReportProcessor</path>
+		</command>
+		<command>
+			<id>157</id>
+			<name>agent ratio</name>
+			<path>com.vinplay.api.backend.processors.admin.AgentRatioProcessor</path>
+		</command>
+		<command>
+			<id>164</id>
+			<name>new player stats</name>
+			<path>com.vinplay.api.backend.processors.report.NewPlayerStatsProcessor</path>
+		</command>
+		<command>
+			<id>165</id>
+			<name>stats by amount</name>
+			<path>com.vinplay.api.backend.processors.report.StatsByAmountProcessor</path>
+		</command>
+		<command>
+			<id>711</id>
+			<name>admin otp action</name>
+			<path>com.vinplay.api.backend.processors.admin.AdminOtpProcessor</path>
+		</command>
+		<command>
+			<id>719</id>
+			<name>money log by mobile</name>
+			<path>com.vinplay.api.backend.processors.report.MoneyLogByMobileProcessor</path>
+		</command>
+		<command>
+			<id>2000</id>
+			<name>quick register</name>
+			<path>com.vinplay.api.backend.processors.admin.QuickRegisterProcessor</path>
+		</command>
+		<command>
+			<id>9785</id>
+			<name>create rtp schedule</name>
+			<path>com.vinplay.api.backend.processors.rtp.CreateRtpScheduleProcessor</path>
+		</command>
+		<!-- Renumbered from 9786/9787/9788 to free IDs: those were shadowed by
+		     genuine collisions further down (GetTimeWindowHeatmap / GetCohortPnl /
+		     GetBetVsRtpScatter which currently hold c=9786/9787/9788 by HashMap.put
+		     last-wins). These schedule/policy processors had been dead code since
+		     the collision landed; moving them to the free 9796-9798 slot makes
+		     them reachable if FE wants to wire them up. -->
+		<command>
+			<id>9796</id>
+			<name>list rtp schedules</name>
+			<path>com.vinplay.api.backend.processors.rtp.ListRtpSchedulesProcessor</path>
+		</command>
+		<command>
+			<id>9797</id>
+			<name>create auto policy</name>
+			<path>com.vinplay.api.backend.processors.rtp.CreateAutoPolicyProcessor</path>
+		</command>
+		<command>
+			<id>9798</id>
+			<name>list auto policies</name>
+			<path>com.vinplay.api.backend.processors.rtp.ListAutoPoliciesProcessor</path>
+		</command>
+		<command>
+			<id>9850</id>
+			<name>emergency flat rtp</name>
+			<path>com.vinplay.api.backend.processors.rtp.EmergencyFlatRtpProcessor</path>
+		</command>
+		<command>
+			<id>9851</id>
+			<name>reset emergency</name>
+			<path>com.vinplay.api.backend.processors.rtp.ResetEmergencyProcessor</path>
+		</command>
+		<command>
+			<id>9852</id>
+			<name>reset all overrides</name>
+			<path>com.vinplay.api.backend.processors.rtp.ResetAllOverridesProcessor</path>
+		</command>
+		<command>
+			<id>9853</id>
+			<name>export rtp snapshot</name>
+			<path>com.vinplay.api.backend.processors.rtp.ExportRtpConfigSnapshotProcessor</path>
+		</command>
+		<command>
+			<id>9860</id>
+			<name>create rtp experiment</name>
+			<path>com.vinplay.api.backend.processors.rtp.CreateRtpExperimentProcessor</path>
+		</command>
+		<command>
+			<id>9861</id>
+			<name>list experiments</name>
+			<path>com.vinplay.api.backend.processors.rtp.ListExperimentsProcessor</path>
+		</command>
+		<command>
+			<id>9870</id>
+			<name>get threat score leaderboard</name>
+			<path>com.vinplay.api.backend.processors.rtp.GetThreatScoreLeaderboardProcessor</path>
+		</command>
+		<command>
+			<id>9871</id>
+			<name>get player heatmap</name>
+			<path>com.vinplay.api.backend.processors.rtp.GetPlayerGameHeatmapProcessor</path>
+		</command>
+		<command>
+			<id>9872</id>
+			<name>get game fund health</name>
+			<path>com.vinplay.api.backend.processors.rtp.GetGameFundHealthProcessor</path>
+		</command>
+		<command>
+			<id>9786</id>
+			<name>get time window heatmap</name>
+			<path>com.vinplay.api.backend.processors.rtp.GetTimeWindowHeatmapProcessor</path>
+		</command>
+		<command>
+			<id>9789</id>
+			<name>get rtp drift series</name>
+			<path>com.vinplay.api.backend.processors.rtp.GetRtpDriftSeriesProcessor</path>
+		</command>
+		<command>
+			<id>9790</id>
+			<name>get pnl distribution</name>
+			<path>com.vinplay.api.backend.processors.rtp.GetPnlDistributionProcessor</path>
+		</command>
+		<command>
+			<id>9873</id>
+			<name>register rtp webhook</name>
+			<path>com.vinplay.api.backend.processors.rtp.RegisterRtpWebhookProcessor</path>
+		</command>
+		<command>
+			<id>9874</id>
+			<name>test webhook</name>
+			<path>com.vinplay.api.backend.processors.rtp.TestWebhookProcessor</path>
+		</command>
+		<command>
+			<id>9875</id>
+			<name>bulk apply override</name>
+			<path>com.vinplay.api.backend.processors.rtp.BulkApplyOverrideProcessor</path>
+		</command>
+		<command>
+			<id>9876</id>
+			<name>bulk clear overrides</name>
+			<path>com.vinplay.api.backend.processors.rtp.BulkClearOverridesProcessor</path>
+		</command>
+		<command>
+			<id>9877</id>
+			<name>bulk update game rate</name>
+			<path>com.vinplay.api.backend.processors.rtp.BulkUpdateGameRateProcessor</path>
+		</command>
+		<command>
+			<id>9878</id>
+			<name>set user session rtp</name>
+			<path>com.vinplay.api.backend.processors.rtp.SetUserSessionRtpProcessor</path>
+		</command>
+		<command>
+			<id>9879</id>
+			<name>freeze user game</name>
+			<path>com.vinplay.api.backend.processors.rtp.SetUserSessionRtpProcessor</path>
+		</command>
+		<command>
+			<id>9880</id>
+			<name>disable game</name>
+			<path>com.vinplay.api.backend.processors.rtp.DisableGameProcessor</path>
+		</command>
+		<command>
+			<id>9881</id>
+			<name>import rtp config</name>
+			<path>com.vinplay.api.backend.processors.rtp.ImportRtpConfigSnapshotProcessor</path>
+		</command>
+		<command>
+			<id>9787</id>
+			<name>getcohortpnl</name>
+			<path>com.vinplay.api.backend.processors.rtp.GetCohortPnlProcessor</path>
+		</command>
+		<command>
+			<id>9788</id>
+			<name>getbetvsrtpscatter</name>
+			<path>com.vinplay.api.backend.processors.rtp.GetBetVsRtpScatterProcessor</path>
+		</command>
+		<command>
+			<id>9791</id>
+			<name>getstreakanomalies</name>
+			<path>com.vinplay.api.backend.processors.rtp.GetStreakAnomaliesProcessor</path>
+		</command>
+		<command>
+			<id>9793</id>
+			<name>getoverridecoverage</name>
+			<path>com.vinplay.api.backend.processors.rtp.GetOverrideCoverageProcessor</path>
+		</command>
+		<command>
+			<id>9794</id>
+			<name>getforceresultactivity</name>
+			<path>com.vinplay.api.backend.processors.rtp.GetForceResultActivityProcessor</path>
+		</command>
+		<command>
+			<id>9795</id>
+			<name>simulatertpchange</name>
+			<path>com.vinplay.api.backend.processors.rtp.SimulateRtpChangeProcessor</path>
+		</command>
+		<command>
+			<id>9882</id>
+			<name>getuseractiveoverrides</name>
+			<path>com.vinplay.api.backend.processors.rtp.GetUserActiveOverridesProcessor</path>
+		</command>
+		<command>
+			<id>9883</id>
+			<name>updatefundguardthresholds</name>
+			<path>com.vinplay.api.backend.processors.rtp.UpdateFundGuardThresholdsProcessor</path>
+		</command>
+		<command>
+			<id>9884</id>
+			<name>updatecapprizeformula</name>
+			<path>com.vinplay.api.backend.processors.rtp.UpdateCapPrizeFormulaProcessor</path>
+		</command>
+		<command>
+			<id>9885</id>
+			<name>adjustgamefund</name>
+			<path>com.vinplay.api.backend.processors.rtp.AdjustGameFundProcessor</path>
+		</command>
+		<command>
+			<id>9910</id>
+			<name>list users</name>
+			<path>com.vinplay.api.backend.processors.user.ListUsersProcessor</path>
+		</command>
+		<command>
+			<id>9911</id>
+			<name>get user detail</name>
+			<path>com.vinplay.api.backend.processors.user.GetUserDetailProcessor</path>
+		</command>
+		<command>
+			<id>9912</id>
+			<name>create user</name>
+			<path>com.vinplay.api.backend.processors.user.CreateUserProcessor</path>
+		</command>
+		<command>
+			<id>9930</id>
+			<name>admin betting history</name>
+			<path>com.vinplay.api.backend.processors.admin.AdminBettingHistoryProcessor</path>
+		</command>
+		<command>
+			<id>9913</id>
+			<name>update user</name>
+			<path>com.vinplay.api.backend.processors.user.UpdateUserProcessor</path>
+		</command>
+		<command>
+			<id>9914</id>
+			<name>delete user</name>
+			<path>com.vinplay.api.backend.processors.user.DeleteUserProcessor</path>
+		</command>
+		<!-- Credit Wallet (2026-04-13) -->
+		<command>
+			<id>9920</id>
+			<name>Get credit wallet balance</name>
+			<path>com.vinplay.api.backend.processors.creditwallet.GetCreditWalletProcessor</path>
+		</command>
+		<command>
+			<id>9921</id>
+			<name>Admin topup credit wallet</name>
+			<path>com.vinplay.api.backend.processors.creditwallet.AdminCreditWalletTopupProcessor</path>
+		</command>
+		<command>
+			<id>9922</id>
+			<name>Agent transfer credit wallet to agent</name>
+			<path>com.vinplay.api.backend.processors.creditwallet.AgentTransferCreditProcessor</path>
+		</command>
+		<command>
+			<id>9923</id>
+			<name>Agent deposit credit wallet to game wallet</name>
+			<path>com.vinplay.api.backend.processors.creditwallet.AgentCreditDepositProcessor</path>
+		</command>
+		<command>
+			<id>9924</id>
+			<name>Admin revoke credit wallet</name>
+			<path>com.vinplay.api.backend.processors.creditwallet.AdminCreditWalletRevokeProcessor</path>
+		</command>
+		<command>
+			<id>9925</id>
+			<name>Get credit wallet transaction history</name>
+			<path>com.vinplay.api.backend.processors.creditwallet.GetCreditWalletHistoryProcessor</path>
+		</command>
+		<command>
+			<id>9926</id>
+			<name>Get admin credit wallet transaction history</name>
+			<path>com.vinplay.api.backend.processors.creditwallet.GetAdminCreditWalletHistoryProcessor</path>
+		</command>
+		<command>
+			<id>9927</id>
+			<name>Get agent main wallet (vin) transaction history</name>
+			<path>com.vinplay.api.backend.processors.agent.GetMainWalletHistoryProcessor</path>
+		</command>
+		<command>
+			<id>9854</id>
+			<name>SUN-1054 BanCa log-bet commission bridge</name>
+			<path>com.vinplay.api.backend.processors.commission.LogBetCommissionProcessor</path>
+		</command>
+		<command>
+			<id>9998</id>
+			<name>SUN-1054 / Wallet Phase 5b BanCa unified-wallet settle bridge</name>
+			<path>com.vinplay.api.backend.processors.banca.BanCaSettleProcessor</path>
+		</command>
+		<command>
+			<id>9997</id>
+			<name>SUN-1062 / Wallet Phase 5c follow-up BanCa unified-wallet balance query</name>
+			<path>com.vinplay.api.backend.processors.banca.BanCaBalanceQueryProcessor</path>
+		</command>
+		<command>
+			<id>9902</id>
+			<name>Generate 2FA Secret</name>
+			<path>com.vinplay.api.backend.processors.admin.GenerateTotpSecretProcessor</path>
+		</command>
+		<command>
+			<id>9903</id>
+			<name>Confirm and Enable 2FA</name>
+			<path>com.vinplay.api.backend.processors.admin.ConfirmEnableTotpProcessor</path>
+		</command>
+		<command>
+			<id>9905</id>
+			<name>Disable 2FA</name>
+			<path>com.vinplay.api.backend.processors.admin.DisableTotpProcessor</path>
+		</command>
+		<!-- Admin GiftCode with Rollover (2026-05-01) -->
+		<command>
+			<id>9940</id>
+			<name>Admin create giftcode batch</name>
+			<path>com.vinplay.api.backend.processors.giftcode.AdminCreateGiftCodeBatchProcessor</path>
+		</command>
+		<command>
+			<id>9941</id>
+			<name>Admin list giftcodes</name>
+			<path>com.vinplay.api.backend.processors.giftcode.AdminListGiftCodesProcessor</path>
+		</command>
+		<command>
+			<id>9942</id>
+			<name>Admin deactivate giftcode batch (disable unused codes)</name>
+			<path>com.vinplay.api.backend.processors.giftcode.AdminDeactivateGiftCodeBatchProcessor</path>
+		</command>
+		<command>
+			<id>9943</id>
+			<name>Admin list campaigns (aggregate per batch)</name>
+			<path>com.vinplay.api.backend.processors.giftcode.AdminListCampaignsProcessor</path>
+		</command>
+		<command>
+			<id>9944</id>
+			<name>Admin campaign detail (list GC codes in batch)</name>
+			<path>com.vinplay.api.backend.processors.giftcode.AdminCampaignDetailProcessor</path>
+		</command>
+		<!-- Phase F1 — GDPR / fraud-driven user cascade delete (super-admin only). -->
+		<command>
+			<id>9970</id>
+			<name>Preview cascade-delete for a user (dry-run row counts)</name>
+			<path>com.vinplay.api.backend.processors.user.PreviewDeleteUserAccountProcessor</path>
+		</command>
+		<command>
+			<id>9971</id>
+			<name>Execute cascade-delete for a user (audited)</name>
+			<path>com.vinplay.api.backend.processors.user.DeleteUserAccountProcessor</path>
+		</command>
+		<!-- 2026-05-14 — User balance history feed (VIN). Spec: docs/superpowers/specs/2026-05-14-user-balance-history-api-design.md -->
+		<command>
+			<id>9972</id>
+			<name>User balance history (VIN, categorized + summary)</name>
+			<path>com.vinplay.api.backend.processors.log.UserBalanceHistoryProcessor</path>
+		</command>
+		<!-- SUN-1306 Phase C — Lô Đề betting history per agent subtree -->
+		<command>
+			<id>9973</id>
+			<name>Lô Đề betting history per agent subtree (2-record split)</name>
+			<path>com.vinplay.api.backend.processors.agent.SearchLoDeBettingHistory4AgencyProcessor</path>
+		</command>
+		<!-- 2026-05-15 — agency-facing twin of c=9972. Same query, rc-based auth. Spec: docs/superpowers/specs/2026-05-14-user-balance-history-api-design.md -->
+		<command>
+			<id>9974</id>
+			<name>User balance history — agency (rc-gated, VIN, categorized + summary)</name>
+			<path>com.vinplay.api.backend.processors.agent.UserBalanceHistoryAgencyProcessor</path>
+		</command>
+	</commands>
+</backend>

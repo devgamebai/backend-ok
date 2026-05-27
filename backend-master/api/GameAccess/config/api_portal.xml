@@ -1,0 +1,380 @@
+<?xml version="1.0"?>
+<portal>
+	<port>8081</port>
+	<ssl_port>8443</ssl_port>
+	<commands>
+		<command>
+			<id>1</id>
+			<name>quickRegister</name>
+			<path>com.vinplay.api.processors.QuickRegisterProcessor</path>
+		</command>
+		<command>
+			<id>2</id>
+			<name>Login token</name>
+			<path>com.vinplay.api.processors.LoginTokenProcessor</path>
+		</command>
+		<command>
+			<id>3</id>
+			<name>login</name>
+			<path>com.vinplay.api.processors.LoginProcessor</path>
+		</command>
+		<command>
+			<id>4</id>
+			<name>login with otp</name>
+			<path>com.vinplay.api.processors.LoginWithOTPProcessor</path>
+		</command>
+		<command>
+			<id>5</id>
+			<name>update nick name</name>
+			<path>com.vinplay.api.processors.UpdateNicknameProcesscor</path>
+		</command>
+		<command>
+			<id>6</id>
+			<name>get app config</name>
+			<path>com.vinplay.api.processors.GetAppConfigProcesscor</path>
+		</command>
+		<command>
+			<id>7</id>
+			<name>update app config</name>
+			<path>com.vinplay.api.processors.UpdateAppConfigProcessor</path>
+		</command>
+		<command>
+			<id>8</id>
+			<name>login app otp</name>
+			<path>com.vinplay.api.processors.LoginAppOtpProcessor</path>
+		</command>
+		<command>
+			<id>9</id>
+			<name>get time server</name>
+			<path>com.vinplay.api.processors.GetTimeServerProccessor</path>
+		</command>
+		<command>
+			<id>10</id>
+			<name>get config admin</name>
+			<path>com.vinplay.api.processors.GetConfigAdminProcessor</path>
+		</command>
+		<command>
+			<id>11</id>
+			<name>get config vin plus</name>
+			<path>com.vinplay.api.processors.GetConfigVinPlusProcessor</path>
+		</command>
+		<command>
+			<id>12</id>
+			<name>lich su vong quay vip</name>
+			<path>com.vinplay.api.processors.vqvip.LuckyVipHistoryProcessor</path>
+		</command>
+		<command>
+			<id>13</id>
+			<name>list poker tour</name>
+			<path>com.vinplay.api.processors.gamebai.GetListPokerTourProcessor</path>
+		</command>
+		<command>
+			<id>14</id>
+			<name>poker tour detail</name>
+			<path>com.vinplay.api.processors.gamebai.GetPokerTourDetailProcessor</path>
+		</command>
+		<command>
+			<id>15</id>
+			<name>poker ticket</name>
+			<path>com.vinplay.api.processors.gamebai.GetPokerTicketProcessor</path>
+		</command>
+		<command>
+			<id>16</id>
+			<name>poker ticket</name>
+			<path>com.vinplay.api.processors.otp.GetOtpProcessor</path>
+		</command>
+		<command>
+			<id>17</id>
+			<name>login by token</name>
+			<path>com.vinplay.api.processors.LoginByTokenProcessor</path>
+		</command>
+		<command>
+			<id>100</id>
+			<name>lich su giao dich tai xiu</name>
+			<path>com.vinplay.api.processors.minigame.LichSuGiaoDichTXProcessor</path>
+		</command>
+		<command>
+			<id>101</id>
+			<name>lich su giao dich tai xiu</name>
+			<path>com.vinplay.api.processors.minigame.TopWinTXProcessor</path>
+		</command>
+		<command>
+			<id>102</id>
+			<name>chi tiet phien tai xiu</name>
+			<path>com.vinplay.api.processors.minigame.ChiTietPhienTXProcessor</path>
+		</command>
+		<command>
+			<id>103</id>
+			<name>top thanh du</name>
+			<path>com.vinplay.api.processors.minigame.TopThanhDuProcessor</path>
+		</command>
+		<command>
+			<id>104</id>
+			<name>lich su rut loc tan loc</name>
+			<path>com.vinplay.api.processors.minigame.LichSuRLTLProcessor</path>
+		</command>
+		<command>
+			<id>105</id>
+			<name>lich su giao dich mini poker</name>
+			<path>com.vinplay.api.processors.minigame.LSGDMiniPokerProcessor</path>
+		</command>
+		<command>
+			<id>106</id>
+			<name>vinh danh mini poker</name>
+			<path>com.vinplay.api.processors.minigame.VinhDanhMiniPokerProcessor</path>
+		</command>
+		<command>
+			<id>107</id>
+			<name>lich su giao dich cao thap</name>
+			<path>com.vinplay.api.processors.minigame.LSGDCaoThapProcessor</path>
+		</command>
+		<command>
+			<id>108</id>
+			<name>vinh danh cao thap</name>
+			<path>com.vinplay.api.processors.minigame.VinhDanhCaoThapProcessor</path>
+		</command>
+		<command>
+			<id>109</id>
+			<name>top cao thap</name>
+			<path>com.vinplay.api.processors.minigame.TopCaoThapProcessor</path>
+		</command>
+		<command>
+			<id>110</id>
+			<name>log no hu game bai</name>
+			<path>com.vinplay.api.processors.gamebai.GetLogNoHuGameBaiProcessor</path>
+		</command>
+		<command>
+			<id>111</id>
+			<name>get config hu game bai</name>
+			<path>com.vinplay.api.processors.gamebai.GetConfigHuGameBaiProcessor</path>
+		</command>
+		<command>
+			<id>120</id>
+			<name>top bau cua</name>
+			<path>com.vinplay.api.processors.minigame.TopBauCuaProcessor</path>
+		</command>
+		<command>
+			<id>121</id>
+			<name>lich su giao dich bau cua</name>
+			<path>com.vinplay.api.processors.minigame.LSGDBauCuaProcessor</path>
+		</command>
+		<command>
+			<id>122</id>
+			<name>toi chon ca</name>
+			<path>com.vinplay.api.processors.minigame.TopToiChonCaProcessor</path>
+		</command>
+		<command>
+			<id>123</id>
+			<name>top cao thu</name>
+			<path>com.vinplay.api.processors.gamebai.TopCaoThuProcessor</path>
+		</command>
+		<command>
+			<id>124</id>
+			<name>get captcha</name>
+			<path>com.vinplay.api.processors.security.CaptchaProcessor</path>
+		</command>
+		<command>
+			<id>125</id>
+			<name>update avatar</name>
+			<path>com.vinplay.api.processors.security.UpdateAvatarProcessor</path>
+		</command>
+		<command>
+			<id>126</id>
+			<name>get vp</name>
+			<path>com.vinplay.api.processors.vippoint.GetVippointProcessor</path>
+		</command>
+		<command>
+			<id>127</id>
+			<name>quen mat khau</name>
+			<path>com.vinplay.api.processors.security.ForgetPasswordProcessor</path>
+		</command>
+		<command>
+			<id>128</id>
+			<name>quen mat khau - otp</name>
+			<path>com.vinplay.api.processors.security.ForgetPasswordOtpProcessor</path>
+		</command>
+		<command>
+			<id>129</id>
+			<name>get config game common</name>
+			<path>com.vinplay.api.processors.GetGameCommonProcessor</path>
+		</command>
+		<command>
+			<id>130</id>
+			<name>get config billing</name>
+			<path>com.vinplay.api.processors.GetBillingProcessor</path>
+		</command>
+		<command>
+			<id>131</id>
+			<name>get odp</name>
+			<path>com.vinplay.api.processors.odp.GetOdpProcessor</path>
+		</command>
+		<command>
+			<id>132</id>
+			<name>check odp</name>
+			<path>com.vinplay.api.processors.odp.CheckOdpProcessor</path>
+		</command>
+		<command>
+			<id>133</id>
+			<name>quen mat khau - email</name>
+			<path>com.vinplay.api.processors.security.ForgetPasswordEmailProcessor</path>
+		</command>
+		<command>
+			<id>134</id>
+			<name>Get lsgd pokego</name>
+			<path>com.vinplay.api.processors.minigame.LSGDPokeGoProcessor</path>
+		</command>
+		<command>
+			<id>135</id>
+			<name>Top pokego</name>
+			<path>com.vinplay.api.processors.minigame.TopPokeGoProcessor</path>
+		</command>
+		<command>
+			<id>136</id>
+			<name>Top pokego</name>
+			<path>com.vinplay.api.processors.slot.TopKhoBauProcessor</path>
+		</command>
+		<command>
+			<id>137</id>
+			<name>LSGD Slot Machine</name>
+			<path>com.vinplay.api.processors.slot.LSGDSlotProcessor</path>
+		</command>
+		<command>
+			<id>138</id>
+			<name>List no hu</name>
+			<path>com.vinplay.api.processors.slot.LSNoHuProcessor</path>
+		</command>
+<!--		<command>-->
+<!--			<id>201</id>-->
+<!--			<name>get lucky history</name>-->
+<!--			<path>com.vinplay.api.processors.minigame.LuckyHistoryProcesscor</path>-->
+<!--		</command>-->
+		<command>
+			<id>301</id>
+			<name>get history log user money</name>
+			<path>com.vinplay.api.processors.HistoryTransactionLogProcessor</path>
+		</command>
+		<command>
+			<id>302</id>
+			<name>get log user money</name>
+			<path>com.vinplay.api.processors.GetLogMoneyUserProcessor</path>
+		</command>
+		<command>
+			<id>401</id>
+			<name>get list agent</name>
+			<path>com.vinplay.api.processors.GetListAgentProcessor</path>
+		</command>
+		<command>
+			<id>402</id>
+			<name>list mail box </name>
+			<path>com.vinplay.api.processors.ListMailBoxProcessor</path>
+		</command>
+		<command>
+			<id>403</id>
+			<name>delete mail box </name>
+			<path>com.vinplay.api.processors.DeleteMailBoxProcessor</path>
+		</command>
+		<command>
+			<id>404</id>
+			<name>update status mail box </name>
+			<path>com.vinplay.api.processors.UpdateStatusMailProcessor</path>
+		</command>
+		<command>
+			<id>405</id>
+			<name>list mail box new</name>
+			<path>com.vinplay.api.processors.ListMailBoxNewProcessor</path>
+		</command>
+		<command>
+			<id>501</id>
+			<name>get event vp map </name>
+			<path>com.vinplay.api.processors.vippoint.GetEventVPMapProcessor</path>
+		</command>
+		<command>
+			<id>502</id>
+			<name>get event vp top intel</name>
+			<path>com.vinplay.api.processors.vippoint.GetEventVPTopIntelProcessor</path>
+		</command>
+		<command>
+			<id>503</id>
+			<name>get event vp top strong</name>
+			<path>com.vinplay.api.processors.vippoint.GetEventVPTopStrongProcessor</path>
+		</command>
+		<command>
+			<id>601</id>
+			<name>get top game tour</name>
+			<path>com.vinplay.api.processors.gamebai.TopGameTourProcessor</path>
+		</command>
+		<command>
+			<id>602</id>
+			<name>get log game tour</name>
+			<path>com.vinplay.api.processors.gamebai.LogGameTourProcessor</path>
+		</command>
+
+		<command>
+			<id>1002</id>
+			<name>login bot</name>
+			<path>com.vinplay.api.processors.bot.LoginBotProcessor</path>
+		</command>
+		<command>
+			<id>2000</id>
+			<name>set app otp</name>
+			<path>com.vinplay.api.processors.Set2AFProcessor</path>
+		</command>
+		<command>
+			<id>2001</id>
+			<name>get log cashout by card</name>
+			<path>com.vinplay.api.processors.LogCashoutByCardProcessor</path>
+		</command>
+		<command>
+			<id>2002</id>
+			<name>get config payment</name>
+			<path>com.vinplay.api.processors.GetPaymentConfigProcessor</path>
+		</command>
+		<command>
+			<id>2003</id>
+			<name>deposit UI</name>
+			<path>com.vinplay.api.processors.payment.DepositRequestUIProcessor</path>
+		</command>
+		<command>
+			<id>2004</id>
+			<name>Paywell CallBack</name>
+			<path>com.vinplay.api.processors.paywell.PaywellCallBackProcessor</path>
+		</command>
+		<command>
+			<id>2005</id>
+			<name>Paywell Notify</name>
+			<path>com.vinplay.api.processors.paywell.PaywellNotifyProcessor</path>
+		</command>
+		<command>
+			<id>2006</id>
+			<name>Deposit history</name>
+			<path>com.vinplay.api.processors.DepositHistoryProcessor</path>
+		</command>
+		<command>
+			<id>2007</id>
+			<name>Insert or update bank</name>
+			<path>com.vinplay.api.processors.payment.InsertOrUpdateBankProcessor</path>
+		</command>
+		<command>
+			<id>2008</id>
+			<name>Bank Search</name>
+			<path>com.vinplay.api.processors.payment.BankSearchProcessor</path>
+		</command>
+		<command>
+			<id>2009</id>
+			<name>Payment status</name>
+			<path>com.vinplay.api.processors.payment.PaymentStatusProcessor</path>
+		</command>
+		<command>
+			<id>2010</id>
+			<name>Withdraw request</name>
+			<path>com.vinplay.api.processors.payment.WithdrawRequestUIProcessor</path>
+		</command>
+
+		<command>
+			<id>2011</id>
+			<name>Withdraw request</name>
+			<path>com.vinplay.api.processors.payment.GetListBankProcessor</path>
+		</command>
+
+	</commands>
+</portal>

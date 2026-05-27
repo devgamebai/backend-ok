@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<hazelcast xmlns="http://www.hazelcast.com/schema/config"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="http://www.hazelcast.com/schema/config
+           http://www.hazelcast.com/schema/config/hazelcast-config-3.12.xsd">
+
+    <group>
+        <name>sunwinkr</name>
+        <password>sunwinkr</password>
+    </group>
+
+    <properties>
+        <property name="hazelcast.tcp.join.port.try.count">3</property>
+        <property name="hazelcast.shutdownhook.policy">GRACEFUL</property>
+        <property name="hazelcast.max.no.heartbeat.seconds">30</property>
+    </properties>
+
+    <network>
+        <port auto-increment="true" port-count="100">5701</port>
+        <join>
+            <multicast enabled="false" />
+            <tcp-ip enabled="true">
+                <member>hazelcast-1</member>
+                <member>hazelcast-2</member>
+                <member>hazelcast-3</member>
+            </tcp-ip>
+        </join>
+        <interfaces enabled="false" />
+    </network>
+
+    <!-- Split-brain protection: a partition that finds itself with fewer
+         than 2 members refuses reads+writes on the protected maps until
+         the cluster heals. Prevents the 1-node side of a network split
+         from accepting writes that would diverge from the 2-node side. -->
+    <quorum name="majority" enabled="true">
+        <quorum-size>2</quorum-size>
+        <quorum-type>READ_WRITE</quorum-type>
+    </quorum>
+
+    <map name="default">
+        <in-memory-format>BINARY</in-memory-format>
+        <backup-count>1</backup-count>
+        <time-to-live-seconds>0</time-to-live-seconds>
+        <max-idle-seconds>0</max-idle-seconds>
+    </map>
+
+    <map name="users">
+        <in-memory-format>BINARY</in-memory-format>
+        <backup-count>1</backup-count>
+        <time-to-live-seconds>3600</time-to-live-seconds>
+        <max-idle-seconds>1800</max-idle-seconds>
+        <eviction-policy>LRU</eviction-policy>
+        <max-size policy="PER_NODE">50000</max-size>
+        <quorum-ref>majority</quorum-ref>
+    </map>
+
+    <map name="cacheToken">
+        <in-memory-format>BINARY</in-memory-format>
+        <backup-count>1</backup-count>
+        <time-to-live-seconds>7200</time-to-live-seconds>
+        <max-idle-seconds>3600</max-idle-seconds>
+        <quorum-ref>majority</quorum-ref>
+    </map>
+
+    <map name="giftcode_fail_attempts">
+        <in-memory-format>BINARY</in-memory-format>
+        <backup-count>1</backup-count>
+        <time-to-live-seconds>21600</time-to-live-seconds> <!-- 6 hours -->
+        <max-idle-seconds>21600</max-idle-seconds>
+        <eviction-policy>LRU</eviction-policy>
+        <max-size policy="PER_NODE">10000</max-size>
+    </map>
+
+
+    <queue name="default">
+        <max-size>0</max-size>
+        <backup-count>1</backup-count>
+    </queue>
+</hazelcast>

@@ -1,0 +1,103 @@
+# =============================================================================
+# WEB SERVICES - PHP Admin Panel, Agency Portal, Webhook
+# =============================================================================
+# PHP-FPM applications (proxied by sunwinkr-fe-nginx in /home/sunwinkr-dev/)
+#
+# NOTE: Nginx has been moved to /home/sunwinkr-dev/docker-compose.yml
+#       (sunwinkr-fe-nginx) so the FE team can manage it independently.
+#       DO NOT add nginx back here — it will conflict with port 80/443.
+# =============================================================================
+
+services:
+
+  # NOTE: admin (CodeIgniter + Next.js) + nextagency are deployed via their
+  # own scripts in sibling repos /root/sunwinkr/sunkr-nextadmin and
+  # /root/sunwinkr/sunkr-nextagency. They are NOT part of this compose stack.
+  # Removed 2026-05-14 — see operator note and missing ../sunkr-admin path
+  # that was breaking deploy.sh --rebuild.
+
+  # ---------------------------------------------------------------------------
+  # Agency Portal - Laravel 8 (PHP 8.4)
+  # ---------------------------------------------------------------------------
+  agency-php:
+    image: php:8.4-fpm-alpine
+    container_name: sunwinkr-agency-php
+    restart: unless-stopped
+    working_dir: /var/www/agency
+    volumes:
+      - ./www/agency-php:/var/www/agency
+    networks:
+      - backend
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+    logging:
+      driver: json-file
+      options:
+        max-size: "20m"
+        max-file: "5"
+
+  # ---------------------------------------------------------------------------
+  # Webhook - Telegram webhook receiver
+  # ---------------------------------------------------------------------------
+  webhook:
+    image: php:7.4-fpm-alpine
+    container_name: sunwinkr-webhook
+    restart: unless-stopped
+    working_dir: /var/www/webhook
+    volumes:
+      - ./www/webhook:/var/www/webhook
+    networks:
+      - backend
+    deploy:
+      resources:
+        limits:
+          memory: 128M
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
+  
+  nginx-gateway:
+    image: nginx:1.25-alpine
+    container_name: sunwinkr-nginx-gateway
+    restart: unless-stopped
+    volumes:
+      - ./nginx/conf.d/ku4789.xyz.conf:/etc/nginx/conf.d/ku4789.xyz.conf:ro
+      - ./www/webbuild:/var/www/webbuild:ro
+    depends_on:
+      portal-api:
+        condition: service_healthy
+      backend-api:
+        condition: service_healthy
+    labels:
+      autoheal: "true"
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO- -T 3 http://localhost/ -S 2>&1 | grep -qE 'HTTP/1\\.[01] (2|3|4)' || exit 1"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 15s
+    networks:
+      - backend
+      - frontend
+    ports:
+      - "80:80"
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+networks:
+  frontend:
+    external: true
+    name: sunkr-network
+  backend:
+    external: true
+    name: sunkr-network
+  database:
+    external: true
+    name: sunkr-network

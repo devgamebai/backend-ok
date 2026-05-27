@@ -1,0 +1,94 @@
+rootProject.name = 'BackendV2'
+
+// === Shared Libraries ===
+include 'VbeeCommon'
+include 'VBeeSecurity'
+include 'VinPlayCardLib'
+include 'VinPlayDAL'
+include 'VinPlayUserCore'
+include 'CardCoreLib'
+include 'BitzeroAll'
+include 'BitzeroMini'
+include 'BitZeroMinigame'
+
+// === APIs ===
+include 'api:VinPlayPortal'
+findProject(':api:VinPlayPortal')?.name = 'VinPlayPortal'
+include 'api:VinPlayBackend'
+findProject(':api:VinPlayBackend')?.name = 'VinPlayBackend'
+include 'api:vbee'
+findProject(':api:vbee')?.name = 'vbee'
+include 'api:payment'
+findProject(':api:payment')?.name = 'payment'
+// SUN-1112 (CQRS Phase 0) — drainer that pushes commission_history_outbox → Mongo
+include 'api:commission-history-drainer'
+findProject(':api:commission-history-drainer')?.name = 'commission-history-drainer'
+// SUN-1054 follow-up — drains banca:failed_settle Redis list back into c=9998
+include 'banca-replay-worker'
+findProject(':banca-replay-worker')?.name = 'banca-replay-worker'
+// include 'api:GameAccess'
+// findProject(':api:GameAccess')?.name = 'GameAccess'
+
+// === Game Servers ===
+// AGENT-NOTE: duplicated bootstrap; expect merge conflict with TaiXiu PR-1.
+// Keep one copy of the minigame-engine include — both agents add the same line.
+include 'game:minigame-engine'
+findProject(':game:minigame-engine')?.name = 'minigame-engine'
+include 'game:Minigame'
+findProject(':game:Minigame')?.name = 'Minigame'
+include "game:slot"
+findProject(":game:slot")?.name = "SlotMachine"
+include 'game:tlmn'
+findProject(':game:tlmn')?.name = 'tlmn'
+include 'game:xocdia'
+findProject(':game:xocdia')?.name = 'xocdia'
+include 'game:xocdiamd5'
+findProject(':game:xocdiamd5')?.name = 'xocdiamd5'
+include 'game:bacayServer'
+findProject(':game:bacayServer')?.name = 'bacayServer'
+include 'game:baicao'
+findProject(':game:baicao')?.name = 'baicao'
+include 'game:binh'
+findProject(':game:binh')?.name = 'binh'
+include 'game:caro'
+findProject(':game:caro')?.name = 'caro'
+include 'game:cotuong'
+findProject(':game:cotuong')?.name = 'cotuong'
+include 'game:coup'
+findProject(':game:coup')?.name = 'coup'
+include 'game:lieng'
+findProject(':game:lieng')?.name = 'lieng'
+include 'game:poker'
+findProject(':game:poker')?.name = 'poker'
+include 'game:pokertour'
+findProject(':game:pokertour')?.name = 'pokertour'
+include 'game:sam'
+findProject(':game:sam')?.name = 'sam'
+include 'game:xizach'
+findProject(':game:xizach')?.name = 'xizach'
+include 'game:thirdParty'
+findProject(':game:thirdParty')?.name = 'thirdParty'
+
+// SUN-LOTTERY PR-1/3: pure-Java XSMB lottery engine. Pins
+// ZoneId.of("Asia/Ho_Chi_Minh") in code — the rest of the stack runs
+// TZ=Asia/Seoul by design (see docs/specs/lottery-anticheat-audit.md §5.1).
+// PR-2 adds bet/prize/settle services; PR-3 adds :game:lottery-api Spring
+// module. See docs/plans/lottery-extraction-plan.md §1.
+include 'game:lottery-engine'
+project(':game:lottery-engine').projectDir = file('game/lottery-engine')
+
+// SUN-LOTTERY PR-3/3: Spring Boot 2.7.18 REST + STOMP module hosting the
+// XSMB lottery engine. Same standalone pattern as :game:minigame-api —
+// the Boot 2.7 plugin requires Gradle 6.8+, root is Gradle 5.2.1. So
+// lottery-api builds standalone via game/lottery-api/settings.gradle with
+// Gradle 7.6.4 (/opt/gradle-7.6.4/bin/gradle). Upstream shared-lib JARs
+// are file deps built by the parent Gradle 5.2.1 build first
+// (./gradlew :VbeeCommon:jar :VinPlayUserCore:jar :VinPlayDAL:jar
+//  :game:lottery-engine:jar). Excluded here so root build doesn't break.
+// include 'game:lottery-api'
+// project(':game:lottery-api').projectDir = file('game/lottery-api')
+
+// === Excluded (no source — use precompiled fat JARs) ===
+// include 'VinPayment'
+// include 'VinOTP'
+// include 'VinGameBase'

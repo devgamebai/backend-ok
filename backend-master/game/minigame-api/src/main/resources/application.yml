@@ -1,0 +1,47 @@
+# minigame-api — Spring Boot config (PR-4/4)
+#
+# Ports per docs/plans/taixiu-extraction-plan.md §1.3:
+#   9290 = REST  (HTTP)
+#   9291 = STOMP (WebSocket /ws/minigame)
+#
+# Both servers run in-process on the same Boot context. STOMP uses the
+# servlet WebSocket adapter so it shares the 9290 listener — port 9291 is
+# kept here as the documented internal-tooling port for the management
+# endpoints, NOT a second HTTP listener.
+
+server:
+  port: 9290
+  servlet:
+    context-path: /
+
+spring:
+  application:
+    name: minigame-api
+  main:
+    # The Boot app starts as a daemon thread under the BitZero ServerReadyTask
+    # — it must not register a shutdown hook of its own (BitZero already owns
+    # the JVM lifecycle).
+    register-shutdown-hook: false
+    # Allow re-bootstrapping in tests.
+    allow-bean-definition-overriding: true
+  security:
+    user:
+      # Default admin credentials are NEVER used — the AccessTokenFilter
+      # always runs first and short-circuits the form-login path. We
+      # disable form-login in SecurityConfig.
+      name: disabled
+      password: disabled
+
+management:
+  server:
+    port: 9291
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics
+
+logging:
+  level:
+    root: INFO
+    com.sunwinkr.minigame: INFO
+    org.springframework.security: WARN

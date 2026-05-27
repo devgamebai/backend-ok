@@ -1,0 +1,1 @@
+{"sign": "deadbeefdeadbeefdeadbeefdeadbeef", "currency": "KRW", "game_type": "LIVE_CASINO", "request_time": "1777800701", "operator_code": "G7A1", "member_account": "khongduong", "product_code": 1002, "transactions": [{"id": "TX-D-9401", "action": "SETTLED", "product_code": 1002, "game_code": "evo-baccarat", "amount": "1000", "bet_amount": "1000", "wager_code": "W-D-9401"}]}

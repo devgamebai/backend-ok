@@ -1,0 +1,43 @@
+plugins {
+    id 'java'
+}
+
+group 'backend'
+
+sourceCompatibility = 1.8
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    testCompile group: 'junit', name: 'junit', version: '4.12'
+    compile project(':VbeeCommon')
+compile 'org.jsoup:jsoup:1.15.4'
+    compile 'commons-httpclient:commons-httpclient:3.1'
+    compile 'org.apache.logging.log4j:log4j-api:2.20.0'
+    compile 'com.twilio.sdk:twilio:8.36.0'
+    compile 'com.google.firebase:firebase-admin:9.2.0'
+    compile 'org.quartz-scheduler:quartz:2.3.2'
+}
+
+// Forward DB password into the test worker JVM. Without this, MoneyGatewayDualWriteTest
+// silently `Assume`-skips its DB-touching tests (because @BeforeClass can't connect),
+// and the build goes green without ever exercising the integration assertions.
+//
+// Prefer -Dtest.mysql.password=... on the gradle command line; fall back to the
+// MYSQL_PASSWORD env var (used by CI) when the system property is not set.
+test {
+    systemProperty 'test.mysql.password',
+            findProperty('test.mysql.password') ?: System.getenv('MYSQL_PASSWORD') ?: ''
+    // Mirror the prompt-spec property name as well for forward compat with CI changes.
+    systemProperty 'db.test.password',
+            findProperty('db.test.password') ?: System.getenv('DB_TEST_PASSWORD') ?: ''
+
+    // Phase 2 contract test — disable the GSC inbound audit log so
+    // GscBalanceAggregatorTest doesn't pollute vinplay.gsc_event_log
+    // with synthetic test rows. The aggregator's pre/postAudit hooks
+    // still exercise the call site (and are unit-covered above), but
+    // tryLogRequest/Response no-op when this env var is "false".
+    environment 'GSC_EVENT_LOG_ENABLED', 'false'
+}

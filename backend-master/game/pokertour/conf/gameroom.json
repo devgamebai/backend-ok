@@ -1,0 +1,127 @@
+{
+    "join_room_interval_time" : 1000,
+    "big_win" : 100000,
+    "roomList" : [
+        {
+            "moneyType" : 1,
+            "moneyBet" : 200000,
+            "requiredMoney" : 0,
+            "outMoney" : 0,
+            "maxUserPerRoom" : 6,
+            "commisionRate" : 2,
+            "rule" : 0,
+            "numberOfInitialRoom" : 0,
+            "roomName" : "San Bang Tat Ca"
+        },
+        {
+            "moneyType" : 1,
+            "moneyBet" : 100000,
+            "requiredMoney" : 0,
+            "outMoney" : 0,
+            "maxUserPerRoom" : 6,
+            "commisionRate" : 2,
+            "rule" : 0,
+            "numberOfInitialRoom" : 0,
+            "roomName" : "San Bang Tat Ca"
+        },
+        {
+            "moneyType" : 1,
+            "moneyBet" : 50000,
+            "requiredMoney" : 0,
+            "outMoney" : 0,
+            "maxUserPerRoom" : 6,
+            "commisionRate" : 2,
+            "rule" : 0,
+            "numberOfInitialRoom" : 0,
+            "roomName" : "San Bang Tat Ca"
+        },
+        {
+            "moneyType" : 1,
+            "moneyBet" : 20000,
+            "requiredMoney" : 0,
+            "outMoney" : 0,
+            "maxUserPerRoom" : 6,
+            "commisionRate" : 2,
+            "rule" : 0,
+            "numberOfInitialRoom" : 0,
+            "roomName" : "San Bang Tat Ca"
+        },
+        {
+            "moneyType" : 1,
+            "moneyBet" : 10000,
+            "requiredMoney" : 0,
+            "outMoney" : 0,
+            "maxUserPerRoom" : 6,
+            "commisionRate" : 2,
+            "rule" : 0,
+            "numberOfInitialRoom" : 0,
+            "roomName" : "San Bang Tat Ca"
+        },
+        {
+            "moneyType" : 1,
+            "moneyBet" : 5000,
+            "requiredMoney" : 0,
+            "outMoney" : 0,
+            "maxUserPerRoom" : 6,
+            "commisionRate" : 2,
+            "rule" : 0,
+            "numberOfInitialRoom" : 0,
+            "roomName" : "San Bang Tat Ca"
+        },
+        {
+            "moneyType" : 1,
+            "moneyBet" : 2000,
+            "requiredMoney" : 0,
+            "outMoney" : 0,
+            "maxUserPerRoom" : 6,
+            "commisionRate" : 2,
+            "rule" : 0,
+            "numberOfInitialRoom" : 0,
+            "roomName" : "San Bang Tat Ca"
+        },
+        {
+            "moneyType" : 1,
+            "moneyBet" : 1000,
+            "requiredMoney" : 0,
+            "outMoney" : 0,
+            "maxUserPerRoom" : 6,
+            "commisionRate" : 2,
+            "rule" : 0,
+            "numberOfInitialRoom" : 0,
+            "roomName" : "San Bang Tat Ca"
+        },
+        {
+            "moneyType" : 1,
+            "moneyBet" : 500,
+            "requiredMoney" : 0,
+            "outMoney" : 0,
+            "maxUserPerRoom" : 6,
+            "commisionRate" : 2,
+            "rule" : 0,
+            "numberOfInitialRoom" : 0,
+            "roomName" : "San Bang Tat Ca"
+        },
+        {
+            "moneyType" : 1,
+            "moneyBet" : 200,
+            "requiredMoney" : 0,
+            "outMoney" : 0,
+            "maxUserPerRoom" : 6,
+            "commisionRate" : 2,
+            "rule" : 0,
+            "numberOfInitialRoom" : 0,
+            "roomName" : "San Bang Tat Ca"
+        },
+        {
+            "moneyType" : 1,
+            "moneyBet" : 5,
+            "requiredMoney" : 0,
+            "outMoney" : 0,
+            "maxUserPerRoom" : 6,
+            "commisionRate" : 2,
+            "rule" : 0,
+            "numberOfInitialRoom" : 0,
+            "roomName" : "San Bang Tat Ca"
+        }
+    ]
+}

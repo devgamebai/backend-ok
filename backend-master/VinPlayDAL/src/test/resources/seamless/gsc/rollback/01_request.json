@@ -1,0 +1,1 @@
+{"sign": "032c41771c41620bd28c8e7a829a691c", "operator_code": "G7A1", "request_time": "1777800001", "currency": "KRW", "member_account": "khongduong", "product_code": 1002, "game_type": "LIVE_CASINO", "transactions": [{"id": "TX-R-9001", "action": "rollback", "product_code": 1002, "game_code": "evo-baccarat", "bet_amount": "1000", "wager_code": "W-R-9001"}]}

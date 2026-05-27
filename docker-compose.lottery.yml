@@ -1,0 +1,68 @@
+# =============================================================================
+# LOTTERY API - XSMB Result Scraper (Node.js)
+# =============================================================================
+# Scrapes Vietnamese lottery results (Xo So Mien Bac) every 5 minutes
+# Provides API for Tai Xiu and lottery games
+#
+# Port: 49111 (internal only)
+#
+# Usage:
+#   docker compose -f docker-compose.yml -f docker-compose.lottery.yml up -d
+# =============================================================================
+
+services:
+
+  lottery-api:
+    image: node:20-alpine
+    container_name: sunwinkr-lottery-api
+    restart: unless-stopped
+    working_dir: /app
+    command: ["node", "app.js"]
+    environment:
+      NODE_ENV: production
+      PORT: 49111
+      URL: ${LOTTERY_SCRAPE_URL:-https://az24.vn/xsmb-sxmb-xo-so-mien-bac.html}
+    volumes:
+      - ./api-xsmb-today-main:/app
+      - lottery-node-modules:/app/node_modules
+    networks:
+      - backend
+      - gameservers  # Game servers fetch results from this
+    # Internal only - game servers fetch results from this
+    # ports:
+    #   - "127.0.0.1:49111:49111"
+    healthcheck:
+      # SUN-878 hypothesis: previous check hit / which has no route — the
+      # node app only exposes /api/v1 (see api-xsmb-today-main/routes/index.js).
+      # wget --spider on / returned 404 every minute, marking the container
+      # "unhealthy" forever even though the scraper was serving correctly.
+      # That noise masks real outages in monitoring dashboards. Use the
+      # canonical endpoint that returns 200 + today's draw when healthy.
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:49111/api/v1"]
+      interval: 60s
+      timeout: 10s
+      retries: 3
+    deploy:
+      resources:
+        limits:
+          memory: 256M
+    logging:
+      driver: json-file
+      options:
+        max-size: "20m"
+        max-file: "3"
+
+volumes:
+  lottery-node-modules:
+    name: sunwinkr-lottery-modules
+
+networks:
+  backend:
+    external: true
+    name: sunkr-network
+  gameservers:
+    external: true
+    name: sunkr-games
+  frontend:
+    external: true
+    name: sunkr-network

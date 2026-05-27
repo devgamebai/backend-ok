@@ -1,0 +1,68 @@
+<?xml version="1.0"?>
+<ip-access>
+	<uri id='/i2b'>
+		<whitelist>
+			<ip>172.16.0.0-172.31.255.255</ip>
+			<ip>10.0.0.0-10.255.255.255</ip>
+		</whitelist>
+		<blacklist>
+		</blacklist>
+	</uri>
+	<uri id='/activeEmail'>
+		<whitelist>
+			<ip>172.16.0.0-172.31.255.255</ip>
+			<ip>10.0.0.0-10.255.255.255</ip>
+		</whitelist>
+		<blacklist>
+		</blacklist>
+	</uri>
+	<uri id='/smsPlus/*'>
+		<whitelist>
+		<ip>123.31.29.141</ip>
+      <ip>123.31.29.145</ip>
+      <ip>123.31.29.147</ip>
+		</whitelist>
+		<blacklist>
+		</blacklist>
+	</uri>
+	<uri id='/sms8x/*'>
+		<whitelist>
+			<ip>123.31.29.141</ip>
+      <ip>123.31.29.145</ip>
+      <ip>123.31.29.147</ip>
+		</whitelist>
+		<blacklist>
+		</blacklist>
+	</uri>
+	<uri id='/api'>
+		<whitelist>
+			<ip>123.31.29.141</ip>
+      <ip>123.31.29.145</ip>
+      <ip>123.31.29.147</ip>
+       <ip>125.212.247.31</ip>
+         <ip>172.16.0.0-172.31.255.255</ip>
+         <ip>10.0.0.0-10.255.255.255</ip>
+		</whitelist>
+		<blacklist>
+		</blacklist>
+	</uri>
+	<uri id='/receive_mo'>
+		<whitelist>
+			<ip>123.31.29.141</ip>
+      <ip>123.31.29.145</ip>
+      <ip>123.31.29.147</ip>
+       <ip>125.212.247.31</ip>
+         <ip>172.16.0.0-172.31.255.255</ip>
+         <ip>10.0.0.0-10.255.255.255</ip>
+		</whitelist>
+		<blacklist>
+		</blacklist>
+	</uri>
+	<uri id='/topup'>
+		<whitelist>
+			<ip>127.0.0.1</ip>      
+		</whitelist>
+		<blacklist>
+		</blacklist>
+ </uri>
+</ip-access>

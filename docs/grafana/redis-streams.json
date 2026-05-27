@@ -1,0 +1,358 @@
+{
+  "__inputs": [
+    {
+      "name": "DS_PROMETHEUS",
+      "label": "Prometheus",
+      "description": "Prometheus datasource scraping the redis-exporter sidecar (sunwinkr-redis-exporter:9121).",
+      "type": "datasource",
+      "pluginId": "prometheus",
+      "pluginName": "Prometheus"
+    },
+    {
+      "name": "DS_MYSQL",
+      "label": "MySQL (vinplay)",
+      "description": "MySQL datasource pointed at the vinplay schema. Reads message_bus_audit (created by Task S1) for producer-side counts.",
+      "type": "datasource",
+      "pluginId": "mysql",
+      "pluginName": "MySQL"
+    }
+  ],
+  "__requires": [
+    {
+      "type": "grafana",
+      "id": "grafana",
+      "name": "Grafana",
+      "version": "9.0.0"
+    },
+    {
+      "type": "datasource",
+      "id": "prometheus",
+      "name": "Prometheus",
+      "version": "1.0.0"
+    },
+    {
+      "type": "datasource",
+      "id": "mysql",
+      "name": "MySQL",
+      "version": "1.0.0"
+    }
+  ],
+  "title": "RMQ -> Redis Streams Migration (Task O1)",
+  "uid": "redis-streams-o1",
+  "tags": [
+    "redis",
+    "streams",
+    "rmq-migration",
+    "messagebus"
+  ],
+  "schemaVersion": 38,
+  "version": 1,
+  "editable": true,
+  "graphTooltip": 1,
+  "refresh": "30s",
+  "time": {
+    "from": "now-1h",
+    "to": "now"
+  },
+  "timepicker": {},
+  "templating": {
+    "list": [
+      {
+        "name": "stream",
+        "label": "Stream",
+        "type": "query",
+        "datasource": {
+          "type": "prometheus",
+          "uid": "${DS_PROMETHEUS}"
+        },
+        "query": "label_values(redis_stream_length, stream)",
+        "refresh": 2,
+        "includeAll": true,
+        "multi": true,
+        "current": {
+          "text": "All",
+          "value": "$__all"
+        }
+      }
+    ]
+  },
+  "annotations": {
+    "list": []
+  },
+  "panels": [
+    {
+      "id": 1,
+      "title": "Top 10 streams by depth (XLEN)",
+      "type": "timeseries",
+      "description": "Rising depth = producers outrunning consumers. If sustained, check consumer lag (panel 2) and DLQ (panel 3).",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${DS_PROMETHEUS}"
+      },
+      "targets": [
+        {
+          "expr": "topk(10, redis_stream_length{stream=~\"$stream\"})",
+          "legendFormat": "{{stream}}",
+          "refId": "A"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 0
+      }
+    },
+    {
+      "id": 2,
+      "title": "Consumer-group lag (entries behind)",
+      "type": "timeseries",
+      "description": "redis_stream_group_lag: number of entries between the group's last-delivered-id and the stream tip. Sustained rise = consumer can't keep up. Alert anchor: >30s of work for 5m (Task O2).",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${DS_PROMETHEUS}"
+      },
+      "targets": [
+        {
+          "expr": "redis_stream_group_lag{stream=~\"$stream\"}",
+          "legendFormat": "{{stream}} / {{group}}",
+          "refId": "A"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 0
+      }
+    },
+    {
+      "id": 3,
+      "title": "DLQ length per stream",
+      "type": "timeseries",
+      "description": "Any non-zero on a *.dlq stream = a poison-pill or processor-crash entry was diverted. Alert anchor: any DLQ > 100 (Task O2).",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${DS_PROMETHEUS}"
+      },
+      "targets": [
+        {
+          "expr": "redis_stream_length{stream=~\".*\\\\.dlq\"}",
+          "legendFormat": "{{stream}}",
+          "refId": "A"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              { "color": "green", "value": null },
+              { "color": "yellow", "value": 1 },
+              { "color": "red", "value": 100 }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 8
+      }
+    },
+    {
+      "id": 4,
+      "title": "Group pending count (PEL size)",
+      "type": "timeseries",
+      "description": "redis_stream_group_pending: entries delivered but not yet ACKed. Sticky high values indicate stuck consumers; XAUTOCLAIM should reap them.",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${DS_PROMETHEUS}"
+      },
+      "targets": [
+        {
+          "expr": "redis_stream_group_pending{stream=~\"$stream\"}",
+          "legendFormat": "{{stream}} / {{group}}",
+          "refId": "A"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 8
+      }
+    },
+    {
+      "id": 5,
+      "title": "AOF current size + last rewrite duration",
+      "type": "timeseries",
+      "description": "redis_aof_current_size_bytes vs redis_aof_last_rewrite_duration_seconds. Rewrite duration > 60s suggests write amplification (Task O2).",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${DS_PROMETHEUS}"
+      },
+      "targets": [
+        {
+          "expr": "redis_aof_current_size_bytes",
+          "legendFormat": "AOF size (bytes)",
+          "refId": "A"
+        },
+        {
+          "expr": "redis_aof_last_rewrite_duration_seconds",
+          "legendFormat": "Last rewrite (s)",
+          "refId": "B"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "bytes"
+        },
+        "overrides": [
+          {
+            "matcher": { "id": "byName", "options": "Last rewrite (s)" },
+            "properties": [
+              { "id": "unit", "value": "s" }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 16
+      }
+    },
+    {
+      "id": 6,
+      "title": "Memory used vs maxmemory",
+      "type": "timeseries",
+      "description": "Ratio used/max. Alert anchor: >75% sustained (Task O2). With noeviction policy a >=100% breaches cause OOM-on-write.",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${DS_PROMETHEUS}"
+      },
+      "targets": [
+        {
+          "expr": "redis_memory_used_bytes",
+          "legendFormat": "used",
+          "refId": "A"
+        },
+        {
+          "expr": "redis_memory_max_bytes",
+          "legendFormat": "max",
+          "refId": "B"
+        },
+        {
+          "expr": "redis_memory_used_bytes / clamp_min(redis_memory_max_bytes, 1)",
+          "legendFormat": "used/max ratio",
+          "refId": "C"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "bytes"
+        },
+        "overrides": [
+          {
+            "matcher": { "id": "byName", "options": "used/max ratio" },
+            "properties": [
+              { "id": "unit", "value": "percentunit" }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 16
+      }
+    },
+    {
+      "id": 7,
+      "title": "Connected clients (Lettuce health proxy)",
+      "type": "timeseries",
+      "description": "redis_connected_clients. Should track number of producer JVMs + consumer JVMs in the dual-write window. A drop to zero on a non-restart event = Lettuce reconnect storm.",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${DS_PROMETHEUS}"
+      },
+      "targets": [
+        {
+          "expr": "redis_connected_clients",
+          "legendFormat": "clients",
+          "refId": "A"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 24
+      }
+    },
+    {
+      "id": 8,
+      "title": "Producer-side audit counts (last 1h, by queue / backend)",
+      "type": "table",
+      "description": "From message_bus_audit (populated by MessageBusAuditWriter on every publish). drift_pct = abs(rmq - redis) / max(rmq, 1). Acceptance per S1: <0.5% over 24h windows. Requires Task S1's CREATE TABLE to have run.",
+      "datasource": {
+        "type": "mysql",
+        "uid": "${DS_MYSQL}"
+      },
+      "targets": [
+        {
+          "rawSql": "SELECT queue_name, SUM(backend = 'rmq') AS rmq_count, SUM(backend = 'redis') AS redis_count, ABS(SUM(backend = 'rmq') - SUM(backend = 'redis')) / GREATEST(SUM(backend = 'rmq'), 1) AS drift_pct, SUM(success = 0) AS failures FROM message_bus_audit WHERE ts >= NOW() - INTERVAL 1 HOUR GROUP BY queue_name ORDER BY drift_pct DESC",
+          "format": "table",
+          "refId": "A"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {},
+        "overrides": [
+          {
+            "matcher": { "id": "byName", "options": "drift_pct" },
+            "properties": [
+              { "id": "unit", "value": "percentunit" }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 10,
+        "w": 24,
+        "x": 0,
+        "y": 32
+      }
+    }
+  ]
+}

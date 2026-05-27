@@ -1,0 +1,3 @@
+# ci smoke test trigger — runner-on-staging → ssh CasProd → nginx -s reload
+# retry after sunwinkr-nginx → sunkr-fe-nginx fix
+# updated 2026-04-11T14:11:38Z

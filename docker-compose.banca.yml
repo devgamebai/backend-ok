@@ -1,0 +1,79 @@
+# =============================================================================
+# BAN CA (FISH SHOOTING GAME) - .NET Service
+# =============================================================================
+# Real-time multiplayer fish shooting game
+# Built with C# .NET Core 3.0 / runs on .NET 5.0 runtime
+#
+# Ports:
+#   TCP 8888  - Game TCP socket (direct player connections)
+#   WS  2083  - WebSocket (browser/mobile clients)
+#   HTTP 8080 - Internal web service API
+#
+# Usage:
+#   docker compose -f docker-compose.yml -f docker-compose.database.yml -f docker-compose.banca.yml up -d
+#
+# Build first:
+#   cd banca/BanCaLiteNet && dotnet publish -c Release -o out
+# =============================================================================
+
+services:
+
+  banca:
+    # Built artifact targets netcoreapp3.0 - aspnet:3.1 is the LTS-compatible runtime
+    # aspnet:5.0 fails: "The framework 'Microsoft.NETCore.App', version '3.0.0' was not found"
+    image: mcr.microsoft.com/dotnet/aspnet:3.1
+    container_name: sunwinkr-banca
+    restart: unless-stopped
+    # SUN-1034: drain fish-game player sockets + flush Core state.
+    stop_grace_period: 30s
+    working_dir: /app
+    # GitLab #30: template config.json from env at container boot so MySQL /
+    # Redis creds follow .env instead of the baked-in config file.
+    entrypoint: ["/entrypoint.sh"]
+    env_file:
+      - .env
+    environment:
+      # Explicit list of the keys the entrypoint templates — keeps the
+      # contract between .env and config.json visible in compose.
+      - MYSQL_USER=${MYSQL_USER:-}
+      - MYSQL_PASSWORD=${MYSQL_PASSWORD:-}
+      - REDIS_PASSWORD=${REDIS_PASSWORD:-}
+      - BANCA_XXENG_BACKEND=${BANCA_XXENG_BACKEND:-}
+      - BANCA_XXENG_SECRET=${BANCA_XXENG_SECRET:-}
+      - BANCA_SERVICE_TOKEN=${BANCA_SERVICE_TOKEN:-}
+    volumes:
+      - ./banca/BanCaLiteNet/out:/app
+      - ./banca/Core:/app/Core:ro
+      - ./banca/entrypoint.sh:/entrypoint.sh:ro
+      - ./logs/banca:/app/logs
+    networks:
+      - gameservers
+      - database
+    # WebSocket port for player connections (through nginx in production)
+    # ports:
+    #   - "2083:2083"
+    depends_on:
+      mysql:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    deploy:
+      resources:
+        limits:
+          memory: 1G
+    logging:
+      driver: json-file
+      options:
+        max-size: "50m"
+        max-file: "5"
+
+networks:
+  gameservers:
+    external: true
+    name: sunkr-games
+  database:
+    external: true
+    name: sunkr-network
+  frontend:
+    external: true
+    name: sunkr-network

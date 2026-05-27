@@ -1,0 +1,171 @@
+{
+	"join_room_interval_time": 1000,
+	"big_win": 100000,
+	"roomList": [
+		{
+			"moneyType": 1,
+			"moneyBet": 100,
+			"requiredMoney": 1,
+			"outMoney": 1,
+			"maxUserPerRoom": 500,
+			"commisionRate": 2,
+			"rule": 1,
+			"numberOfInitialRoom": 1,
+			"roomName": "Kênh thế giới"
+		},
+		{ 
+			"moneyType": 1,
+			"moneyBet": 100,
+			"requiredMoney": 1,
+			"outMoney": 1,
+			"maxUserPerRoom": 30,
+			"commisionRate": 2,
+			"rule": 0,
+			"numberOfInitialRoom": 3,
+			"roomName": "Bàn thường"
+		},
+		{
+			"moneyType": 1,
+			"moneyBet": 200,
+			"requiredMoney": 1,
+			"outMoney": 1,
+			"maxUserPerRoom": 30,
+			"commisionRate": 2,
+			"rule": 0,
+			"numberOfInitialRoom": 3,
+			"roomName": "Bàn thường"
+		},
+		{
+			"moneyType": 1,
+			"moneyBet": 500,
+			"requiredMoney": 1,
+			"outMoney": 1,
+			"maxUserPerRoom": 30,
+			"commisionRate": 2,
+			"rule": 0,
+			"numberOfInitialRoom": 3,
+			"roomName": "Bàn thường"
+		},
+		{
+			"moneyType": 1,
+			"moneyBet": 1000,
+			"requiredMoney": 1,
+			"outMoney": 1,
+			"maxUserPerRoom": 30,
+			"commisionRate": 2,
+			"rule": 0,
+			"numberOfInitialRoom": 3,
+			"roomName": "Bàn thường"
+		},
+		{
+			"moneyType": 1,
+			"moneyBet": 2000,
+			"requiredMoney": 1,
+			"outMoney": 1,
+			"maxUserPerRoom": 30,
+			"commisionRate": 2,
+			"rule": 0,
+			"numberOfInitialRoom": 3,
+			"roomName": "Bàn thường"
+		},
+		{
+			"moneyType": 1,
+			"moneyBet": 5000,
+			"requiredMoney": 1,
+			"outMoney": 1,
+			"maxUserPerRoom": 30,
+			"commisionRate": 2,
+			"rule": 0,
+			"numberOfInitialRoom": 3,
+			"roomName": "Bàn thường"
+		},
+		{
+			"moneyType": 1,
+			"moneyBet": 10000,
+			"requiredMoney": 1,
+			"outMoney": 1,
+			"maxUserPerRoom": 30,
+			"commisionRate": 2,
+			"rule": 0,
+			"numberOfInitialRoom": 3,
+			"roomName": "Bàn thường"
+		},
+		{
+			"moneyType": 1,
+			"moneyBet": 20000,
+			"requiredMoney": 1,
+			"outMoney": 1,
+			"maxUserPerRoom": 30,
+			"commisionRate": 2,
+			"rule": 0,
+			"numberOfInitialRoom": 3,
+			"roomName": "Bàn thường"
+		},
+		{
+			"moneyType": 0,
+			"moneyBet": 1000,
+			"requiredMoney": 1,
+			"outMoney": 1,
+			"maxUserPerRoom": 30,
+			"commisionRate": 7,
+			"rule": 0,
+			"numberOfInitialRoom": 3,
+			"roomName": "Bàn thường"
+		},
+		{
+			"moneyType": 0,
+			"moneyBet": 2000,
+			"requiredMoney": 1,
+			"outMoney": 1,
+			"maxUserPerRoom": 30,
+			"commisionRate": 7,
+			"rule": 0,
+			"numberOfInitialRoom": 3,
+			"roomName": "Bàn thường"
+		},
+		{
+			"moneyType": 0,
+			"moneyBet": 5000,
+			"requiredMoney": 1,
+			"outMoney": 1,
+			"maxUserPerRoom": 30,
+			"commisionRate": 7,
+			"rule": 0,
+			"numberOfInitialRoom": 3,
+			"roomName": "Bàn thường"
+		},
+		{
+			"moneyType": 0,
+			"moneyBet": 10000,
+			"requiredMoney": 1,
+			"outMoney": 1,
+			"maxUserPerRoom": 30,
+			"commisionRate": 7,
+			"rule": 0,
+			"numberOfInitialRoom": 3,
+			"roomName": "Bàn thường"
+		},
+		{
+			"moneyType": 0,
+			"moneyBet": 20000,
+			"requiredMoney": 1,
+			"outMoney": 1,
+			"maxUserPerRoom": 30,
+			"commisionRate": 7,
+			"rule": 0,
+			"numberOfInitialRoom": 3,
+			"roomName": "Bàn thường"
+		},
+		{
+			"moneyType": 0,
+			"moneyBet": 50000,
+			"requiredMoney": 1,
+			"outMoney": 1,
+			"maxUserPerRoom": 30,
+			"commisionRate": 7,
+			"rule": 0,
+			"numberOfInitialRoom": 3,
+			"roomName": "Bàn thường"
+		}
+	]
+}

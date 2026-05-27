@@ -1,0 +1,8 @@
+USE `vinplay`;
+
+INSERT IGNORE INTO `game_config` (`name`, `value`, `version`, `platform`) VALUES 
+('taixiu', '{"min_ctrl": 100000}', '1.0', 'web'),
+('revenue_config', '{"TaiXiu": 2, "BauCua": 2, "Slot": 2, "MiniPoker": 2, "CaoThap": 2}', '1.0', 'web'),
+('mini_prizes', '{"TaiXiu": []}', '1.0', 'web'),
+('esms', '{}', '1.0', 'web')
+;

@@ -1,0 +1,24 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net5.0</TargetFramework>
+    <IsPackable>false</IsPackable>
+    <!-- NOTE: this test project is NOT referenced from the production
+         BanCaLiteNet.csproj. It is built/run separately with
+         `dotnet test banca/Core/UnifiedWalletTests/UnifiedWalletTests.csproj`.
+         Excluded from the main publish path on purpose. -->
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.11.0" />
+    <PackageReference Include="xunit" Version="2.4.1" />
+    <PackageReference Include="xunit.runner.visualstudio" Version="2.4.3" />
+    <PackageReference Include="StackExchange.Redis" Version="2.0.601" />
+  </ItemGroup>
+
+  <!-- We do NOT pull in the entire Core project (it has heavy native
+       deps + WebSocket server). The test file in this directory is
+       picked up by default SDK globbing. -->
+
+
+</Project>

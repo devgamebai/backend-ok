@@ -1,0 +1,97 @@
+# =============================================================================
+# BAN CA failed-settle replay worker — sidecar.
+# =============================================================================
+# Drains the Redis list `banca:failed_settle` produced by the BanCa C# server
+# after 3-retry exhaustion of MoneyGateway settle calls (Phase 5b).
+#
+# Each tick (default 30s) the worker LPOPs up to BANCA_REPLAY_BATCH_SIZE items
+# and re-POSTs them to backend-api `c=9998` (BanCaSettleProcessor). Idempotency
+# is server-side (external_ref + money_gateway_log UNIQUE). On terminal failure
+# (HTTP 4xx, success:false with non-9999 errorCode) the item moves to
+# `banca:failed_settle_dead`. On transient failure (HTTP 5xx, IO timeout,
+# success:false with errorCode 9999) the item is re-pushed into a per-second
+# retry bucket key `banca:failed_settle:retry_at:{ts}` with exponential
+# backoff up to BANCA_REPLAY_MAX_ATTEMPTS.
+#
+# Reuses the shared backend image built by backend-master/Dockerfile — the
+# worker JAR is already shipped to /app/libs/app/. No separate build needed
+# unless you want a stand-alone image (see banca-replay-worker/Dockerfile).
+#
+# Usage:
+#   docker compose -f docker-compose.yml -f docker-compose.database.yml \
+#     -f docker-compose.backend.yml -f docker-compose.banca-replay.yml up -d
+# =============================================================================
+
+services:
+
+  banca-replay-worker:
+    build:
+      context: ./backend-master
+      dockerfile: Dockerfile
+    image: sunwinkr-backend:latest
+    container_name: sunwinkr-banca-replay-worker
+    restart: unless-stopped
+    env_file: [.env]
+    working_dir: /app
+    entrypoint: ["/app/entrypoint.sh"]
+    environment:
+      # Master kill switch. Flip to "1" only after BanCa is settled on the
+      # unified-wallet path (BANCA_USE_UNIFIED_WALLET=1) and ops is ready to
+      # drain accumulated entries.
+      BANCA_REPLAY_ENABLED: "${BANCA_REPLAY_ENABLED:-0}"
+
+      # Tick cadence + per-tick caps.
+      BANCA_REPLAY_INTERVAL_SEC: "30"
+      BANCA_REPLAY_BATCH_SIZE: "200"
+      BANCA_REPLAY_MAX_ATTEMPTS: "8"
+
+      # Internal backend URL — bridge path documented in
+      # BanCaSettleProcessor.java. Same container reachable from the
+      # `backend` Docker network.
+      BANCA_MONEYGATEWAY_URL: "${BANCA_MONEYGATEWAY_URL:-http://backend-api:19082/api_backend?c=9998}"
+      BANCA_SERVICE_TOKEN: "${BANCA_SERVICE_TOKEN}"
+
+      # Redis — BanCa C# pushes onto DB 0 (its default), so the worker reads
+      # from DB 0 too (not the cache DB).
+      REDIS_STREAMS_HOST: "${REDIS_HOST:-redis}"
+      REDIS_STREAMS_PORT: "${REDIS_PORT:-6379}"
+      REDIS_PASSWORD: "${REDIS_PASSWORD:-}"
+      BANCA_REPLAY_REDIS_DB: "0"
+
+      BANCA_REPLAY_HTTP_TIMEOUT_MS: "5000"
+    command: >
+      java -Xmx128m -Xms64m -Djava.net.preferIPv4Stack=true -Djava.net.preferIPv4Addresses=true
+      -Dservice.name=banca-replay-worker
+      -Dlogback.configurationFile=/app/api/banca-replay-worker/config/logback.xml
+      -cp "libs/app/*:libs/runtime/*"
+      com.vinplay.bancareplay.BancaReplayWorker
+    volumes:
+      - ./logs:/app/logs
+      - ./backend-master/banca-replay-worker/config:/app/api/banca-replay-worker/config:ro
+    networks:
+      - backend
+      - database
+    depends_on:
+      redis:
+        condition: service_healthy
+      mysql:
+        condition: service_healthy
+    deploy:
+      resources:
+        limits:
+          memory: 256M
+    logging:
+      driver: json-file
+      options:
+        max-size: "50m"
+        max-file: "5"
+    labels:
+      autoheal: "true"
+
+networks:
+  backend:
+    external: true
+    name: sunkr-network
+  database:
+    external: true
+    name: sunkr-network
