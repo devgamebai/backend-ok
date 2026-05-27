@@ -1269,6 +1269,18 @@ extends GameServer {
                 }
                 this.setPlayer(user.getName(), gp);
                 this.notifyUserEnter(gp);
+                // When a real user enters an empty room, fill with bots immediately
+                if (!user.isBot() && this.playerList.size() == 1 && this.roomType != 2 && this.bCheckBalanceBot) {
+                    Debug.trace((Object[])new Object[]{"[DEBUG-JOIN] Triggering bot join for user=" + user.getName() + " roomId=" + this.roomId});
+                    final GameRoom botRoom = this.room;
+                    BitZeroServer.getInstance().getTaskScheduler().schedule(
+                        new Runnable() {
+                            public void run() {
+                                BotXocDiaManager.instance().forceJoinBots(botRoom, 6);
+                            }
+                        },
+                        2, TimeUnit.SECONDS);
+                }
                 if (this.playerList.size() == 2) {
                     this.prepareNewGame(false);
                 } else if (this.playerList.size() == 1 && user.isBot() && this.bankerName.isEmpty() && this.roomType == 0 && NumberUtils.isDoWithRatio((double)XocDiaConfig.bkRatioRequestBanker) && gp.getMoneyUseInGame() >= (long)Math.round(XocDiaConfig.bkMoneyRequestBankerMin * this.moneyBet)) {

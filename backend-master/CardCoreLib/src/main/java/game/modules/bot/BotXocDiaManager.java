@@ -230,6 +230,31 @@ public class BotXocDiaManager {
         }
     }
 
+    /**
+     * Force join a number of bots to a specific room immediately.
+     * Used when a real user enters an empty room to fill it with bots.
+     */
+    public void forceJoinBots(GameRoom room, int count) {
+        if (room == null || count <= 0) return;
+        if (!GameUtils.isBot) {
+            Debug.trace((Object)("[BotXocDia] forceJoinBots skipped: isBot=false"));
+            return;
+        }
+        Debug.trace((Object[])new Object[]{"[BotXocDia] forceJoinBots roomId=" + room.getId() + " count=" + count});
+        for (int i = 0; i < count; i++) {
+            try {
+                Thread.sleep(200); // small delay between joins to avoid race conditions
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+                break;
+            }
+            if (!this.joinRoom(room)) {
+                Debug.trace((Object)("[BotXocDia] forceJoinBots stopped after " + i + " bots (no more free bots or room full)"));
+                break;
+            }
+        }
+    }
+
     /*
      * WARNING - Removed try catching itself - possible behaviour change.
      */
