@@ -32,10 +32,12 @@ public class LichSuGiaoDichTXProcessor
             return response.toJson();
         }
         int moneyType = Integer.parseInt(request.getParameter("mt"));
-        boolean isMD5 = false;
+        boolean isMD5 = true;
         try {
             String type = request.getParameter("type");
-            isMD5 = type.equals("md5");
+            if (type != null && type.equals("old")) {
+                isMD5 = false;
+            }
         }catch(Exception e){
         }
         TaiXiuService service = new TaiXiuServiceImpl();

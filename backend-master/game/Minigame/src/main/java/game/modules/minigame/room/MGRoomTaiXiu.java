@@ -293,8 +293,8 @@ extends MGRoom {
         // Old value caused the displayed countdown to snap from 16 → 50 mid-
         // round (the "2 countdowns" symptom). With 18s, the result phase
         // monotonically reaches 0 just as the new round starts.
-        final int bettingTime = 50;
-        final int resultTime = 18;
+        final int bettingTime = 45;
+        final int resultTime = 16;
         long currentTime = System.currentTimeMillis();
         long revealStart = this.startTime + (long) bettingTime * 1000L;
         if (currentTime < revealStart) {

@@ -11,6 +11,7 @@
 package com.vinplay.api.processors.minigame;
 
 import com.vinplay.api.processors.minigame.response.TopWinTXResponse;
+import com.vinplay.dal.service.impl.TaiXiuMD5ServiceImpl;
 import com.vinplay.dal.service.impl.TaiXiuServiceImpl;
 import com.vinplay.vbee.common.cp.BaseProcessor;
 import com.vinplay.vbee.common.cp.Param;
@@ -24,7 +25,7 @@ implements BaseProcessor<HttpServletRequest, String> {
     public String execute(Param<HttpServletRequest> param) {
         HttpServletRequest request = (HttpServletRequest)param.get();
         int moneyType = Integer.parseInt(request.getParameter("mt"));
-        TaiXiuServiceImpl service = new TaiXiuServiceImpl();
+        TaiXiuMD5ServiceImpl service = new TaiXiuMD5ServiceImpl();
         TopWinTXResponse response = new TopWinTXResponse(false, "1001");
         try {
             List result = service.getTopWin(moneyType);

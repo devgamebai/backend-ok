@@ -421,7 +421,7 @@ extends BaseClientRequestHandler {
             if (roomVin == null) {
                 return;
             }
-            int remainTime = 60 - count;
+            int remainTime = 45 - count;
             short jackpotSide = 0;
             if (remainTime <= 15) {
                 jackpotSide = roomVin.getJackPotApi();
@@ -464,31 +464,25 @@ extends BaseClientRequestHandler {
                 case 45: {
                     roomTXVin.disableBetting();
                     roomTXXu.disableBetting();
-                    break;
-                }
-                case 48: {
                     roomTXVin.calculateMoneyReturn();
-                    break;
-                }
-                case 50: {
                     roomTXVin.finish();
                     break;
                 }
-                case 51: {
+                case 46: {
                     this.generateTaiXiuDices(roomTXVin, roomTXXu);
                     roomTXVin.calculateJackpot();
                     break;
                 }
-                case 55: {
+                case 50: {
                     BitZeroServer.getInstance().getTaskScheduler().schedule(this.calculatingTXVinTask, 1, TimeUnit.SECONDS);
                     break;
                 }
-                case 60: {
+                case 55: {
                     ScheduleBotTask t = new ScheduleBotTask();
                     this.executor.execute(t);
                     break;
                 }
-                case 68: {
+                case 60: {
                     roomTXVin.getBalanceTX().startNewRound();
                     this.startNewRoundTX();
                     this.count = 0;

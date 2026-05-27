@@ -127,32 +127,21 @@ implements TaiXiuDAO {
     @Override
     public List<TopWin> getTopTaiXiu(int moneyType) throws SQLException {
         ArrayList<TopWin> result = new ArrayList<TopWin>();
-//        Connection conn = ConnectionPool.getInstance().getConnection("mysqlpool_minigame");
-//        CallableStatement call = null;
-//        try {
-//            call = conn.prepareCall("CALL tx_get_top_win(?)");
-//            int param = 1;
-//            call.setByte(param++, (byte)moneyType);
-//            ResultSet rs = call.executeQuery();
-//            while (rs.next()) {
-//                TopWin entry = new TopWin();
-//                entry.setUsername(rs.getString("user_name"));
-//                entry.setMoney(rs.getLong("money"));
-//                result.add(entry);
-//            }
-//            rs.close();
-//        }
-//        catch (SQLException e) {
-//            throw e;
-//        }
-//        finally {
-//            if (call != null) {
-//                call.close();
-//            }
-//            if (conn != null) {
-//                conn.close();
-//            }
-//        }
+        try (Connection conn = ConnectionPool.getInstance().getConnection("mysqlpool_minigame");
+             CallableStatement call = conn.prepareCall("CALL tx_get_top_win_md5(?)")) {
+            call.setByte(1, (byte)moneyType);
+            try (ResultSet rs = call.executeQuery()) {
+                while (rs.next()) {
+                    TopWin entry = new TopWin();
+                    entry.setUsername(rs.getString("user_name"));
+                    entry.setMoney(rs.getLong("money"));
+                    result.add(entry);
+                }
+            }
+        }
+        catch (SQLException e) {
+            throw e;
+        }
         return result;
     }
 
