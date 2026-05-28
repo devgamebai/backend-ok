@@ -21,18 +21,18 @@
             <multicast enabled="false" />
             <tcp-ip enabled="true">
                 <member>hazelcast-1</member>
-                <member>hazelcast-2</member>
-                <member>hazelcast-3</member>
+                <!-- hazelcast-2 and hazelcast-3 disabled for small-VPS.
+                     Uncomment when restoring 3-node HA cluster. -->
+                <!-- <member>hazelcast-2</member> -->
+                <!-- <member>hazelcast-3</member> -->
             </tcp-ip>
         </join>
         <interfaces enabled="false" />
     </network>
 
-    <!-- Split-brain protection: a partition that finds itself with fewer
-         than 2 members refuses reads+writes on the protected maps until
-         the cluster heals. Prevents the 1-node side of a network split
-         from accepting writes that would diverge from the 2-node side. -->
-    <quorum name="majority" enabled="true">
+    <!-- Split-brain protection DISABLED for single-node deployment.
+         When restoring 3-node HA cluster, re-enable with quorum-size=2. -->
+    <quorum name="majority" enabled="false">
         <quorum-size>2</quorum-size>
         <quorum-type>READ_WRITE</quorum-type>
     </quorum>
