@@ -39,14 +39,14 @@
 
     <map name="default">
         <in-memory-format>BINARY</in-memory-format>
-        <backup-count>1</backup-count>
+        <backup-count>0</backup-count>
         <time-to-live-seconds>0</time-to-live-seconds>
         <max-idle-seconds>0</max-idle-seconds>
     </map>
 
     <map name="users">
         <in-memory-format>BINARY</in-memory-format>
-        <backup-count>1</backup-count>
+        <backup-count>0</backup-count>
         <time-to-live-seconds>3600</time-to-live-seconds>
         <max-idle-seconds>1800</max-idle-seconds>
         <eviction-policy>LRU</eviction-policy>
@@ -56,7 +56,7 @@
 
     <map name="cacheToken">
         <in-memory-format>BINARY</in-memory-format>
-        <backup-count>1</backup-count>
+        <backup-count>0</backup-count>
         <time-to-live-seconds>7200</time-to-live-seconds>
         <max-idle-seconds>3600</max-idle-seconds>
         <quorum-ref>majority</quorum-ref>
@@ -64,7 +64,7 @@
 
     <map name="giftcode_fail_attempts">
         <in-memory-format>BINARY</in-memory-format>
-        <backup-count>1</backup-count>
+        <backup-count>0</backup-count>
         <time-to-live-seconds>21600</time-to-live-seconds> <!-- 6 hours -->
         <max-idle-seconds>21600</max-idle-seconds>
         <eviction-policy>LRU</eviction-policy>
@@ -74,6 +74,6 @@
 
     <queue name="default">
         <max-size>0</max-size>
-        <backup-count>1</backup-count>
+        <backup-count>0</backup-count>
     </queue>
 </hazelcast>
