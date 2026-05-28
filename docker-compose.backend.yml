@@ -38,7 +38,7 @@ services:
     restart: unless-stopped
     working_dir: /app
     command: >
-      java -Xmx512m -Xms256m -Djava.net.preferIPv4Stack=true -Djava.net.preferIPv4Addresses=true
+      java -Xmx256m -Xms128m -Djava.net.preferIPv4Stack=true -Djava.net.preferIPv4Addresses=true
       -Dservice.name=portal-api
       -Dlogback.configurationFile=/app/api/VinPlayPortal/config/logback.xml
       -cp "libs/app/*:libs/runtime/*:libs/api-precompiled/*"
@@ -69,7 +69,7 @@ services:
     deploy:
       resources:
         limits:
-          memory: 1G
+          memory: 512M
     logging:
       driver: json-file
       options:
@@ -87,19 +87,11 @@ services:
     container_name: sunwinkr-backend-api
     restart: unless-stopped
     working_dir: /app
-    # SUN-1243: bumped -Xmx512m -> -Xmx1500m. The 512MB heap was OOM-ing
-    # repeatedly (16x in ~30 min on 2026-05-03) under the combined load of
-    # 16 GSC_SIDE_EFFECT_THREADS, RebateRollupScheduler, GscWagerReconciler,
-    # ConnectionPoolMonitor, AggregatorP99Scheduler, plus the agent
-    # bet-history processor (c=9843) which can pull 5000+ player rows × 7-day
-    # date ranges from Mongo. Symptom: every read endpoint timed out at 30s
-    # because the JVM crashed → restarted → crashed again. Container limit
-    # bumped to 2g via deploy.resources.limits.memory below so the new heap
-    # has headroom for off-heap (JIT, metaspace, direct buffers).
-    # HeapDumpOnOutOfMemoryError emits a /app/logs/backend-api-oom.hprof on
-    # next OOM for postmortem analysis.
+    # SUN-1243: bumped -Xmx512m -> -Xmx1500m. 2026-05-27: reduced to 768m
+    # for small-VPS stability. If OOM recurs under high agent bet-history load
+    # (c=9843 pulling 5000+ rows from Mongo), bump back toward 1024m.
     command: >
-      java -Xmx1500m -Xms512m -Djava.net.preferIPv4Stack=true -Djava.net.preferIPv4Addresses=true
+      java -Xmx768m -Xms256m -Djava.net.preferIPv4Stack=true -Djava.net.preferIPv4Addresses=true
       -XX:+HeapDumpOnOutOfMemoryError -XX:HeapDumpPath=/app/logs/backend-api-oom.hprof
       -Dservice.name=backend-api
       -Dlogback.configurationFile=/app/api/VinPlayBackend/config/logback.xml
@@ -128,7 +120,7 @@ services:
     deploy:
       resources:
         limits:
-          memory: 2G   # SUN-1243: bumped 1G -> 2G to support 1500m heap + off-heap
+          memory: 1G   # SUN-1243: was 2G, reduced for small-VPS stability
     logging:
       driver: json-file
       options:
@@ -214,7 +206,7 @@ services:
     restart: unless-stopped
     working_dir: /app
     command: >
-      java -Xmx768m -Xms256m -Djava.net.preferIPv4Stack=true -Djava.net.preferIPv4Addresses=true
+      java -Xmx384m -Xms128m -Djava.net.preferIPv4Stack=true -Djava.net.preferIPv4Addresses=true
       -Dservice.name=vbee
       -Dlogback.configurationFile=/app/api/vbee/config/logback.xml
       -cp "libs/app/*:libs/runtime/*:libs/api-precompiled/*"
@@ -232,7 +224,7 @@ services:
     deploy:
       resources:
         limits:
-          memory: 1024M
+          memory: 512M
     logging:
       driver: json-file
       options:

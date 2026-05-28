@@ -74,7 +74,7 @@ services:
     <<: *game-base
     container_name: sunwinkr-game-slot
     command: >
-      java -Xmx512m -Xms256m -Djava.net.preferIPv4Stack=true -Djava.net.preferIPv4Addresses=true
+      java -Xmx256m -Xms128m -Djava.net.preferIPv4Stack=true -Djava.net.preferIPv4Addresses=true
       -Dservice.name=game-slot
       -Dlogback.configurationFile=/app/game/slot/config/logback.xml
       -cp "libs/runtime/*:libs/app/*"
@@ -86,7 +86,7 @@ services:
     deploy:
       resources:
         limits:
-          memory: 1G
+          memory: 512M
 
   # ---------------------------------------------------------------------------
   # XocDia Tứ Linh (4 Divine Beasts) - Dedicated server
@@ -98,7 +98,7 @@ services:
     <<: *game-base
     container_name: sunwinkr-game-xocdiatulinh
     command: >
-      java -Xmx512m -Xms256m -Djava.net.preferIPv4Stack=true -Djava.net.preferIPv4Addresses=true
+      java -Xmx256m -Xms128m -Djava.net.preferIPv4Stack=true -Djava.net.preferIPv4Addresses=true
       -Dservice.name=game-xocdiatulinh
       -Dlogback.configurationFile=/app/game/xocdiatulinh/config/logback.xml
       -cp "libs/runtime/*:libs/app/*"
@@ -107,6 +107,10 @@ services:
     ports:
       - "12543:2343"
       - "12544:2344"
+    deploy:
+      resources:
+        limits:
+          memory: 512M
 
   # ---------------------------------------------------------------------------
   # Minigame - MiniPoker, Bau Cua, Tai Xiu, Cao Thap, Sicbo, Galaxy
@@ -120,7 +124,7 @@ services:
     extra_hosts:
       - "localhost:host-gateway"
     command: >
-      java -Xmx512m -Xms256m -Djava.net.preferIPv4Stack=true -Djava.net.preferIPv4Addresses=true
+      java -Xmx256m -Xms128m -Djava.net.preferIPv4Stack=true -Djava.net.preferIPv4Addresses=true
       -Dservice.name=game-minigame
       -Dlogback.configurationFile=/app/game/Minigame/config/logback.xml
       -cp "libs/app/*:libs/runtime/*"
@@ -132,7 +136,7 @@ services:
     deploy:
       resources:
         limits:
-          memory: 1G
+          memory: 512M
 
   # ---------------------------------------------------------------------------
   # Tien Len Mien Nam (TLMN) - Vietnamese "Thirteen" card game
@@ -171,7 +175,7 @@ services:
     <<: *game-base
     container_name: sunwinkr-game-xocdia
     command: >
-      java -Xmx512m -Xms256m -Djava.net.preferIPv4Stack=true -Djava.net.preferIPv4Addresses=true
+      java -Xmx256m -Xms128m -Djava.net.preferIPv4Stack=true -Djava.net.preferIPv4Addresses=true
       -Dservice.name=game-xocdia
       -Dlogback.configurationFile=/app/game/xocdia/config/logback.xml
       -cp "libs/runtime/*:libs/app/*"
@@ -183,7 +187,7 @@ services:
     deploy:
       resources:
         limits:
-          memory: 1G
+          memory: 512M
 
   # ---------------------------------------------------------------------------
   # Ba Cay - Vietnamese 3-card baccarat

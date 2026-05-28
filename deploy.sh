@@ -327,7 +327,7 @@ else
         -v "$(pwd)/backend-master:/app" \
         -w /app \
         eclipse-temurin:8-jdk \
-        bash -c "chmod +x gradlew && ./gradlew clean build copyRuntimeDeps -x test"
+        bash -c "chmod +x gradlew && ./gradlew clean build copyRuntimeDeps -x test --parallel --build-cache"
     GRADLE_RC=$?
     if [ $GRADLE_RC -ne 0 ]; then
         error "Java build FAILED (gradle exit $GRADLE_RC). Full gradle output above. Fix the reported compile error and re-run ./deploy.sh --rebuild."

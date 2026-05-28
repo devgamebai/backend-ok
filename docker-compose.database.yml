@@ -286,13 +286,12 @@ services:
         max-file: "3"
 
   # ---------------------------------------------------------------------------
-  # Hazelcast 3.12 - 3-node TCP-IP cluster (SUN-WS-STAB)
+  # Hazelcast 3.12 - Single-node (was 3-node HA cluster)
   #
-  # Why 3 nodes: with backup-count=1 on the `users` and `cacheToken` IMaps
-  # (see install/config/hazelcast/hazelcast.xml), the loss of any single
-  # member preserves all session/balance data. Restarts can roll one-at-a-
-  # time without kicking every player. With a single member (the prior
-  # config) every Hazelcast restart wiped cache and force-logged everyone.
+  # Reduced from 3 nodes to 1 for small-VPS memory (3×2GB=6GB → 1×512MB).
+  # A Hazelcast restart will wipe session/balance cache — acceptable
+  # trade-off for stability on single-server deployments.
+  # To restore HA: uncomment hazelcast-2/3 and bump heap back to 1g.
   # ---------------------------------------------------------------------------
   hazelcast-1:
     image: hazelcast/hazelcast:3.12
@@ -305,7 +304,7 @@ services:
         -Dhazelcast.config=/configFolder/hazelcast.xml
         -Dgroup.name=${HAZELCAST_GROUP:-dev}
         -Dgroup.password=${HAZELCAST_PASSWORD:?Set HAZELCAST_PASSWORD in .env}
-        -Xmx1g
+        -Xmx256m
     volumes:
       - ./install/config/hazelcast:/configFolder:ro
     networks:
@@ -325,78 +324,22 @@ services:
     deploy:
       resources:
         limits:
-          memory: 2G
+          memory: 512M
     logging:
       driver: json-file
       options:
         max-size: "20m"
         max-file: "3"
 
-  hazelcast-2:
-    image: hazelcast/hazelcast:3.12
-    container_name: sunwinkr-hazelcast-2
-    hostname: hazelcast-2
-    restart: unless-stopped
-    stop_grace_period: 15s
-    environment:
-      JAVA_OPTS: >
-        -Dhazelcast.config=/configFolder/hazelcast.xml
-        -Dgroup.name=${HAZELCAST_GROUP:-dev}
-        -Dgroup.password=${HAZELCAST_PASSWORD:?Set HAZELCAST_PASSWORD in .env}
-        -Xmx1g
-    volumes:
-      - ./install/config/hazelcast:/configFolder:ro
-    networks:
-      database:
-        aliases: [hazelcast]
-    healthcheck:
-      test: ["CMD-SHELL", "nc -z localhost 5701 || exit 1"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
-      start_period: 30s
-    deploy:
-      resources:
-        limits:
-          memory: 2G
-    logging:
-      driver: json-file
-      options:
-        max-size: "20m"
-        max-file: "3"
-
-  hazelcast-3:
-    image: hazelcast/hazelcast:3.12
-    container_name: sunwinkr-hazelcast-3
-    hostname: hazelcast-3
-    restart: unless-stopped
-    stop_grace_period: 15s
-    environment:
-      JAVA_OPTS: >
-        -Dhazelcast.config=/configFolder/hazelcast.xml
-        -Dgroup.name=${HAZELCAST_GROUP:-dev}
-        -Dgroup.password=${HAZELCAST_PASSWORD:?Set HAZELCAST_PASSWORD in .env}
-        -Xmx1g
-    volumes:
-      - ./install/config/hazelcast:/configFolder:ro
-    networks:
-      database:
-        aliases: [hazelcast]
-    healthcheck:
-      test: ["CMD-SHELL", "nc -z localhost 5701 || exit 1"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
-      start_period: 30s
-    deploy:
-      resources:
-        limits:
-          memory: 2G
-    logging:
-      driver: json-file
-      options:
-        max-size: "20m"
-        max-file: "3"
+  # hazelcast-2 and hazelcast-3 — DISABLED for small-VPS memory savings.
+  # Uncomment below to restore the 3-node HA cluster when scaling up.
+  #
+  # hazelcast-2:
+  #   image: hazelcast/hazelcast:3.12
+  #   ...
+  # hazelcast-3:
+  #   image: hazelcast/hazelcast:3.12
+  #   ...
 
   # ---------------------------------------------------------------------------
   # Autoheal 1.2 - Auto-restart unhealthy containers (SUN-1035)
